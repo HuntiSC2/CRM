@@ -8,7 +8,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('comercial'); // roles: admin, comercial, soporte
+            $table->string('role')->default('comercial'); // roles: admin, comercial, gerente
             $table->integer('login_attempts')->default(0); // Criterio: control de intentos fallidos
             $table->boolean('is_active')->default(true);   // Estado de cuenta (Bloqueo al 3er intento)
         });

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -22,7 +23,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // Criterio Scrum: Verificación de bloqueo por intentos fallidos
+        // Criterio Scrum: Verificación de bloqueo por intentos fallidos (HU-01)
         if ($user && !$user->is_active) {
             return back()->withErrors([
                 'email' => 'Su cuenta ha sido bloqueada temporalmente por seguridad tras múltiples intentos fallidos.',
@@ -35,13 +36,7 @@ class AuthenticatedSessionController extends Controller
             // Resetear intentos si el login es exitoso
             $user->update(['login_attempts' => 0]);
 
-            // Criterio Scrum: Redirección inteligente basada en Roles
-            if ($user->role === 'admin') {
-                return redirect()->intended('/admin/dashboard');
-            } elseif ($user->role === 'comercial') {
-                return redirect()->intended('/comercial/dashboard');
-            }
-
+            // Redirección unificada al Panel de Control Maestro para todos los roles
             return redirect()->intended('/dashboard');
         }
 
