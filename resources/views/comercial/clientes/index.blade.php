@@ -71,6 +71,18 @@
         background-color: #f1f5f9 !important;
     }
 
+    /* Cabecera Verde y Bordes definidos para filas y columnas */
+    .dtl-table-hover thead th {
+        background-color: #d1fae5 !important;
+        color: #065f46 !important;
+        border: 1px solid #94a3b8 !important;
+    }
+
+    /* Líneas divisorias de celdas ligeramente más intensas */
+    .dtl-table-hover td {
+        border: 1px solid #cbd5e1 !important;
+    }
+
     /* Indicador de Sesión Activa */
     .status-pulse-green {
         width: 8px;
@@ -178,30 +190,30 @@
     </div>
 
     <!-- 3. TABLA DE CLIENTES / CONTRATISTAS -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 dtl-table-hover" style="font-size: 0.88rem; min-width: 800px;">
-                    <thead class="text-uppercase border-bottom" style="font-size: 0.72rem; letter-spacing: 0.8px; background-color: #0f172a; color: #ffffff;">
+                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover" style="font-size: 0.80rem; min-width: 800px;">
+                    <thead class="text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.8px; background-color: #d1fae5 !important; border-bottom: 2px solid #059669;">
                         <tr>
-                            <th class="ps-4 py-3 fw-bold">RUC</th>
+                            <th class="ps-3 py-3 fw-bold">RUC</th>
                             <th class="py-3 fw-bold">Razón Social</th>
                             <th class="py-3 fw-bold">Contacto</th>
                             <th class="py-3 fw-bold">Teléfono</th>
                             <th class="py-3 fw-bold">Email</th>
                             <th class="py-3 fw-bold text-center">Estado</th>
                             <th class="py-3 fw-bold text-center">Registrado Por</th>
-                            <th class="pe-4 py-3 fw-bold text-end">Acciones</th>
+                            <th class="pe-3 py-3 fw-bold text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($clientes ?? [] as $cliente)
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td class="ps-4 fw-bold font-monospace" style="color: #059669;">{{ $cliente->ruc }}</td>
+                            <tr style="border-top: 2px solid #10b981;">
+                                <td class="ps-3 fw-bold font-monospace" style="color: #059669;">{{ $cliente->ruc }}</td>
                                 <td class="fw-bold" style="color: #0f172a;">{{ $cliente->razon_social }}</td>
-                                <td style="color: #334155;"><i class="fas fa-user-tie me-1.5" style="color: #94a3b8;"></i> {{ $cliente->nombre_contacto }}</td>
-                                <td style="color: #334155;"><i class="fas fa-phone-alt me-1.5" style="color: #94a3b8;"></i> {{ $cliente->telefono_contacto }}</td>
-                                <td style="color: #334155;"><i class="fas fa-envelope me-1.5" style="color: #94a3b8;"></i> {{ $cliente->email_contacto }}</td>
+                                <td style="color: #334155;">{{ $cliente->nombre_contacto }}</td>
+                                <td style="color: #334155;">{{ $cliente->telefono_contacto }}</td>
+                                <td style="color: #334155;">{{ $cliente->email_contacto }}</td>
                                 <td class="text-center">
                                     @if($cliente->estado === 'ACTIVO')
                                         <span class="badge fw-semibold px-2.5 py-1 rounded-pill" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
@@ -218,7 +230,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center small" style="color: #64748b;">{{ $cliente->user->name ?? 'Sistema' }}</td>
-                                <td class="pe-4 text-end">
+                                <td class="pe-3 text-end">
                                     <button class="btn btn-sm rounded-2 px-2.5 py-1" style="background-color: #f8fafc; color: #0f172a; border: 1px solid #cbd5e1;" title="Ver Detalles">
                                         <i class="fas fa-eye" style="color: #059669;"></i>
                                     </button>
@@ -226,7 +238,7 @@
                             </tr>
                         @empty
                             <!-- MENSAJE DE ESTADO VACÍO (EMPTY STATE) -->
-                            <tr>
+                            <tr style="border-top: 2px solid #10b981;">
                                 <td colspan="8" class="text-center py-5">
                                     <div class="py-4">
                                         <div class="rounded-circle d-inline-flex p-3.5 mb-3" style="background-color: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
@@ -248,7 +260,7 @@
 
             <!-- PAGINACIÓN AUTOMÁTICA -->
             @if(isset($clientes) && method_exists($clientes, 'links'))
-                <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
+                <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2" style="background-color: #f8fafc; border-color: #cbd5e1 !important;">
                     <div class="small" style="color: #64748b;">
                         Mostrando registros del sistema comercial DTL PREMIER.
                     </div>
