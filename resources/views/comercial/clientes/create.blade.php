@@ -9,25 +9,13 @@
         border-color: #059669 !important;
         color: #ffffff !important;
         transition: all 0.2s ease-in-out;
+        white-space: nowrap;
     }
     .btn-dtl-primary:hover {
         background-color: #047857 !important;
         border-color: #047857 !important;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
-    }
-
-    /* Botón Secundario / Volver */
-    .btn-dtl-outline {
-        background-color: #ffffff !important;
-        border-color: #cbd5e1 !important;
-        color: #475569 !important;
-        transition: all 0.2s ease-in-out;
-    }
-    .btn-dtl-outline:hover {
-        background-color: #f8fafc !important;
-        border-color: #94a3b8 !important;
-        color: #0f172a !important;
     }
 
     /* Enfoque e interacción de Campos de Formulario */
@@ -46,34 +34,42 @@
     .extra-small {
         font-size: 0.75rem;
     }
+
+    /* Indicador de Sesión Activa */
+    .status-pulse-green {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+    }
 </style>
 
-<div class="container-fluid px-3 py-2">
+<div class="container-fluid px-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. (ESTILO UNIFICADO CON LOGO) -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <!-- Línea Superior de Acento Verde Corporativo -->
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
         
         <div class="card-body px-4 py-3">
             <div class="row align-items-center g-3">
                 
-                <!-- Logo Oficial Corporativo -->
+                <!-- IZQUIERDA: Logo Oficial Corporativo -->
                 <div class="col-12 col-lg-auto text-center text-lg-start">
                     <div class="p-2 rounded-3 bg-white d-inline-flex align-items-center justify-content-center border" style="min-width: 155px; height: 58px; border-color: #cbd5e1 !important;">
                         <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 42px; width: auto; object-fit: contain;">
                     </div>
                 </div>
 
-                <!-- Título y Subtítulo del Módulo -->
+                <!-- CENTRO: Título, Rol y Subtítulo del Módulo -->
                 <div class="col-12 col-lg border-start-lg ps-lg-4" style="border-color: #e2e8f0 !important;">
                     <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                        <!-- BADGE DE MÓDULO -->
                         <span class="badge rounded-pill fw-bold px-2.5 py-1 text-uppercase" style="font-size: 0.65rem; background-color: #0f172a; color: #ffffff;">
-                            <i class="fas fa-file-signature me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
+                            <i class="fas fa-briefcase me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
                         </span>
                         <span class="badge rounded-pill fw-semibold px-2.5 py-1 d-inline-flex align-items-center gap-1.5" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            FORMULARIO TRIBUTARIO
+                            <span class="status-pulse-green"></span> Formulario Tributario
                         </span>
                     </div>
                     
@@ -86,12 +82,17 @@
                     </p>
                 </div>
 
-                <!-- Botón de Acción / Regreso al Directorio -->
+                <!-- DERECHA: Credenciales de Sesión (En lugar del botón Volver) -->
                 <div class="col-12 col-lg-auto text-lg-end">
-                    <a href="{{ route('comercial.clientes.index') }}" class="btn btn-dtl-outline px-3.5 py-2 rounded-3 shadow-sm fw-semibold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.88rem;">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Volver al Directorio</span>
-                    </a>
+                    <div class="px-3 py-2 rounded-3 border bg-light d-inline-block text-start text-lg-end w-100 w-lg-auto" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
+                        <div class="d-flex align-items-center justify-content-lg-end gap-1.5 mb-0.5">
+                            <i class="fas fa-envelope me-1" style="color: #059669; font-size: 0.75rem;"></i>
+                            <span class="text-dark fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 0.8px;">Sesión iniciada como:</span>
+                        </div>
+                        <span class="fw-bold text-dark small d-block" style="font-size: 0.78rem;">
+                            {{ auth()->user()->email }}
+                        </span>
+                    </div>
                 </div>
 
             </div>
@@ -257,9 +258,11 @@
                 <span class="extra-small" style="color: #64748b;">
                     <i class="fas fa-circle-check me-1" style="color: #059669;"></i> Asegúrese de completar todos los campos obligatorios (*) antes de proceder.
                 </span>
+
+                <!-- Botón de acción con texto "Guardar" -->
                 <button type="submit" id="btn-submit" class="btn btn-dtl-primary px-4 py-2.5 rounded-3 shadow-sm fw-bold d-flex align-items-center gap-2" style="font-size: 0.95rem;">
                     <i class="fas fa-floppy-disk"></i>
-                    <span>Guardar Ficha</span>
+                    <span>Guardar</span>
                 </button>
             </div>
         </div>

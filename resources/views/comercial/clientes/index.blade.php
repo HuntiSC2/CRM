@@ -3,12 +3,26 @@
 @section('content')
 <!-- Estilos Exclusivos para la Vista Directorio de Clientes DTL PREMIER -->
 <style>
+    /* Estilo de botones con tamaño y padding estándar uniforme */
+    .btn-dtl-action {
+        height: 38px;
+        padding: 0 16px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s ease-in-out;
+        white-space: nowrap;
+    }
+
     /* Botón Principal Verde Corporativo DTL */
     .btn-dtl-primary {
         background-color: #059669 !important;
-        border-color: #059669 !important;
+        border: 1px solid #059669 !important;
         color: #ffffff !important;
-        transition: all 0.2s ease-in-out;
     }
     .btn-dtl-primary:hover {
         background-color: #047857 !important;
@@ -20,14 +34,20 @@
     /* Botón Secundario Negro Carbón DTL */
     .btn-dtl-dark {
         background-color: #0f172a !important;
-        border-color: #0f172a !important;
+        border: 1px solid #0f172a !important;
         color: #ffffff !important;
-        transition: all 0.2s ease-in-out;
     }
     .btn-dtl-dark:hover {
         background-color: #1e293b !important;
         border-color: #1e293b !important;
         transform: translateY(-1px);
+    }
+
+    /* Botón compacto solo ícono '+' */
+    .btn-dtl-icon-only {
+        width: 38px;
+        height: 38px;
+        padding: 0;
     }
 
     /* Foco del Input de Búsqueda */
@@ -50,34 +70,42 @@
     .dtl-table-hover tbody tr:hover {
         background-color: #f1f5f9 !important;
     }
+
+    /* Indicador de Sesión Activa */
+    .status-pulse-green {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+    }
 </style>
 
-<div class="container-fluid px-3 py-2">
+<div class="container-fluid px-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. (ESTILO IDÉNTICO AL DASHBOARD) -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <!-- Línea Superior de Acento Verde Corporativo -->
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
         
         <div class="card-body px-4 py-3">
             <div class="row align-items-center g-3">
                 
-                <!-- Logo Oficial Corporativo (Igual que en el Dashboard) -->
+                <!-- IZQUIERDA: Logo Oficial Corporativo -->
                 <div class="col-12 col-lg-auto text-center text-lg-start">
                     <div class="p-2 rounded-3 bg-white d-inline-flex align-items-center justify-content-center border" style="min-width: 155px; height: 58px; border-color: #cbd5e1 !important;">
                         <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 42px; width: auto; object-fit: contain;">
                     </div>
                 </div>
 
-                <!-- Título y Subtítulo del Módulo -->
+                <!-- CENTRO: Título, Rol y Subtítulo del Módulo -->
                 <div class="col-12 col-lg border-start-lg ps-lg-4" style="border-color: #e2e8f0 !important;">
                     <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                        <!-- BADGE DE MÓDULO -->
                         <span class="badge rounded-pill fw-bold px-2.5 py-1 text-uppercase" style="font-size: 0.65rem; background-color: #0f172a; color: #ffffff;">
                             <i class="fas fa-briefcase me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
                         </span>
                         <span class="badge rounded-pill fw-semibold px-2.5 py-1 d-inline-flex align-items-center gap-1.5" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            EXPEDIENTES ACTIVOS
+                            <span class="status-pulse-green"></span> Expedientes Activos
                         </span>
                     </div>
                     
@@ -90,12 +118,17 @@
                     </p>
                 </div>
 
-                <!-- Botón de Acción Principal -->
+                <!-- DERECHA: Credenciales de Sesión -->
                 <div class="col-12 col-lg-auto text-lg-end">
-                    <a href="{{ route('comercial.clientes.create') }}" class="btn btn-dtl-primary px-3.5 py-2 rounded-3 shadow-sm fw-bold d-flex align-items-center justify-content-center gap-2" style="font-size: 0.88rem;">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Registrar Ficha</span>
-                    </a>
+                    <div class="px-3 py-2 rounded-3 border bg-light d-inline-block text-start text-lg-end w-100 w-lg-auto" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
+                        <div class="d-flex align-items-center justify-content-lg-end gap-1.5 mb-0.5">
+                            <i class="fas fa-envelope me-1" style="color: #059669; font-size: 0.75rem;"></i>
+                            <span class="text-dark fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 0.8px;">Sesión iniciada como:</span>
+                        </div>
+                        <span class="fw-bold text-dark small d-block" style="font-size: 0.78rem;">
+                            {{ auth()->user()->email }}
+                        </span>
+                    </div>
                 </div>
 
             </div>
@@ -110,29 +143,36 @@
         </div>
     @endif
 
-    <!-- 2. BARRA DE BÚSQUEDA Y FILTROS -->
+    <!-- 2. BARRA DE BÚSQUEDA Y BOTÓN '+' REGISTRAR AL LADO -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-3" style="border: 1px solid #e2e8f0 !important;">
-        <div class="card-body p-2.5 px-3">
-            <form action="{{ route('comercial.clientes.index') }}" method="GET" class="row g-2 align-items-center">
-                <div class="col-md-9 col-lg-10">
-                    <div class="input-group">
-                        <span class="input-group-text border-end-0 ps-3" style="background-color: #f8fafc; border-color: #cbd5e1; color: #64748b;">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" name="search" class="form-control border-start-0 ps-0 py-2 dtl-search-input" value="{{ request('search') }}" placeholder="Buscar por RUC, Razón Social o Contacto..." style="background-color: #f8fafc; border-color: #cbd5e1; font-size: 0.9rem; color: #0f172a;">
-                    </div>
-                </div>
-                <div class="col-md-3 col-lg-2 d-flex gap-2">
-                    <button type="submit" class="btn btn-dtl-dark w-100 py-2 fw-bold rounded-3 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.88rem;">
+        <div class="card-body p-3">
+            <form action="{{ route('comercial.clientes.index') }}" method="GET" class="d-flex align-items-center gap-2">
+                
+                <!-- Buscador e Input Group -->
+                <div class="input-group flex-grow-1">
+                    <span class="input-group-text border-end-0 ps-3" style="background-color: #f8fafc; border-color: #cbd5e1; color: #64748b; height: 38px;">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0 dtl-search-input" value="{{ request('search') }}" placeholder="Buscar por RUC, Razón Social o Contacto..." style="background-color: #f8fafc; border-color: #cbd5e1; font-size: 0.9rem; color: #0f172a; height: 38px;">
+                    
+                    <!-- Botón Buscar -->
+                    <button type="submit" class="btn btn-dtl-action btn-dtl-dark">
                         <i class="fas fa-filter"></i>
                         <span>Buscar</span>
                     </button>
+
                     @if(request('search'))
-                        <a href="{{ route('comercial.clientes.index') }}" class="btn py-2 px-3 rounded-3" style="background-color: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;" title="Limpiar búsqueda">
+                        <a href="{{ route('comercial.clientes.index') }}" class="btn btn-dtl-action dtl-icon-only" style="background-color: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;" title="Limpiar búsqueda">
                             <i class="fas fa-rotate-left"></i>
                         </a>
                     @endif
                 </div>
+
+                <!-- Botón solo ícono '+' al lado del botón buscar -->
+                <a href="{{ route('comercial.clientes.create') }}" class="btn btn-dtl-action btn-dtl-primary btn-dtl-icon-only shadow-sm" title="Registrar Ficha">
+                    <i class="fas fa-plus fs-6"></i>
+                </a>
+
             </form>
         </div>
     </div>
@@ -141,7 +181,7 @@
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 dtl-table-hover" style="font-size: 0.88rem;">
+                <table class="table table-hover align-middle mb-0 dtl-table-hover" style="font-size: 0.88rem; min-width: 800px;">
                     <thead class="text-uppercase border-bottom" style="font-size: 0.72rem; letter-spacing: 0.8px; background-color: #0f172a; color: #ffffff;">
                         <tr>
                             <th class="ps-4 py-3 fw-bold">RUC</th>
@@ -194,8 +234,9 @@
                                         </div>
                                         <h6 class="fw-bold mb-1" style="color: #0f172a;">No se encontraron clientes registrados</h6>
                                         <p class="small mb-3" style="color: #64748b;">Aún no hay fichas registradas en la base de datos o la búsqueda no arrojó resultados.</p>
-                                        <a href="{{ route('comercial.clientes.create') }}" class="btn btn-dtl-primary btn-sm px-3.5 py-2 rounded-3 fw-bold">
-                                            <i class="fas fa-plus me-1"></i> Registrar Primera Ficha
+                                        <a href="{{ route('comercial.clientes.create') }}" class="btn btn-dtl-action btn-dtl-primary shadow-sm">
+                                            <i class="fas fa-plus"></i>
+                                            <span>Registrar</span>
                                         </a>
                                     </div>
                                 </td>
@@ -207,7 +248,7 @@
 
             <!-- PAGINACIÓN AUTOMÁTICA -->
             @if(isset($clientes) && method_exists($clientes, 'links'))
-                <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
+                <div class="px-4 py-3 border-top d-flex justify-content-between align-items-center flex-wrap gap-2" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
                     <div class="small" style="color: #64748b;">
                         Mostrando registros del sistema comercial DTL PREMIER.
                     </div>
