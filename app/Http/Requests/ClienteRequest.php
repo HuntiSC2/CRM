@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ClienteRequest extends FormRequest
 {
@@ -22,11 +24,11 @@ class ClienteRequest extends FormRequest
                 'unique:clientes,ruc',
             ],
             'razon_social' => 'required|string|max:255',
-            'direccion' => 'nullable|string|max:255', // <--- Incorporado para validar la dirección fiscal
+            'direccion' => 'nullable|string|max:255',
             'nombre_contacto' => 'required|string|max:150',
             'telefono_contacto' => 'required|string|max:20',
             'email_contacto' => 'required|email|max:150',
-            'estado' => 'nullable|in:ACTIVO,INACTIVO,EN_EVALUACION', // <--- Cambiado a nullable para manejo flexible
+            'estado' => 'nullable|in:ACTIVO,INACTIVO,EN_EVALUACION',
             'observaciones' => 'nullable|string|max:500',
         ];
     }
@@ -47,5 +49,20 @@ class ClienteRequest extends FormRequest
             'email_contacto.email' => 'Ingrese un formato de correo electrónico válido.',
             'estado.in' => 'El estado seleccionado no es válido.',
         ];
+    }
+
+    /**
+     * Retorna JSON HTTP 422 ante fallos de validación en solicitudes AJAX, evitando la redirección.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->wantsJson() || $this->ajax()) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'errors'  => $validator->errors()
+            ], 422));
+        }
+
+        parent::failedValidation($validator);
     }
 }

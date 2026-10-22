@@ -33,23 +33,21 @@
             border: 1px solid #e2e8f0;
             overflow: hidden;
             display: flex;
-            min-height: 540px;
+            min-height: 520px;
         }
 
-        /* Panel Izquierdo: Distribución Proporcional de Arriba hacia Abajo */
+        /* Panel Izquierdo: Distribución Proporcional en Escritorios */
         .login-banner-side {
             flex: 1.1;
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             padding: 48px 40px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Distribución natural arriba, centro y abajo */
-            align-items: flex-start;       /* Alineado estéticamente a la izquierda */
+            justify-content: space-between;
+            align-items: flex-start;
             text-align: left;
             position: relative;
-            border-end-style: solid;
-            border-end-width: 1px;
-            border-end-color: #e2e8f0;
+            border-right: 1px solid #e2e8f0;
         }
 
         /* Línea Lateral de Acento Verde Corporativo DTL */
@@ -65,7 +63,7 @@
         /* Panel Derecho: Formulario de Login */
         .login-form-side {
             flex: 1;
-            padding: 45px 42px;
+            padding: 42px 42px 32px 42px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -104,7 +102,7 @@
             color: #0f172a;
             transition: all 0.2s ease;
             height: 46px;
-            padding-left: 18px !important; /* Espacio cómodo entre el icono y el texto */
+            padding-left: 18px !important;
         }
 
         .dtl-input:focus {
@@ -134,21 +132,51 @@
             background-color: #f1f5f9;
         }
 
-        /* Adaptabilidad Responsiva */
+        /* 1. ADAPTABILIDAD PARA TABLETS (768px a 820px) -> Mayor altura vertical simétrica arriba y abajo del logo */
         @media (max-width: 820px) {
+            body {
+                padding: 1rem;
+            }
             .login-split-card {
                 flex-direction: column;
-                max-width: 450px;
-            }
-            .login-banner-side {
-                padding: 35px 25px;
-                align-items: center;
-                text-align: center;
-                border-end-style: none;
-                border-bottom: 1px solid #e2e8f0;
+                max-width: 440px;
+                min-height: auto;
+                border-radius: 1.25rem;
             }
             .login-form-side {
-                padding: 35px 25px;
+                padding: 42px 30px 24px 30px; /* Distancia superior aumentada a 42px */
+            }
+            .mobile-logo-container {
+                margin-top: 0 !important;
+                margin-bottom: 42px !important; /* Distancia inferior aumentada a 42px hacia Correo Corporativo */
+                text-align: center;
+            }
+            .mobile-logo-container img {
+                max-height: 82px !important;
+                width: auto;
+                object-fit: contain;
+            }
+        }
+
+        /* 2. ADAPTABILIDAD ESPECÍFICA PARA CELULARES (< 576px) -> Simetría de mayor espacio ajustada para teléfonos */
+        @media (max-width: 575.98px) {
+            body {
+                padding: 0.75rem;
+            }
+            .login-split-card {
+                max-width: 100%;
+                border-radius: 1rem;
+            }
+            .login-form-side {
+                padding: 32px 20px 20px 20px;
+            }
+            .mobile-logo-container {
+                margin-top: 0 !important;
+                margin-bottom: 32px !important;
+                text-align: center;
+            }
+            .mobile-logo-container img {
+                max-height: 54px !important;
             }
         }
     </style>
@@ -157,36 +185,42 @@
 
     <div class="login-split-card">
         
-        <!-- PANEL IZQUIERDO: DISTRIBUCIÓN VERTICAL PROPORCIONAL DE ARRIBA HACIA ABAJO -->
-        <div class="login-banner-side">
+        <!-- PANEL IZQUIERDO: Visible solo en escritorios mayores a 820px -->
+        <div class="login-banner-side d-none d-md-flex">
             <div class="banner-accent-line"></div>
             
-            <!-- 1. Parte Superior: Logo Oficial con excelente respiro -->
+            <!-- Logo Oficial -->
             <div class="w-100 mb-4">
                 <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 85px; width: auto; object-fit: contain;">
             </div>
 
-            <!-- 2. Parte Central: Textos con jerarquía y espaciado vertical armónico -->
+            <!-- Textos Principales -->
             <div class="w-100 my-auto py-2">
                 <h3 class="fw-bold mb-3" style="color: #0f172a; font-size: 1.85rem; letter-spacing: -0.5px; line-height: 1.2;">
                     Bienvenido a ...
                 </h3>
                 
                 <p class="mb-0 text-muted" style="line-height: 1.65; font-size: 0.92rem; color: #475569 !important; max-width: 330px;">
-                    Empresa con experiencia solida que brinda servicios de ejecución de obras, consultoría y otros servicios en general.
+                    Empresa con experiencia sólida que brinda servicios de ejecución de obras, consultoría y otros servicios en general.
                 </p>
             </div>
 
-            <!-- 3. Parte Inferior: Copyright con separación limpia -->
+            <!-- Copyright -->
             <div class="w-100 pt-3 mt-3 border-top" style="border-color: #e2e8f0 !important;">
                 <span class="small" style="color: #94a3b8; font-size: 0.73rem;">DTL PREMIER S.A.C. © 2026</span>
             </div>
         </div>
 
-        <!-- PANEL DERECHO: FORMULARIO DE ACCESO -->
+        <!-- PANEL DERECHO: Formulario de Acceso -->
         <div class="login-form-side">
 
-            <div class="mb-4">
+            <!-- LOGO SUPERIOR MÓVIL/TABLET: Espaciado vertical superior e inferior ampliado y simétrico -->
+            <div class="text-center mobile-logo-container d-block d-md-none">
+                <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C.">
+            </div>
+
+            <!-- TÍTULO DE INICIAR SESIÓN: Visible en Escritorio -->
+            <div class="mb-4 d-none d-md-block">
                 <h4 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.35rem; letter-spacing: -0.3px;">Iniciar Sesión</h4>
                 <p class="text-muted small mb-0" style="color: #64748b !important; font-size: 0.82rem;">
                     Ingrese su correo corporativo y contraseña autorizada
@@ -200,7 +234,7 @@
                         <i class="fas fa-circle-exclamation me-2"></i> Error de Autenticación
                     </div>
                     @foreach ($errors->all() as $error)
-                        <div>• {{ $error }}</div>
+                        <div>{{ $error }}</div>
                     @endforeach
                 </div>
             @endif
@@ -235,7 +269,7 @@
                 </div>
 
                 <!-- Recordar Sesión -->
-                <div class="d-flex justify-content-between align-items-center mb-4 text-start">
+                <div class="d-flex justify-content-between align-items-center mb-3.5 text-start">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="remember" name="remember" style="border-color: #cbd5e1; cursor: pointer;">
                         <label class="form-check-label small" for="remember" style="cursor: pointer; color: #64748b !important; font-size: 0.82rem;">Recordar sesión</label>
@@ -250,8 +284,8 @@
             </form>
 
             <!-- Pie del Formulario -->
-            <div class="text-center mt-4 border-top pt-2.5" style="border-color: #f1f5f9 !important;">
-                <span class="text-muted" style="font-size: 0.73rem; color: #94a3b8 !important;">© 2026 DTL PREMIER S.A.C. — Todos los derechos reservados</span>
+            <div class="text-center mt-2.5 pt-2 border-top" style="border-color: #f1f5f9 !important;">
+                <span class="text-muted" style="font-size: 0.72rem; color: #94a3b8 !important;">© 2026 DTL PREMIER S.A.C. — Todos los derechos reservados</span>
             </div>
 
         </div>

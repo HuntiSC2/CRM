@@ -41,13 +41,13 @@ class ClienteController extends Controller
 
     /**
      * Guarda la ficha comercial en MySQL utilizando validación mediante ClienteRequest.
+     * Retorna JSON para peticiones AJAX para mantener el modal abierto ante observaciones.
      */
     public function store(ClienteRequest $request)
     {
-        // Se valida a través de ClienteRequest y se extraen los datos validados
         $data = $request->validated();
 
-        Cliente::create([
+        $cliente = Cliente::create([
             'ruc'               => $data['ruc'],
             'razon_social'      => $data['razon_social'],
             'direccion'         => $data['direccion'] ?? null,
@@ -58,6 +58,14 @@ class ClienteController extends Controller
             'observaciones'     => $data['observaciones'] ?? null,
             'user_id'           => Auth::id(),
         ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Ficha del cliente/contratista registrada correctamente.',
+                'cliente' => $cliente
+            ], 200);
+        }
 
         return redirect()->route('comercial.clientes.index')
             ->with('success', 'Ficha del cliente/contratista registrada correctamente.');

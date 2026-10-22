@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
             // Resetear intentos si el login es exitoso
             $user->update(['login_attempts' => 0]);
 
-            // Redirección unificada al Panel de Control Maestro para todos los roles
+            // Redirección unificada al Panel de Control Maestro para Bienvenido a ...roles
             return redirect()->intended('/dashboard');
         }
 

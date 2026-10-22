@@ -3,6 +3,20 @@
 @section('content')
 <!-- Estilos de Animación, Transiciones e Identidad Visual DTL PREMIER -->
 <style>
+    /* Jerarquía Tipográfica Estricta (14px, 12px, 10px) */
+    .font-title {
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+    }
+    .font-subtitle {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+    .font-minor {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+
     .dtl-card-transition {
         transition: all 0.25s ease;
     }
@@ -25,6 +39,7 @@
         background-color: #f8fafc !important;
         border: 1px solid #e2e8f0 !important;
         box-shadow: none !important;
+        opacity: 0.75;
     }
 
     .btn-dtl-primary {
@@ -45,14 +60,13 @@
     }
 
     .status-pulse-green {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
         background-color: #10b981;
         border-radius: 50%;
         display: inline-block;
     }
 
-    /* Regla para garantizar que el botón se quede a la derecha e información a la izquierda */
     .module-flex-container {
         display: flex;
         align-items: center;
@@ -69,54 +83,56 @@
         .module-flex-container .btn-action-wrapper {
             width: 100%;
         }
+        .module-flex-container .btn-action-wrapper .btn {
+            width: 100%;
+        }
     }
 </style>
 
-<div class="container-fluid px-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
+<div class="container-fluid px-3 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. (ALTURA INICIAL RESTAURADA) -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
-        <!-- Línea Superior Verde Corporativo -->
+    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
         
-        <div class="card-body px-4 py-3">
-            <div class="row align-items-center g-3">
+        <div class="card-body p-2.5 p-md-3">
+            <div class="row align-items-center g-2 g-md-3">
                 
-                <!-- IZQUIERDA: Logo Oficial Corporativo -->
-                <div class="col-12 col-lg-auto text-center text-lg-start">
-                    <div class="p-2 rounded-3 bg-white d-inline-flex align-items-center justify-content-center border" style="min-width: 155px; height: 58px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 42px; width: auto; object-fit: contain;">
+                <!-- Logo -->
+                <div class="col-auto">
+                    <div class="p-1.5 p-md-2 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="min-width: 125px; height: 48px; border-color: #cbd5e1 !important;">
+                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 34px; width: auto; object-fit: contain;">
                     </div>
                 </div>
 
-                <!-- CENTRO: Mensaje de Bienvenida y Rol -->
-                <div class="col-12 col-lg border-start-lg ps-lg-4" style="border-color: #e2e8f0 !important;">
-                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                        <span class="badge rounded-pill fw-bold px-2.5 py-1 text-uppercase" style="font-size: 0.65rem; background-color: #0f172a; color: #ffffff;">
+                <!-- Datos de Sesión -->
+                <div class="col border-start-md ps-md-3" style="border-color: #e2e8f0 !important;">
+                    <div class="d-flex flex-wrap align-items-center gap-1.5 mb-0.5">
+                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase font-minor" style="background-color: #0f172a; color: #ffffff;">
                             <i class="fas fa-user-shield me-1" style="color: #10b981;"></i> ROL: {{ strtoupper(auth()->user()->role ?? 'INVITADO') }}
                         </span>
-                        <span class="badge rounded-pill fw-semibold px-2.5 py-1 d-inline-flex align-items-center gap-1.5" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1 font-minor" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
                             <span class="status-pulse-green"></span> Sesión Activa
                         </span>
                     </div>
                     
-                    <h3 class="fw-bold mb-0 text-dark" style="font-size: 1.25rem; color: #0f172a; letter-spacing: -0.3px;">
+                    <h3 class="fw-bold mb-0 text-dark font-title" style="color: #0f172a; letter-spacing: -0.3px;">
                         Bienvenido, {{ auth()->user()->name }}
                     </h3>
                     
-                    <p class="mb-0 mt-0.5" style="font-size: 0.8rem; color: #64748b; font-weight: 500;">
+                    <p class="mb-0 text-muted d-none d-md-block font-subtitle" style="font-weight: 500;">
                         Ejecución de obras, consultoría y servicios en general 
                     </p>
                 </div>
 
-                <!-- DERECHA: Credenciales de Sesión -->
-                <div class="col-12 col-lg-auto text-lg-end">
-                    <div class="px-3 py-2 rounded-3 border bg-light d-inline-block text-start text-lg-end w-100 w-lg-auto" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
-                        <div class="d-flex align-items-center justify-content-lg-end gap-1.5 mb-0.5">
-                            <i class="fas fa-envelope me-1" style="color: #059669; font-size: 0.75rem;"></i>
-                            <span class="text-dark fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 0.8px;">Sesión iniciada como:</span>
+                <!-- Credenciales -->
+                <div class="col-12 col-md-auto text-end d-none d-lg-block">
+                    <div class="px-3 py-2 rounded-3 border bg-light d-inline-block text-end" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
+                        <div class="d-flex align-items-center justify-content-end gap-1.5 mb-0.5">
+                            <i class="fas fa-envelope me-1" style="color: #059669; font-size: 10px;"></i>
+                            <span class="text-dark fw-bold text-uppercase font-minor" style="letter-spacing: 0.8px;">Sesión iniciada como:</span>
                         </div>
-                        <span class="fw-bold text-dark small d-block" style="font-size: 0.78rem;">
+                        <span class="fw-bold text-dark d-block font-subtitle">
                             {{ auth()->user()->email }}
                         </span>
                     </div>
@@ -129,7 +145,7 @@
     <!-- 2. MÓDULOS DEL SISTEMA -->
     <div class="mb-4">
         <div class="d-flex align-items-center justify-content-between mb-3">
-            <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2" style="font-size: 1.1rem; color: #0f172a;">
+            <h5 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2 font-title" style="color: #0f172a;">
                 <i class="fas fa-th-large" style="color: #059669;"></i>
                 <span>Módulos del Sistema</span>
             </h5>
@@ -139,52 +155,58 @@
 
             @php
                 $userRole = strtolower(trim(auth()->user()->role ?? ''));
+
+                // ASIGNACIÓN ESTRICTA DE 1 ROL A 1 MÓDULO EXCLUSIVO
                 $isEjecutivo     = ($userRole === 'ejecutivo');
-                $isDirectivo     = in_array($userRole, ['directivo']);
+                $isDirectivo     = ($userRole === 'directivo');
                 $isAdministrador = ($userRole === 'administrador');
+
+                // RUTAS DE NAVEGACIÓN
+                $routeComercial  = Route::has('comercial.clientes.index') ? route('comercial.clientes.index') : (Route::has('comercial.pipeline.index') ? route('comercial.pipeline.index') : '#');
+                
+                // Ruta exclusiva para Directivo (evita el 403 de la ruta comercial)
+                $routeDirectorio = Route::has('directorio.index') ? route('directorio.index') : (Route::has('directivo.pipeline.index') ? route('directivo.pipeline.index') : (Route::has('directivo.index') ? route('directivo.index') : '#'));
+                
+                // Ruta exclusiva para Administrador
+                $routeAdmin      = Route::has('admin.users.index') ? route('admin.users.index') : (Route::has('admin.dashboard') ? route('admin.dashboard') : '#');
             @endphp
 
-            <!-- 1. MÓDULO GESTIÓN COMERCIAL -->
+            <!-- MÓDULO 1: GESTIÓN COMERCIAL (Exclusivo ROL: ejecutivo) -->
             <div class="card rounded-4 dtl-card-transition {{ $isEjecutivo ? 'dtl-card-active' : 'dtl-card-disabled' }}">
-                <div class="card-body p-3 p-md-4">
+                <div class="card-body p-3 p-md-3.5">
                     <div class="module-flex-container">
                         
-                        <!-- LADO IZQUIERDO: Ícono, Título, Insignia y Descripción -->
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 p-3 d-flex align-items-center justify-content-center dtl-icon-box" 
-                                 style="width: 52px; height: 52px; background-color: {{ $isEjecutivo ? '#d1fae5' : '#e2e8f0' }}; color: {{ $isEjecutivo ? '#059669' : '#94a3b8' }};">
-                                <i class="fas fa-handshake fs-4"></i>
+                            <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center dtl-icon-box" 
+                                 style="width: 48px; height: 48px; background-color: {{ $isEjecutivo ? '#d1fae5' : '#e2e8f0' }}; color: {{ $isEjecutivo ? '#059669' : '#94a3b8' }};">
+                                <i class="fas fa-handshake fs-5"></i>
                             </div>
                             <div>
-                                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                                    <h5 class="fw-bold mb-0" style="color: {{ $isEjecutivo ? '#0f172a' : '#64748b' }}; font-size: 1.12rem;">
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-0.5">
+                                    <h5 class="fw-bold mb-0 font-title" style="color: {{ $isEjecutivo ? '#0f172a' : '#64748b' }};">
                                         Gestión Comercial
                                     </h5>
-                                    <span class="badge fw-bold rounded-pill px-2.5 py-1 text-uppercase" 
-                                          style="font-size: 0.65rem; background-color: {{ $isEjecutivo ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $isEjecutivo ? '#047857' : '#64748b' }}; border: 1px solid {{ $isEjecutivo ? '#a7f3d0' : '#cbd5e1' }};">
+                                    <span class="badge fw-bold rounded-pill px-2 py-0.5 text-uppercase font-minor" 
+                                          style="background-color: {{ $isEjecutivo ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $isEjecutivo ? '#047857' : '#64748b' }}; border: 1px solid {{ $isEjecutivo ? '#a7f3d0' : '#cbd5e1' }};">
                                         Front-Office
                                     </span>
                                 </div>
-                                <p class="mb-0 text-secondary" style="font-size: 0.85rem; line-height: 1.45;">
+                                <p class="mb-0 text-secondary font-subtitle">
                                     Registro, consulta y administración de fichas de clientes/contratistas con validación automática de RUC.
                                 </p>
                             </div>
                         </div>
 
-                        <!-- LADO DERECHO: Botón de Acción -->
                         <div class="btn-action-wrapper text-end">
                             @if($isEjecutivo)
-                                <a href="{{ route('comercial.clientes.index') }}" 
-                                   class="btn text-white fw-bold py-2.5 px-4 rounded-3 d-inline-flex align-items-center justify-content-center gap-2 btn-dtl-primary" 
-                                   style="font-size: 0.9rem;">
-                                    <i class="fas fa-folder-open"></i>
-                                    <span>Ir a Clientes</span>
+                                <a href="{{ $routeComercial }}" 
+                                   class="btn btn-dtl-primary fw-bold py-2 px-3.5 rounded-3 d-inline-flex align-items-center justify-content-center gap-2 font-subtitle">
+                                    <span>Ingresar al Módulo</span>
+                                    <i class="fas fa-arrow-right font-minor"></i>
                                 </a>
                             @else
-                                <button class="btn fw-semibold py-2.5 px-4 rounded-3 border d-inline-flex align-items-center justify-content-center gap-2" 
-                                        style="background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1 !important; cursor: not-allowed; white-space: nowrap;" disabled>
-                                    <i class="fas fa-lock" style="font-size: 0.85rem; color: #64748b;"></i>
-                                    <span style="color: #64748b; font-weight: 600; font-size: 0.88rem;">Acceso Restringido</span>
+                                <button class="btn btn-secondary fw-semibold py-2 px-3 rounded-3 font-subtitle" disabled style="opacity: 0.65;">
+                                    Sin Acceso
                                 </button>
                             @endif
                         </div>
@@ -193,47 +215,42 @@
                 </div>
             </div>
 
-            <!-- 2. MÓDULO SUPERVISIÓN EJECUTIVA -->
+            <!-- MÓDULO 2: DIRECTORIO Y CONTROL DE OBRAS (Exclusivo ROL: directivo) -->
             <div class="card rounded-4 dtl-card-transition {{ $isDirectivo ? 'dtl-card-active' : 'dtl-card-disabled' }}">
-                <div class="card-body p-3 p-md-4">
+                <div class="card-body p-3 p-md-3.5">
                     <div class="module-flex-container">
                         
-                        <!-- LADO IZQUIERDO: Ícono, Título, Insignia y Descripción -->
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 p-3 d-flex align-items-center justify-content-center dtl-icon-box" 
-                                 style="width: 52px; height: 52px; background-color: {{ $isDirectivo ? '#0f172a' : '#e2e8f0' }}; color: {{ $isDirectivo ? '#ffffff' : '#94a3b8' }};">
-                                <i class="fas fa-chart-line fs-4"></i>
+                            <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center dtl-icon-box" 
+                                 style="width: 48px; height: 48px; background-color: {{ $isDirectivo ? '#d1fae5' : '#e2e8f0' }}; color: {{ $isDirectivo ? '#059669' : '#94a3b8' }};">
+                                <i class="fas fa-chart-line fs-5"></i>
                             </div>
                             <div>
-                                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                                    <h5 class="fw-bold mb-0" style="color: {{ $isDirectivo ? '#0f172a' : '#64748b' }}; font-size: 1.12rem;">
-                                        Supervisión Ejecutiva
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-0.5">
+                                    <h5 class="fw-bold mb-0 font-title" style="color: {{ $isDirectivo ? '#0f172a' : '#64748b' }};">
+                                        Directorio y Control de Obras
                                     </h5>
-                                    <span class="badge fw-bold rounded-pill px-2.5 py-1 text-uppercase" 
-                                          style="font-size: 0.65rem; background-color: {{ $isDirectivo ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $isDirectivo ? '#047857' : '#64748b' }}; border: 1px solid {{ $isDirectivo ? '#a7f3d0' : '#cbd5e1' }};">
-                                        Management
+                                    <span class="badge fw-bold rounded-pill px-2 py-0.5 text-uppercase font-minor" 
+                                          style="background-color: {{ $isDirectivo ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $isDirectivo ? '#047857' : '#64748b' }}; border: 1px solid {{ $isDirectivo ? '#a7f3d0' : '#cbd5e1' }};">
+                                        Gestión Ejecutiva
                                     </span>
                                 </div>
-                                <p class="mb-0 text-secondary" style="font-size: 0.85rem; line-height: 1.45;">
-                                    Visibilidad total de estimaciones, avances de obras y métricas clave del sistema comercial.
+                                <p class="mb-0 text-secondary font-subtitle">
+                                    Monitoreo de pipeline corporativo, revisión de expedientes, estados de avance y métricas comerciales.
                                 </p>
                             </div>
                         </div>
 
-                        <!-- LADO DERECHO: Botón de Acción -->
                         <div class="btn-action-wrapper text-end">
                             @if($isDirectivo)
-                                <a href="#" 
-                                   class="btn text-white fw-bold py-2.5 px-4 rounded-3 d-inline-flex align-items-center justify-content-center gap-2" 
-                                   style="background-color: #0f172a; border-color: #0f172a; font-size: 0.9rem; white-space: nowrap;">
-                                    <i class="fas fa-chart-pie"></i>
-                                    <span>Ingresar al Panel</span>
+                                <a href="{{ $routeDirectorio }}" 
+                                   class="btn btn-dtl-primary fw-bold py-2 px-3.5 rounded-3 d-inline-flex align-items-center justify-content-center gap-2 font-subtitle">
+                                    <span>Ingresar al Módulo</span>
+                                    <i class="fas fa-arrow-right font-minor"></i>
                                 </a>
                             @else
-                                <button class="btn fw-semibold py-2.5 px-4 rounded-3 border d-inline-flex align-items-center justify-content-center gap-2" 
-                                        style="background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1 !important; cursor: not-allowed; white-space: nowrap;" disabled>
-                                    <i class="fas fa-lock" style="font-size: 0.85rem; color: #64748b;"></i>
-                                    <span style="color: #64748b; font-weight: 600; font-size: 0.88rem;">Acceso Restringido</span>
+                                <button class="btn btn-secondary fw-semibold py-2 px-3 rounded-3 font-subtitle" disabled style="opacity: 0.65;">
+                                    Sin Acceso
                                 </button>
                             @endif
                         </div>
@@ -242,47 +259,42 @@
                 </div>
             </div>
 
-            <!-- 3. MÓDULO SOPORTE Y SEGURIDAD -->
+            <!-- MÓDULO 3: ADMINISTRACIÓN Y AJUSTES (Exclusivo ROL: administrador) -->
             <div class="card rounded-4 dtl-card-transition {{ $isAdministrador ? 'dtl-card-active' : 'dtl-card-disabled' }}">
-                <div class="card-body p-3 p-md-4">
+                <div class="card-body p-3 p-md-3.5">
                     <div class="module-flex-container">
                         
-                        <!-- LADO IZQUIERDO: Ícono, Título, Insignia y Descripción -->
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-3 p-3 d-flex align-items-center justify-content-center dtl-icon-box" 
-                                 style="width: 52px; height: 52px; background-color: {{ $isAdministrador ? '#d1fae5' : '#e2e8f0' }}; color: {{ $isAdministrador ? '#059669' : '#94a3b8' }};">
-                                <i class="fas fa-cogs fs-4"></i>
+                            <div class="rounded-3 p-2.5 d-flex align-items-center justify-content-center dtl-icon-box" 
+                                 style="width: 48px; height: 48px; background-color: {{ $isAdministrador ? '#d1fae5' : '#e2e8f0' }}; color: {{ $isAdministrador ? '#059669' : '#94a3b8' }};">
+                                <i class="fas fa-user-cog fs-5"></i>
                             </div>
                             <div>
-                                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                                    <h5 class="fw-bold mb-0" style="color: {{ $isAdministrador ? '#0f172a' : '#64748b' }}; font-size: 1.12rem;">
-                                        Soporte y Seguridad
+                                <div class="d-flex align-items-center gap-2 flex-wrap mb-0.5">
+                                    <h5 class="fw-bold mb-0 font-title" style="color: {{ $isAdministrador ? '#0f172a' : '#64748b' }};">
+                                        Administración y Ajustes
                                     </h5>
-                                    <span class="badge fw-bold rounded-pill px-2.5 py-1 text-uppercase" 
-                                          style="font-size: 0.65rem; background-color: {{ $isAdministrador ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $isAdministrador ? '#047857' : '#64748b' }}; border: 1px solid {{ $isAdministrador ? '#a7f3d0' : '#cbd5e1' }};">
-                                        Control Total
+                                    <span class="badge fw-bold rounded-pill px-2 py-0.5 text-uppercase font-minor" 
+                                          style="background-color: {{ $isAdministrador ? '#ecfdf5' : '#f1f5f9' }}; color: {{ $isAdministrador ? '#047857' : '#64748b' }}; border: 1px solid {{ $isAdministrador ? '#a7f3d0' : '#cbd5e1' }};">
+                                        Back-Office
                                     </span>
                                 </div>
-                                <p class="mb-0 text-secondary" style="font-size: 0.85rem; line-height: 1.45;">
-                                    Auditoría de intentos fallidos, control de cuentas bloqueadas y parámetros de infraestructura.
+                                <p class="mb-0 text-secondary font-subtitle">
+                                    Gestión centralizada de usuarios, asignación de roles y permisos corporativos del sistema.
                                 </p>
                             </div>
                         </div>
 
-                        <!-- LADO DERECHO: Botón de Acción -->
                         <div class="btn-action-wrapper text-end">
                             @if($isAdministrador)
-                                <a href="#" 
-                                   class="btn text-white fw-bold py-2.5 px-4 rounded-3 d-inline-flex align-items-center justify-content-center gap-2 btn-dtl-primary" 
-                                   style="font-size: 0.9rem;">
-                                    <i class="fas fa-shield-halved"></i>
-                                    <span>Panel de Seguridad</span>
+                                <a href="{{ $routeAdmin }}" 
+                                   class="btn btn-dtl-primary fw-bold py-2 px-3.5 rounded-3 d-inline-flex align-items-center justify-content-center gap-2 font-subtitle">
+                                    <span>Ingresar al Módulo</span>
+                                    <i class="fas fa-arrow-right font-minor"></i>
                                 </a>
                             @else
-                                <button class="btn fw-semibold py-2.5 px-4 rounded-3 border d-inline-flex align-items-center justify-content-center gap-2" 
-                                        style="background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1 !important; cursor: not-allowed; white-space: nowrap;" disabled>
-                                    <i class="fas fa-lock" style="font-size: 0.85rem; color: #64748b;"></i>
-                                    <span style="color: #64748b; font-weight: 600; font-size: 0.88rem;">Acceso Restringido</span>
+                                <button class="btn btn-secondary fw-semibold py-2 px-3 rounded-3 font-subtitle" disabled style="opacity: 0.65;">
+                                    Sin Acceso
                                 </button>
                             @endif
                         </div>
