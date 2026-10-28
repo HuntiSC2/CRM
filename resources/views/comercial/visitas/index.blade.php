@@ -1,249 +1,378 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid px-3 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
+<!-- Estilos Exclusivos DTL PREMIER -->
+<style>
+    .btn-dtl-action {
+        height: 38px;
+        padding: 0 16px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s ease-in-out;
+        white-space: nowrap;
+    }
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL DTL PREMIER S.A.C. (ESTÁNDAR UNIFORME) -->
+    .btn-dtl-primary {
+        background-color: #059669 !important;
+        border: 1px solid #059669 !important;
+        color: #ffffff !important;
+    }
+    .btn-dtl-primary:hover {
+        background-color: #047857 !important;
+        border-color: #047857 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
+    }
+
+    .btn-dtl-dark {
+        background-color: #0f172a !important;
+        border: 1px solid #0f172a !important;
+        color: #ffffff !important;
+    }
+
+    .btn-dtl-icon-only {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+    }
+
+    .dtl-search-input:focus, .dtl-input:focus, .form-control:focus, .form-select:focus {
+        border-color: #059669 !important;
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+        background-color: #ffffff !important;
+    }
+
+    .dtl-table-hover tbody tr:hover {
+        background-color: #f1f5f9 !important;
+    }
+
+    /* Cabecera unificada y exacta para la tabla y el formulario */
+    .dtl-table-hover thead th, .dtl-card-header-styled {
+        background-color: #0f172a !important;
+        color: #ffffff !important;
+        border: 1px solid #1e293b !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0.8px;
+        padding-top: 0.55rem !important;
+        padding-bottom: 0.55rem !important;
+    }
+
+    .dtl-table-hover thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+
+    .dtl-table-hover td {
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.78rem !important;
+        padding: 0.6rem 0.75rem !important;
+    }
+
+    /* REDUCCIÓN PROPORCIONAL DE LETRA Y ESPACIOS PARA RESOLUCIÓN DE CELULAR */
+    @media (max-width: 767.98px) {
+        .dtl-table-hover thead th {
+            font-size: 0.55rem !important;
+            padding: 0.4rem 0.3rem !important;
+            letter-spacing: 0.3px !important;
+        }
+        .dtl-table-hover td {
+            font-size: 0.65rem !important;
+            padding: 0.4rem 0.4rem !important;
+        }
+        .dtl-table-hover td span {
+            font-size: 0.65rem !important;
+        }
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+    }
+
+    /* Ocultar texto "Showing 1 to 10 of results" de la paginación de Laravel */
+    .dtl-pagination-wrapper nav > div:first-child,
+    .dtl-pagination-wrapper p.small.text-muted,
+    .dtl-pagination-wrapper .text-muted {
+        display: none !important;
+    }
+
+    /* Paginación Numerada en círculos alineada a la derecha */
+    .dtl-pagination-wrapper {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-top: 15px !important;
+        margin-bottom: 20px !important;
+        padding-right: 4px !important;
+    }
+
+    .dtl-pagination-wrapper nav {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper nav > div:last-child,
+    .dtl-pagination-wrapper nav > div:nth-child(2) {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper .pagination {
+        margin-bottom: 0 !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 4px !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item .page-link {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 0 8px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-weight: 700 !important;
+        font-size: 0.80rem !important;
+        text-decoration: none !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
+        background-color: #059669 !important;
+        border-color: #059669 !important;
+        color: #ffffff !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
+        background-color: #ffffff !important;
+        border-color: #e2e8f0 !important;
+        color: #cbd5e1 !important;
+        border-radius: 8px !important;
+    }
+
+    .extra-small {
+        font-size: 0.73rem;
+    }
+
+    .status-pulse-green {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+    }
+</style>
+
+<div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
+
+    <!-- 1. ENCABEZADO INSTITUCIONAL -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
-        <!-- Línea Superior de Acento Verde Corporativo -->
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
         
         <div class="card-body p-2.5 p-md-3">
             <div class="row align-items-center g-2 g-md-3">
-                
-                <!-- MITAD IZQUIERDA (Logo) -->
-                <div class="col-6 col-md-auto d-flex align-items-center justify-content-center justify-content-md-start">
+                <div class="col-auto">
                     <div class="p-1.5 p-md-2 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="min-width: 125px; height: 48px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER" style="max-height: 34px; width: auto; object-fit: contain;" onerror="this.style.display='none'">
-                        <span class="fw-bold text-dark d-none d-block-fallback" style="font-size: 0.8rem;">DTL PREMIER</span>
+                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 34px; width: auto; object-fit: contain;">
                     </div>
                 </div>
 
-                <!-- MITAD DERECHA (Información) -->
-                <div class="col-6 col-md d-flex flex-column justify-content-center">
-                    <div class="d-flex align-items-center gap-1.5 mb-0.5 flex-wrap">
-                        <span class="badge rounded-pill text-white px-2 py-0.5 fw-bold text-uppercase" style="font-size: 0.62rem; background-color: #0f172a;">
-                            <i class="fas fa-briefcase me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
+                <div class="col border-start-md ps-md-3" style="border-color: #e2e8f0 !important;">
+                    <div class="d-flex flex-wrap align-items-center gap-1.5 mb-0.5">
+                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: #0f172a; color: #ffffff;">
+                            <i class="fas fa-clipboard-check me-1" style="color: #10b981;"></i> GESTIÓN TÉCNICA
                         </span>
-                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.62rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            ● Visitas Técnicas (HU-04)
+
+                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                            <span class="status-pulse-green"></span> Inspecciones Activas
                         </span>
                     </div>
-                    <h3 class="fw-bold mb-0 text-dark" style="font-size: 1rem; color: #0f172a; letter-spacing: -0.3px;">
-                        Solicitudes de Inspección Técnica 
+                    
+                    <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: #0f172a; letter-spacing: -0.3px;">
+                        Control de Inspecciones Técnicas
                     </h3>
-                    <p class="mb-0 text-muted small d-none d-md-block" style="font-size: 0.8rem; font-weight: 500;">
-                        Registro, consulta y asignación de ingenieros especializados para visitas técnicas
-                    </p>
                 </div>
-
-                <!-- BLOQUE USUARIO (Escritorio) -->
-                <div class="col-12 col-md-auto text-end d-none d-lg-block">
-                    <div class="px-3 py-2 rounded-3 border bg-light d-inline-block text-end" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
-                        <div class="d-flex align-items-center justify-content-end gap-1.5 mb-0.5">
-                            <i class="fas fa-envelope me-1" style="color: #059669; font-size: 0.75rem;"></i>
-                            <span class="text-dark fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 0.8px;">Sesión iniciada como:</span>
-                        </div>
-                        <span class="fw-bold text-dark small d-block" style="font-size: 0.78rem;">
-                            {{ auth()->user()->email ?? 'asesor_comercial@dtl.premier' }}
-                        </span>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
 
-    <!-- 2. BARRA DE ACCIÓN Y BUSCADOR (MEDIDAS Y BOTÓN UNIFORMADOS CON EL RESTO) -->
-    <div class="card border-0 rounded-4 shadow-sm mb-3 bg-white" style="border: 1px solid #e2e8f0 !important;">
+    @if (session('success'))
+        <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
+            <i class="fas fa-circle-check me-2 fs-5 flex-shrink-0" style="color: #059669;"></i>
+            <div class="fw-medium small" style="font-size: 0.80rem;">{{ session('success') }}</div>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca !important;">
+            <i class="fas fa-triangle-exclamation me-2 fs-5 flex-shrink-0" style="color: #dc2626;"></i>
+            <div class="fw-medium small" style="font-size: 0.80rem;">{{ session('error') }}</div>
+        </div>
+    @endif
+
+    <!-- 2. BARRA DE BÚSQUEDA Y BOTÓN DE ACCIÓN -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3" style="border: 1px solid #e2e8f0 !important;">
         <div class="card-body p-2.5 p-md-3">
-            <div class="row g-2 align-items-center">
-                <div class="col-12 col-md">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-white border-end-0 text-muted ps-3" style="border-color: #cbd5e1; height: 38px;">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <input type="text" class="form-control form-control-sm border-start-0 ps-0" placeholder="Buscar por cliente, ubicación o ingeniero..." style="box-shadow: none; border-color: #cbd5e1; font-size: 0.88rem; height: 38px;">
-                    </div>
-                </div>
-                <div class="col-12 col-md-auto d-flex gap-2">
-                    <button class="btn btn-sm text-white w-100 w-md-auto px-3 fw-bold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-1.5" 
-                            style="background-color: #059669; border: none; height: 38px; font-size: 0.88rem;" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#modalNuevaVisita">
-                        <i class="fas fa-plus fs-6"></i>
-                        <span>Solicitar Inspección</span>
+            <div class="d-flex align-items-center gap-2">
+                <form action="{{ route('comercial.visitas.index') }}" method="GET" class="input-group flex-grow-1">
+                    <span class="input-group-text border-end-0 ps-3" style="background-color: #f8fafc; border-color: #cbd5e1; color: #64748b; height: 38px;">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0 dtl-search-input" value="{{ request('search') }}" placeholder="Buscar por Obra, Ingeniero o Estado..." style="background-color: #f8fafc; border-color: #cbd5e1; font-size: 0.85rem; color: #0f172a; height: 38px;">
+                    
+                    <button type="submit" class="btn btn-dtl-action btn-dtl-dark">
+                        <i class="fas fa-filter"></i>
+                        <span class="d-none d-sm-inline">Buscar</span>
                     </button>
-                </div>
+
+                    @if(request('search'))
+                        <a href="{{ route('comercial.visitas.index') }}" class="btn btn-dtl-action btn-dtl-icon-only" style="background-color: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;" title="Limpiar búsqueda">
+                            <i class="fas fa-rotate-left"></i>
+                        </a>
+                    @endif
+                </form>
+
+                <button type="button" class="btn btn-dtl-action btn-dtl-primary btn-dtl-icon-only shadow-sm flex-shrink-0" data-bs-toggle="collapse" data-bs-target="#seccionFormularioRegistro" aria-expanded="false" aria-controls="seccionFormularioRegistro" title="Nueva Inspección">
+                    <i class="fas fa-plus fs-6"></i>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- 3. CONTENEDOR DE REGISTROS -->
-    <div class="card border-0 rounded-4 shadow-sm overflow-hidden bg-white mb-4" style="border: 1px solid #e2e8f0 !important;">
-        
-        <!-- VISTA TABULAR (PC / Tablet) -->
-        <div class="table-responsive d-none d-md-block">
-            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
-                <thead style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
-                    <tr class="text-uppercase fw-bold text-slate-600" style="font-size: 0.72rem; letter-spacing: 0.3px;">
-                        <th class="py-3 px-3">Cliente / RUC</th>
-                        <th class="py-3">Ubicación de Obra</th>
-                        <th class="py-3">Servicio Requerido</th>
-                        <th class="py-3">Fecha y Hora</th>
-                        <th class="py-3">Ingeniero Asignado</th>
-                        <th class="py-3">Estado</th>
-                        <th class="py-3 text-end px-3">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="px-3">
-                            <span class="fw-bold text-dark d-block">Desarrollo de Software S.A.C.</span>
-                            <span class="badge border fw-semibold" style="background-color: #f1f5f9; color: #059669; font-size: 0.65rem;">
-                                RUC: 10479460014
-                            </span>
-                        </td>
-                        <td><i class="fas fa-map-marker-alt text-danger me-1"></i>Av. Javier Prado Este 4200, Surco</td>
-                        <td><span class="badge border bg-light text-dark">Evaluación Estructural</span></td>
-                        <td><i class="far fa-calendar-alt text-muted me-1"></i>25/10/2026 10:00 AM</td>
-                        <td><i class="fas fa-user-tie text-secondary me-1"></i>Ing. Carlos Mendoza (CIP 14205)</td>
-                        <td>
-                            <span class="badge rounded-pill border px-2 py-1" style="color: #b45309; background-color: #fffbeb; border-color: #fde68a !important;">
-                                ● Pendiente
-                            </span>
-                        </td>
-                        <td class="text-end px-3">
-                            <button class="btn btn-sm btn-light border rounded-circle p-1" style="width:28px; height:28px;"><i class="fas fa-eye text-primary"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- VISTA DE TARJETAS FLUIDAS (Exclusivo Celulares < 768px) -->
-        <div class="d-block d-md-none p-2.5">
-            <div class="card border shadow-sm rounded-3 p-3 mb-2" style="border-left: 4px solid #059669 !important; border-color: #e2e8f0;">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                        <span class="badge border fw-bold mb-1" style="background-color: #f1f5f9; color: #059669; font-size: 0.62rem;">
-                            RUC: 10479460014
-                        </span>
-                        <h6 class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">Desarrollo de Software S.A.C.</h6>
-                    </div>
-                    <span class="badge rounded-pill border px-2 py-1" style="color: #b45309; background-color: #fffbeb; border-color: #fde68a !important; font-size: 0.62rem;">
-                        Pendiente
-                    </span>
-                </div>
-                
-                <p class="text-muted small mb-1" style="font-size: 0.78rem;">
-                    <i class="fas fa-map-marker-alt text-danger me-1"></i>Av. Javier Prado Este 4200, Surco
-                </p>
-                <p class="text-muted small mb-2" style="font-size: 0.78rem;">
-                    <i class="fas fa-tools text-secondary me-1"></i>Evaluación Estructural de Muros
-                </p>
-
-                <div class="d-flex justify-content-between align-items-center pt-2 border-top" style="border-color: #f1f5f9 !important;">
-                    <span class="text-dark small fw-medium" style="font-size: 0.75rem;">
-                        <i class="far fa-calendar-alt text-muted me-1"></i>25/10/2026 10:00 AM
-                    </span>
-                    <span class="fw-bold text-slate-700" style="font-size: 0.75rem;">
-                        <i class="fas fa-user-tie text-success me-1"></i>Ing. Carlos Mendoza
-                    </span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-<!-- 4. MODAL: SOLICITAR INSPECCIÓN TÉCNICA (HU-04) -->
-<div class="modal fade" id="modalNuevaVisita" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            
-            <div class="modal-header text-white p-3.5" style="background-color: #0f172a;">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="p-1.5 bg-warning text-dark rounded-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <i class="fas fa-hard-hat"></i>
-                    </div>
-                    <div>
-                        <h6 class="modal-title fw-bold mb-0" style="font-size: 0.98rem;">Solicitud de Inspección Técnica a Obra</h6>
-                        <span class="text-muted small" style="font-size: 0.72rem; color: #94a3b8 !important;">Complete los datos para la asignación del especialista</span>
-                    </div>
-                </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- 3. FORMULARIO DINÁMICO AGRUPADO (Filas superiores y campo de dos líneas abajo) -->
+    <div class="collapse mb-3" id="seccionFormularioRegistro">
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
+            <div class="card-header dtl-card-header-styled px-3 d-flex align-items-center justify-content-between" style="border-bottom: 3px solid #059669;">
+                <h6 class="fw-bold mb-0 text-white text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.8px;">Programación de Nueva Inspección Técnica</h6>
+                <button type="button" class="btn-close btn-close-white opacity-75" data-bs-toggle="collapse" data-bs-target="#seccionFormularioRegistro" aria-label="Close"></button>
             </div>
 
             <form action="{{ route('comercial.visitas.store') }}" method="POST">
                 @csrf
-                <div class="modal-body p-3.5 p-md-4" style="background-color: #f8fafc;">
-                    <div class="row g-3">
+                <div class="card-body p-3" style="background-color: #f8fafc;">
+                    <div class="row g-2.5">
                         
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-dark mb-1">
-                                Cliente / Contratista <span class="text-danger">*</span>
-                            </label>
-                            <select class="form-select form-select-sm" name="cliente_ruc" required style="font-size: 0.85rem;">
-                                <option value="10479460014" selected>10479460014 - Desarrollo de Software S.A.C.</option>
+                        <!-- FILA SUPERIOR (Flechas Azules): Obra e Ingeniero Asignado -->
+                        <div class="col-12 col-md-7">
+                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Obra Asociada <span class="text-danger">*</span></label>
+                            <select name="obra_id" class="form-select form-select-sm py-1" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
+                                <option value="">Seleccione una obra disponible...</option>
+                                @foreach($obrasDisponibles ?? [] as $obra)
+                                    <option value="{{ $obra->id }}">{{ $obra->codigo }} - {{ $obra->titulo }} ({{ $obra->estado }})</option>
+                                @endforeach
                             </select>
                         </div>
 
-                        <div class="col-12 col-md-8">
-                            <label class="form-label small fw-bold text-dark mb-1">
-                                Ubicación de la Obra / Inspección <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" class="form-control form-control-sm" name="ubicacion_obra" placeholder="Ej: Av. Javier Prado Este 4200, Surco, Lima" required style="font-size: 0.85rem;">
+                        <div class="col-12 col-md-5">
+                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Ingeniero Asignado <span class="text-danger">*</span></label>
+                            <input type="text" name="ingeniero_asignado" class="form-control form-control-sm py-1" placeholder="Ej: Ing. Carlos Mendoza" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
                         </div>
 
-                        <div class="col-12 col-md-4">
-                            <label class="form-label small fw-bold text-dark mb-1">
-                                Servicio Requerido <span class="text-danger">*</span>
-                            </label>
-                            <select class="form-select form-select-sm" name="servicio_requerido" required style="font-size: 0.85rem;">
-                                <option>Evaluación Estructural</option>
-                                <option>Inspección de Cimentación</option>
-                                <option>Levantamiento Topográfico</option>
-                                <option>Prueba de Calidad de Concreto</option>
-                            </select>
+                        <!-- FILA INFERIOR: Fecha a la izquierda, Observaciones con 2 líneas a la derecha (Flecha Roja) -->
+                        <div class="col-12 col-md-5">
+                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Fecha y Hora de Inspección <span class="text-danger">*</span></label>
+                            <input type="datetime-local" name="fecha_inspeccion" class="form-control form-control-sm py-1" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
                         </div>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label small fw-bold text-dark mb-1">
-                                Fecha y Hora Programada <span class="text-danger">*</span>
-                            </label>
-                            <input type="datetime-local" class="form-control form-control-sm" name="fecha_programada" required style="font-size: 0.85rem;">
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <label class="form-label small fw-bold text-dark mb-1">
-                                Ingeniero Asignado <span class="text-danger">*</span>
-                            </label>
-                            <select class="form-select form-select-sm" name="ingeniero_asignado" required style="font-size: 0.85rem;">
-                                <option value="Ing. Carlos Mendoza (CIP 14205)">Ing. Carlos Mendoza (CIP 14205)</option>
-                                <option value="Ing. Roberto Flores (CIP 18920)">Ing. Roberto Flores (CIP 18920)</option>
-                                <option value="Ing. Ana Valdivia (CIP 21045)">Ing. Ana Valdivia (CIP 21045)</option>
-                            </select>
-                        </div>
-
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-dark mb-1">Observaciones / Notas para el Ingeniero</label>
-                            <textarea class="form-control form-control-sm" name="observaciones_campo" rows="2" placeholder="Ingrese detalles técnicos o puntos de contacto en obra..." style="font-size: 0.85rem;"></textarea>
+                        <div class="col-12 col-md-7">
+                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Resultado / Observaciones Técnicas Iniciales</label>
+                            <textarea name="resultado" class="form-control form-control-sm py-1" rows="2" placeholder="Detalle los objetivos o notas de la visita..." style="font-size: 0.82rem; border-color: #cbd5e1;"></textarea>
                         </div>
 
                     </div>
                 </div>
 
-                <div class="modal-footer bg-white border-top p-3" style="border-color: #e2e8f0 !important;">
-                    <button type="button" class="btn btn-sm btn-light border px-3 fw-medium" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-sm text-white fw-bold px-4 shadow-sm" style="background-color: #059669; border: none;">
-                        <i class="fas fa-paper-plane me-1"></i> Registrar & Notificar
-                    </button>
+                <div class="card-footer bg-white px-3 py-2 border-top d-flex justify-content-end gap-2" style="border-color: #e2e8f0 !important;">
+                    <button type="button" class="btn btn-sm btn-outline-secondary px-3 fw-bold rounded-2" data-bs-toggle="collapse" data-bs-target="#seccionFormularioRegistro">Cancelar</button>
+                    <button type="submit" class="btn btn-sm btn-dtl-primary px-4 fw-bold rounded-2">Guardar Inspección</button>
                 </div>
             </form>
-
         </div>
     </div>
+
+    <!-- 4. TABLA Y LISTADO DE INSPECCIONES -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover" style="min-width: 900px;">
+                    <thead>
+                        <tr>
+                            <th class="ps-3 py-2.5 fw-bold">ID</th>
+                            <th class="py-2.5 fw-bold">OBRA ASOCIADA</th>
+                            <th class="py-2.5 fw-bold">INGENIERO ASIGNADO</th>
+                            <th class="py-2.5 fw-bold">FECHA INSPECCIÓN</th>
+                            <th class="py-2.5 fw-bold">RESULTADO / OBSERVACIONES</th>
+                            <th class="py-2.5 fw-bold text-center">ESTADO</th>
+                            <th class="py-2.5 fw-bold text-center">RESPONSABLE (CRM)</th>
+                            <th class="pe-3 py-2.5 fw-bold text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($inspecciones ?? [] as $inspeccion)
+                            <tr style="border-top: 1px solid #cbd5e1;">
+                                <td class="ps-3">
+                                    <span class="fw-bold" style="color: #059669; font-size: 0.78rem;">
+                                        #INS-{{ $inspeccion->id }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark text-uppercase" style="font-size: 0.78rem;">
+                                        {{ $inspeccion->obra->titulo ?? 'Sin Obra' }}
+                                    </span>
+                                </td>
+                                <td><span class="text-secondary" style="font-size: 0.78rem;">{{ $inspeccion->ingeniero_asignado ?? '---' }}</span></td>
+                                <td><span class="text-secondary" style="font-size: 0.78rem;"><i class="far fa-calendar-alt me-1 text-success"></i> {{ $inspeccion->fecha_inspeccion ?? '---' }}</span></td>
+                                <td><span class="text-secondary" style="font-size: 0.78rem;">{{ Str::limit($inspeccion->resultado, 40) ?: 'Sin detalles' }}</span></td>
+                                <td class="text-center">
+                                    @php $est = ucfirst(strtolower($inspeccion->estado_inspeccion ?? '')); @endphp
+                                    @if($est == 'Completada')
+                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">Completada</span>
+                                    @elseif($est == 'Pendiente')
+                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">Pendiente</span>
+                                    @else
+                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">{{ $est ?: 'Cancelada' }}</span>
+                                    @endif
+                                </td>
+                                <td class="text-center"><span class="text-muted fw-semibold" style="font-size: 0.78rem;">{{ $inspeccion->user->name ?? 'Asesor Comercial' }}</span></td>
+                                <td class="pe-3 text-center">
+                                    <button class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center" style="background-color: #ecfdf5; color: #059669; width: 28px; height: 28px;" title="Ver Detalle">
+                                        <i class="fas fa-eye" style="font-size: 0.75rem;"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted small">No se encontraron inspecciones técnicas registradas.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. PAGINACIÓN NUMERADA -->
+    <div class="dtl-pagination-wrapper">
+        @if(isset($inspecciones) && method_exists($inspecciones, 'links'))
+            {{ $inspecciones->withQueryString()->links('pagination::bootstrap-5') }}
+        @endif
+    </div>
+
 </div>
 @endsection

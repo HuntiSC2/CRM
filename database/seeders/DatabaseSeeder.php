@@ -248,5 +248,165 @@ class DatabaseSeeder extends Seeder
         ];
 
         DB::table('clientes')->insert($clientes);
+
+        // Recuperamos los IDs de los clientes insertados para asociarlos con las obras
+        $clienteCosapi = DB::table('clientes')->where('ruc', '20100017491')->first()->id;
+        $clienteAesa = DB::table('clientes')->where('ruc', '20100154308')->first()->id;
+        $clienteMarcan = DB::table('clientes')->where('ruc', '20512849310')->first()->id;
+        $clienteBesco = DB::table('clientes')->where('ruc', '20338572101')->first()->id;
+        $clienteAntamina = DB::table('clientes')->where('ruc', '20102030405')->first()->id;
+
+        // ==========================================
+        // 3. CREACIÓN DE OBRAS / PROYECTOS (PIPELINE)
+        // ==========================================
+
+
+        $obras = [
+            [
+                'cliente_id' => $clienteCosapi,
+                'user_id' => $comercial->id,
+                'codigo' => 'OBR-001',
+                'titulo' => 'Ampliación Carretera Central Tramo II',
+                'estado' => 'Aprobado',
+                'monto' => 340000.00,
+                'fecha' => now()->addDays(15),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'cliente_id' => $clienteAesa,
+                'user_id' => $comercial->id,
+                'codigo' => 'OBR-002',
+                'titulo' => 'Cimentación Obras Civiles Lote B',
+                'estado' => 'Cotizado',
+                'monto' => 210000.00,
+                'fecha' => now()->addDays(30),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'cliente_id' => $clienteMarcan,
+                'user_id' => $comercial->id,
+                'codigo' => 'OBR-003',
+                'titulo' => 'Edificio Multifamiliar San Isidro Suites',
+                'estado' => 'Inspeccion', // <--- Cambiado de 'Por Visitar' a 'Inspeccion' para cumplir con el Enum de la BD
+                'monto' => 95000.00,
+                'fecha' => now()->addDays(45),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'cliente_id' => $clienteBesco,
+                'user_id' => $comercial->id,
+                'codigo' => 'OBR-004',
+                'titulo' => 'Planta Industrial Callao Sur',
+                'estado' => 'Aprobado',
+                'monto' => 180000.00,
+                'fecha' => now()->addDays(10),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'cliente_id' => $clienteAntamina,
+                'user_id' => $comercial->id,
+                'codigo' => 'OBR-005',
+                'titulo' => 'Estabilidad de Taludes Campamento Yanacocha',
+                'estado' => 'Cotizado',
+                'monto' => 450000.00,
+                'fecha' => now()->addDays(60),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ];
+
+        DB::table('obras')->insert($obras);
+
+        // Recuperamos los IDs de las obras creadas
+        $obraCarretera = DB::table('obras')->where('titulo', 'like', '%Carretera Central%')->first()->id;
+        $obraCimentacion = DB::table('obras')->where('titulo', 'like', '%Cimentación Obras Civiles%')->first()->id;
+
+        // ==========================================
+        // 4. CREACIÓN DE INSPECCIONES TÉCNICAS
+        // ==========================================
+
+
+        $inspecciones = [
+            [
+                'obra_id' => $obraCarretera,
+                'user_id' => $admin->id,
+                'ingeniero_asignado' => 'Ing. Marco Antonio Silva (Especialista Vial)',
+                'fecha_inspeccion' => now()->subDays(5),
+                'resultado' => 'Conforme sin observaciones mayores. Proceder con fase de asfaltado.',
+                'estado_inspeccion' => 'Completada',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'obra_id' => $obraCimentacion,
+                'user_id' => $admin->id,
+                'ingeniero_asignado' => 'Ing. Roberto Mendoza (Estructuras)',
+                'fecha_inspeccion' => now()->addDays(2),
+                'resultado' => 'Pendiente de verificación de juntas de dilatación.',
+                'estado_inspeccion' => 'Pendiente',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ];
+
+        DB::table('inspecciones')->insert($inspecciones);
+
+        // ==========================================
+        // 5. CREACIÓN DE BITÁCORAS DE SEGUIMIENTO
+        // ==========================================
+
+        $bitacoras = [
+            [
+                'obra_id' => $obraCarretera,
+                'user_id' => $comercial->id,
+                'comentario' => 'Reunión de coordinación con el Ing. Roberto Benavides. Aprobación final del cronograma de ensayos.',
+                'tipo_contacto' => 'Reunión Presencial',
+                'created_at' => now()->subDays(4),
+                'updated_at' => now()->subDays(4),
+            ],
+            [
+                'obra_id' => $obraCimentacion,
+                'user_id' => $comercial->id,
+                'comentario' => 'Llamada telefónica con la Lic. Sofia Ramos para aclarar detalles de la propuesta económica.',
+                'tipo_contacto' => 'Llamada Telefónica',
+                'created_at' => now()->subDays(2),
+                'updated_at' => now()->subDays(2),
+            ]
+        ];
+
+        DB::table('bitacoras')->insert($bitacoras);
+
+        // ==========================================
+        // 6. CREACIÓN DE COTIZACIONES
+        // ==========================================
+
+        $cotizaciones = [
+            [
+                'obra_id' => $obraCarretera,
+                'codigo_cotizacion' => 'COT-2026-001',
+                'monto_total' => 340000.00,
+                'estado_cotizacion' => 'Aceptada',
+                'validez_dias' => 30,
+                'observaciones' => 'Incluye póliza de seguros y equipos calibrados bajo norma ISO.',
+                'created_at' => now()->subDays(6),
+                'updated_at' => now()->subDays(6),
+            ],
+            [
+                'obra_id' => $obraCimentacion,
+                'codigo_cotizacion' => 'COT-2026-002',
+                'monto_total' => 210000.00,
+                'estado_cotizacion' => 'Enviada',
+                'validez_dias' => 15,
+                'observaciones' => 'Sujeto a renegociación por volumen de metros cúbicos evaluados.',
+                'created_at' => now()->subDays(3),
+                'updated_at' => now()->subDays(3),
+            ]
+        ];
+
+        DB::table('cotizaciones')->insert($cotizaciones);
     }
 }

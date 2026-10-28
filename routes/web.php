@@ -2,14 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PipelineController;
+use App\Http\Controllers\Comercial\DashboardController;
+use App\Http\Controllers\Comercial\PipelineController;
 
 // Importaciones de los controladores del Módulo Comercial
 use App\Http\Controllers\Comercial\ClienteController;
-use App\Http\Controllers\Comercial\VisitaTecnicaController;
+use App\Http\Controllers\Comercial\InspeccionController;
 use App\Http\Controllers\Comercial\BitacoraController;
 use App\Http\Controllers\Comercial\CotizadorController;
+
+
+
 
 // Redirección inicial a la vista de login
 Route::get('/', function () {
@@ -42,11 +45,12 @@ Route::middleware(['auth', 'role:ejecutivo'])->prefix('comercial')->name('comerc
 
     // HU-03: Pipeline CRM / Tablero Kanban
     Route::get('/pipeline', [PipelineController::class, 'index'])->name('pipeline.index');
+    Route::post('/pipeline', [PipelineController::class, 'store'])->name('pipeline.store'); // <--- AÑADIDA: Ruta para registrar la nueva obra del modal
     Route::post('/pipeline/update-status', [PipelineController::class, 'updateStatus'])->name('pipeline.updateStatus');
 
     // HU-04: Visitas Técnicas e Inspección a Obra
-    Route::get('/visitas', [VisitaTecnicaController::class, 'index'])->name('visitas.index');
-    Route::post('/visitas', [VisitaTecnicaController::class, 'store'])->name('visitas.store');
+    Route::get('/inspecciones', [InspeccionController::class, 'index'])->name('visitas.index');
+    Route::post('/inspecciones', [InspeccionController::class, 'store'])->name('visitas.store');
 
     // HU-05: Bitácora CRM y Cronología de Interacciones
     Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora.index');
@@ -54,6 +58,7 @@ Route::middleware(['auth', 'role:ejecutivo'])->prefix('comercial')->name('comerc
 
     // HU-06: Cotizador Express y Generador PDF Membretado
     Route::get('/cotizador', [CotizadorController::class, 'index'])->name('cotizador.index');
+    Route::post('/cotizador', [CotizadorController::class, 'store'])->name('cotizador.store');
     Route::post('/cotizador/pdf', [CotizadorController::class, 'generarPdf'])->name('cotizador.pdf');
 });
 

@@ -41,7 +41,7 @@ class ClienteController extends Controller
 
     /**
      * Guarda la ficha comercial en MySQL utilizando validación mediante ClienteRequest.
-     * Retorna JSON para peticiones AJAX para mantener el modal abierto ante observaciones.
+     * Retorna JSON para peticiones AJAX para mantener el formulario abierto ante observaciones.
      */
     public function store(ClienteRequest $request)
     {
@@ -54,7 +54,7 @@ class ClienteController extends Controller
             'nombre_contacto'   => $data['nombre_contacto'],
             'telefono_contacto' => $data['telefono_contacto'],
             'email_contacto'    => $data['email_contacto'],
-            'estado'            => $data['estado'] ?? 'ACTIVO',
+            'estado'            => 'EN_EVALUACION', // <--- Bloqueado por seguridad y lógica de negocio
             'observaciones'     => $data['observaciones'] ?? null,
             'user_id'           => Auth::id(),
         ]);
