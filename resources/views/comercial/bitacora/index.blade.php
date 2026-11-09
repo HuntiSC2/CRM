@@ -329,28 +329,27 @@
             
             <!-- VISTA TABLA RESPONSIVA (ESCRITORIO Y ADAPTADA A CELULAR) -->
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover" style="min-width: 600px;">
+                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover w-100" style="min-width: 680px;">
                     <thead>
                         <tr>
-                            <th class="ps-3 py-2.5 fw-bold">FECHA / HORA</th>
-                            <th class="py-2.5 fw-bold">OBRA / PROYECTO</th>
-                            <th class="py-2.5 fw-bold text-center">TIPO CONTACTO</th>
-                            <th class="py-2.5 fw-bold">COMENTARIO / ACUERDO</th>
-                            <th class="py-2.5 fw-bold text-center">REGISTRADO POR</th>
-                            <th class="pe-3 py-2.5 fw-bold text-center">ACCIONES</th>
+                            <th class="ps-3 py-2.5 fw-bold" style="width: 16%;">FECHA / HORA</th>
+                            <th class="py-2.5 fw-bold" style="width: 22%;">OBRA / PROYECTO</th>
+                            <th class="py-2.5 fw-bold text-center" style="width: 14%;">TIPO CONTACTO</th>
+                            <th class="py-2.5 fw-bold" style="width: 32%;">COMENTARIO / ACUERDO</th>
+                            <th class="pe-3 py-2.5 fw-bold text-center" style="width: 16%;">REGISTRADO POR</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bitacoras ?? [] as $bitacora)
                             <tr style="border-top: 1px solid #cbd5e1;">
                                 <td class="ps-3">
-                                    <span class="fw-bold text-dark" style="font-size: 0.75rem;">
+                                    <span class="fw-bold text-dark d-inline-flex align-items-center" style="font-size: 0.75rem;">
                                         <i class="far fa-clock me-1 text-success"></i>
                                         {{ \Carbon\Carbon::parse($bitacora->created_at ?? now())->format('d/m/Y h:i A') }}
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-dark text-uppercase" style="font-size: 0.78rem;">
+                                    <span class="fw-bold text-dark text-uppercase text-break d-block" style="font-size: 0.78rem;">
                                         {{ $bitacora->obra->titulo ?? 'Seguimiento General' }}
                                     </span>
                                 </td>
@@ -371,24 +370,19 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="text-secondary" style="font-size: 0.78rem;">
-                                        {{ Str::limit($bitacora->comentario, 50) ?: 'Sin detalles anotados' }}
+                                    <span class="text-dark d-block text-break" style="font-size: 0.78rem; line-height: 1.45;">
+                                        {{ $bitacora->comentario ?: 'Sin detalles anotados' }}
                                     </span>
                                 </td>
-                                <td class="text-center">
+                                <td class="pe-3 text-center">
                                     <span class="text-muted" style="font-size: 0.78rem;">
                                         {{ $bitacora->user->name ?? 'Asesor Comercial' }}
                                     </span>
                                 </td>
-                                <td class="pe-3 text-center">
-                                    <button class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center" style="background-color: #ecfdf5; color: #059669; width: 28px; height: 28px;" title="Ver Detalle">
-                                        <i class="fas fa-eye" style="font-size: 0.75rem;"></i>
-                                    </button>
-                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted small">No se encontraron anotaciones en la bitácora.</td>
+                                <td colspan="5" class="text-center py-4 text-muted small">No se encontraron anotaciones en la bitácora.</td>
                             </tr>
                         @endforelse
                     </tbody>

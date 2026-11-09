@@ -363,9 +363,10 @@
                                 </td>
                                 <td class="text-center"><span class="text-muted fw-semibold" style="font-size: 0.78rem;">{{ $cliente->user->name ?? 'Asesor Comercial' }}</span></td>
                                 <td class="pe-3 text-center">
-                                    <button class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center" style="background-color: #ecfdf5; color: #059669; width: 28px; height: 28px;" title="Ver Detalle">
+                                    <!-- Enlace funcional que conecta con el Historial 360° del cliente -->
+                                    <a href="{{ route('comercial.clientes.show', $cliente->id) }}" class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center text-decoration-none" style="background-color: #ecfdf5; color: #059669; width: 28px; height: 28px;" title="Ver Bitácora e Historial 360°">
                                         <i class="fas fa-eye" style="font-size: 0.75rem;"></i>
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         @empty

@@ -1,398 +1,313 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Estilos Exclusivos DTL PREMIER -->
 <style>
-    .btn-dtl-action {
-        height: 38px;
-        padding: 0 16px;
-        font-size: 0.88rem;
-        font-weight: 700;
-        border-radius: 8px;
+    :root {
+        --dtl-navy: #0c192c;
+        --dtl-navy-hover: #1e293b;
+        --dtl-green: #059669;
+        --dtl-green-hover: #047857;
+        --dtl-amber: #f59e0b;
+        --dtl-red: #dc2626;
+    }
+
+    .btn-dtl-green {
+        height: 38px !important;
+        padding: 0 16px !important;
+        font-size: 0.80rem !important;
+        font-weight: 700 !important;
+        background-color: var(--dtl-green) !important;
+        color: #ffffff !important;
+        border: 1px solid var(--dtl-green) !important;
+        border-radius: 8px !important;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(5, 150, 105, 0.20);
         white-space: nowrap;
+        text-decoration: none;
     }
-
-    .btn-dtl-primary {
-        background-color: #059669 !important;
-        border: 1px solid #059669 !important;
+    .btn-dtl-green:hover {
+        background-color: var(--dtl-green-hover) !important;
+        border-color: var(--dtl-green-hover) !important;
         color: #ffffff !important;
-    }
-    .btn-dtl-primary:hover {
-        background-color: #047857 !important;
-        border-color: #047857 !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
+        box-shadow: 0 4px 10px rgba(5, 150, 105, 0.30);
     }
 
-    .btn-dtl-dark {
-        background-color: #0f172a !important;
-        border: 1px solid #0f172a !important;
-        color: #ffffff !important;
-    }
-
-    .btn-dtl-icon-only {
-        width: 38px;
+    .btn-dtl-reset {
         height: 38px;
-        padding: 0;
+        width: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        border-radius: 8px;
+        color: #64748b;
     }
 
-    .dtl-search-input:focus, .dtl-input:focus, .form-control:focus, .form-select:focus {
-        border-color: #059669 !important;
-        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
-        background-color: #ffffff !important;
-    }
-
-    .dtl-table-hover tbody tr:hover {
-        background-color: #f1f5f9 !important;
-    }
-
-    /* Cabecera unificada y exacta para la tabla y el formulario */
-    .dtl-table-hover thead th, .dtl-card-header-styled {
-        background-color: #0f172a !important;
-        color: #ffffff !important;
-        border: 1px solid #1e293b !important;
-        font-size: 0.68rem !important;
-        letter-spacing: 0.8px;
-        padding-top: 0.55rem !important;
-        padding-bottom: 0.55rem !important;
-    }
-
-    .dtl-table-hover thead th {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-    }
-
-    .dtl-table-hover td {
+    .filter-card-dtl {
+        background: #ffffff;
         border: 1px solid #cbd5e1 !important;
+        border-radius: 12px;
+        padding: 0.85rem 1rem !important;
+    }
+
+    .input-dtl-control {
+        height: 38px !important;
+        font-size: 0.84rem !important;
+        border-color: #cbd5e1 !important;
+        border-radius: 8px !important;
+    }
+    .input-dtl-control:focus {
+        border-color: var(--dtl-green) !important;
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+    }
+
+    .table-responsive-cotizador {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 0 0 12px 12px;
+    }
+    .table-responsive-cotizador table {
+        min-width: 860px;
+    }
+
+    .dtl-table thead th {
+        background-color: var(--dtl-navy) !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0.5px;
+        padding: 0.75rem 0.85rem !important;
+        text-transform: uppercase;
+    }
+    .dtl-table tbody td {
         font-size: 0.78rem !important;
-        padding: 0.6rem 0.75rem !important;
+        padding: 0.65rem 0.85rem !important;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9 !important;
+    }
+    .dtl-table tbody tr:hover {
+        background-color: #f8fafc;
     }
 
-    /* REDUCCIÓN PROPORCIONAL Y COMPACTA PARA RESOLUCIÓN DE CELULAR */
-    @media (max-width: 767.98px) {
-        .dtl-table-hover thead th {
-            font-size: 0.52rem !important;
-            padding: 0.35rem 0.25rem !important;
-            letter-spacing: 0.2px !important;
-        }
-        .dtl-table-hover td {
-            font-size: 0.62rem !important;
-            padding: 0.35rem 0.35rem !important;
-        }
-        .dtl-table-hover td span, .dtl-table-hover td div {
-            font-size: 0.62rem !important;
-        }
-        .container-fluid {
-            padding-left: 4px !important;
-            padding-right: 4px !important;
-        }
-    }
-
-    /* Ocultar texto de la paginación de Laravel */
     .dtl-pagination-wrapper nav > div:first-child,
-    .dtl-pagination-wrapper p.small.text-muted,
-    .dtl-pagination-wrapper .text-muted {
+    .dtl-pagination-wrapper p.small.text-muted {
         display: none !important;
     }
-
-    /* Paginación Numerada en círculos alineada a la derecha */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
-        align-items: center !important;
-        width: 100% !important;
         margin-top: 15px !important;
-        margin-bottom: 20px !important;
-        padding-right: 4px !important;
-    }
-
-    .dtl-pagination-wrapper nav {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:last-child,
-    .dtl-pagination-wrapper nav > div:nth-child(2) {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper .pagination {
-        margin-bottom: 0 !important;
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        gap: 4px !important;
-        list-style: none !important;
-        padding-left: 0 !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item .page-link {
-        min-width: 32px !important;
-        height: 32px !important;
-        padding: 0 8px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 50% !important;
-        border: 1px solid #cbd5e1 !important;
-        background-color: #ffffff !important;
-        color: #0f172a !important;
-        font-weight: 700 !important;
-        font-size: 0.80rem !important;
-        text-decoration: none !important;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
-        background-color: #059669 !important;
-        border-color: #059669 !important;
-        color: #ffffff !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
-        background-color: #ffffff !important;
-        border-color: #e2e8f0 !important;
-        color: #cbd5e1 !important;
-        border-radius: 8px !important;
-    }
-
-    .extra-small {
-        font-size: 0.73rem;
-    }
-
-    .status-pulse-green {
-        width: 8px;
-        height: 8px;
-        background-color: #10b981;
-        border-radius: 50%;
-        display: inline-block;
     }
 </style>
 
 <div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
-        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
-        
+    <!-- ENCABEZADO -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+        <div class="position-absolute top-0 start-0 w-100" style="height: 3.5px; background-color: var(--dtl-green);"></div>
         <div class="card-body p-2.5 p-md-3">
-            <div class="row align-items-center g-2 g-md-3">
-                <div class="col-auto">
-                    <div class="p-1.5 p-md-2 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="min-width: 125px; height: 48px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 34px; width: auto; object-fit: contain;">
-                    </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="p-1 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="width: 125px; height: 44px; border-color: #cbd5e1 !important;">
+                    <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER" style="max-height: 28px; max-width: 100%; object-fit: contain;">
                 </div>
-
-                <div class="col border-start-md ps-md-3" style="border-color: #e2e8f0 !important;">
-                    <div class="d-flex flex-wrap align-items-center gap-1.5 mb-0.5">
-                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: #0f172a; color: #ffffff;">
-                            <i class="fas fa-file-invoice-dollar me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
+                <div class="border-start ps-3" style="border-color: #cbd5e1 !important;">
+                    <div class="d-flex align-items-center gap-1.5 mb-0.5">
+                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
+                            💼 GESTIÓN COMERCIAL
                         </span>
-
-                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            <span class="status-pulse-green"></span> Cotizaciones Emitidas
+                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                            Auditoría de Presupuestos & Propuestas
                         </span>
                     </div>
-                    
-                    <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: #0f172a; letter-spacing: -0.3px;">
+                    <h2 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem; letter-spacing: -0.2px;">
                         Módulo de Cotizaciones y Propuestas Económicas
-                    </h3>
+                    </h2>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ALERTAS -->
     @if (session('success'))
-        <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
-            <i class="fas fa-circle-check me-2 fs-5 flex-shrink-0" style="color: #059669;"></i>
-            <div class="fw-medium small" style="font-size: 0.80rem;">{{ session('success') }}</div>
+        <div class="alert border-0 rounded-3 shadow-sm mb-3 py-2 px-3 small d-flex align-items-center gap-2" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
+            <i class="fas fa-circle-check fs-6 text-success"></i>
+            <span>{{ session('success') }}</span>
         </div>
     @endif
 
-    @if (session('error'))
-        <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca !important;">
-            <i class="fas fa-triangle-exclamation me-2 fs-5 flex-shrink-0" style="color: #dc2626;"></i>
-            <div class="fw-medium small" style="font-size: 0.80rem;">{{ session('error') }}</div>
-        </div>
-    @endif
-
-    <!-- 2. BARRA DE BÚSQUEDA Y BOTÓN DE ACCIÓN -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3" style="border: 1px solid #e2e8f0 !important;">
-        <div class="card-body p-2.5 p-md-3">
-            <div class="d-flex align-items-center gap-2">
-                <form action="{{ route('comercial.cotizador.index') }}" method="GET" class="input-group flex-grow-1">
-                    <span class="input-group-text border-end-0 ps-3" style="background-color: #f8fafc; border-color: #cbd5e1; color: #64748b; height: 38px;">
-                        <i class="fas fa-search"></i>
-                    </span>
-                    <input type="text" name="search" class="form-control border-start-0 ps-0 dtl-search-input" value="{{ request('search') }}" placeholder="Buscar por Código, Obra o Estado..." style="background-color: #f8fafc; border-color: #cbd5e1; font-size: 0.85rem; color: #0f172a; height: 38px;">
-                    
-                    <button type="submit" class="btn btn-dtl-action btn-dtl-dark">
-                        <i class="fas fa-filter"></i>
-                        <span class="d-none d-sm-inline">Buscar</span>
-                    </button>
-
-                    @if(request('search'))
-                        <a href="{{ route('comercial.cotizador.index') }}" class="btn btn-dtl-action btn-dtl-icon-only" style="background-color: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;" title="Limpiar búsqueda">
-                            <i class="fas fa-rotate-left"></i>
-                        </a>
-                    @endif
-                </form>
-
-                <button type="button" class="btn btn-dtl-action btn-dtl-primary btn-dtl-icon-only shadow-sm flex-shrink-0" data-bs-toggle="collapse" data-bs-target="#seccionFormularioCotizacion" aria-expanded="false" aria-controls="seccionFormularioCotizacion" title="Nueva Cotización">
-                    <i class="fas fa-plus fs-6"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. FORMULARIO DINÁMICO COMPACTO Y SEGURO -->
-    <div class="collapse mb-3" id="seccionFormularioCotizacion">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
-            <div class="card-header dtl-card-header-styled px-3 d-flex align-items-center justify-content-between" style="border-bottom: 3px solid #059669;">
-                <h6 class="fw-bold mb-0 text-white text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.8px;">Emisión de Cotización Comercial - DTL PREMIER S.A.C.</h6>
-                <button type="button" class="btn-close btn-close-white opacity-75" data-bs-toggle="collapse" data-bs-target="#seccionFormularioCotizacion" aria-label="Close"></button>
+    <!-- BUSCADOR ANCHO COMPLETO -->
+    <div class="card border-0 shadow-sm rounded-4 filter-card-dtl mb-3">
+        <form action="{{ route('comercial.cotizador.index') }}" method="GET" class="d-flex align-items-center gap-2 w-100">
+            <div class="input-group flex-grow-1">
+                <span class="input-group-text bg-white border-end-0 text-muted px-2.5" style="border-color: #cbd5e1; height: 38px; border-radius: 8px 0 0 8px;">
+                    <i class="fas fa-search" style="font-size: 0.75rem;"></i>
+                </span>
+                <input type="text" name="search" value="{{ request('search') }}" 
+                       class="form-control border-start-0 input-dtl-control" 
+                       placeholder="Buscar por Código, Obra o Cliente..."
+                       style="border-radius: 0 8px 8px 0 !important;">
             </div>
 
-            <form action="{{ route('comercial.cotizador.store') }}" method="POST">
-                @csrf
-                <div class="card-body p-3" style="background-color: #f8fafc;">
-                    <div class="row g-2.5">
-                        
-                        <div class="col-12 col-md-3">
-                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Código Correlativo <span class="text-danger">*</span></label>
-                            <input type="text" name="codigo_cotizacion" class="form-control form-control-sm py-1 bg-light fw-bold text-success" value="{{ $nuevoCodigo ?? '' }}" readonly style="font-size: 0.82rem; border-color: #cbd5e1;">
-                        </div>
+            <button type="submit" class="btn-dtl-green">
+                <i class="fas fa-filter"></i>
+                <span>Buscar</span>
+            </button>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Proyecto / Obra Asociada <span class="text-danger">*</span></label>
-                            <select name="obra_id" class="form-select form-select-sm py-1" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
-                                <option value="">Seleccione una obra con inspección completada...</option>
-                                @foreach($obrasDisponibles ?? [] as $obra)
-                                    <option value="{{ $obra->id }}">{{ $obra->codigo }} - {{ $obra->titulo }} ({{ $obra->estado }})</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-12 col-md-3">
-                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Monto Total (S/) <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" name="monto_total" class="form-control form-control-sm py-1" placeholder="Ej. 15000.00" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
-                        </div>
-
-                        <div class="col-12 col-md-3">
-                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Validez de Oferta (Días) <span class="text-danger">*</span></label>
-                            <input type="number" name="validez_dias" class="form-control form-control-sm py-1" value="15" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
-                        </div>
-
-                        <div class="col-12 col-md-9">
-                            <label class="form-label fw-semibold extra-small mb-1 text-dark">Observaciones / Términos de Pago</label>
-                            <textarea name="observaciones" class="form-control form-control-sm py-1" rows="2" placeholder="Ej. Incluye pruebas de laboratorio y póliza de seguro..." style="font-size: 0.82rem; border-color: #cbd5e1;"></textarea>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="card-footer bg-white px-3 py-2 border-top d-flex justify-content-end gap-2" style="border-color: #e2e8f0 !important;">
-                    <button type="button" class="btn btn-sm btn-outline-secondary px-3 fw-bold rounded-2" data-bs-toggle="collapse" data-bs-target="#seccionFormularioCotizacion">Cancelar</button>
-                    <button type="submit" class="btn btn-sm btn-dtl-primary px-4 fw-bold rounded-2">Emitir Cotización</button>
-                </div>
-            </form>
-        </div>
+            @if(request('search'))
+                <a href="{{ route('comercial.cotizador.index') }}" class="btn-dtl-reset" title="Limpiar filtro">
+                    <i class="fas fa-rotate-left"></i>
+                </a>
+            @endif
+        </form>
     </div>
 
-    <!-- 4. TABLA RESPONSIVA Y COMPACTA DE COTIZACIONES -->
+    <!-- TABLA DE COTIZACIONES -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover" style="min-width: 650px;">
-                    <thead>
+        <div class="table-responsive-cotizador">
+            <table class="table dtl-table w-100 mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-3" style="width: 14%;">CÓDIGO</th>
+                        <th style="width: 26%;">PROYECTO / CLIENTE</th>
+                        <th class="text-end" style="width: 14%;">MONTO TOTAL</th>
+                        <th class="text-center" style="width: 14%;">FECHA PROG. / FIN</th>
+                        <th style="width: 16%;">OBSERVACIONES</th>
+                        <th class="text-center" style="width: 10%;">ESTADO</th>
+                        <th class="pe-3 text-center" style="width: 6%;">PDF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($cotizaciones ?? [] as $cotizacion)
                         <tr>
-                            <th class="ps-3 py-2.5 fw-bold">CÓDIGO</th>
-                            <th class="py-2.5 fw-bold">OBRA ASOCIADA</th>
-                            <th class="py-2.5 fw-bold text-end">MONTO TOTAL</th>
-                            <th class="py-2.5 fw-bold text-center">VALIDEZ</th>
-                            <th class="py-2.5 fw-bold">OBSERVACIONES</th>
-                            <th class="py-2.5 fw-bold text-center">ESTADO</th>
-                            <th class="pe-3 py-2.5 fw-bold text-center">ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($cotizaciones ?? [] as $cotizacion)
-                            <tr style="border-top: 1px solid #cbd5e1;">
-                                <td class="ps-3">
-                                    <span class="fw-bold" style="color: #059669; font-size: 0.78rem;">
-                                        {{ $cotizacion->codigo_cotizacion }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="fw-bold text-dark text-uppercase" style="font-size: 0.78rem;">
-                                        {{ $cotizacion->obra->titulo ?? 'Sin Obra Asociada' }}
-                                    </span>
-                                </td>
-                                <td class="text-end">
-                                    <span class="fw-bold text-dark" style="font-size: 0.78rem;">
-                                        S/ {{ number_format($cotizacion->monto_total ?? 0, 2) }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge rounded-pill bg-light text-dark border px-2 py-1" style="font-size: 0.70rem; border-color: #cbd5e1 !important;">
-                                        <i class="far fa-clock me-1 text-success"></i>{{ $cotizacion->validez_dias ?? 15 }} días
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="text-secondary" style="font-size: 0.78rem;">
-                                        {{ Str::limit($cotizacion->observaciones, 35) ?: 'Sin observaciones' }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    @php $est = strtoupper($cotizacion->estado_cotizacion ?? ''); @endphp
-                                    @if(in_array($est, ['ACEPTADA', 'APROBADA']))
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">Aceptada</span>
-                                    @elseif(in_array($est, ['ENVIADA', 'PENDIENTE']))
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">Enviada</span>
-                                    @elseif(in_array($est, ['RECHAZADA', 'VENCIDA']))
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">Rechazada</span>
+                            <td class="ps-3 font-monospace fw-bold" style="color: var(--dtl-navy);">
+                                {{ $cotizacion->codigo_cotizacion }}
+                            </td>
+                            <td>
+                                <span class="fw-bold text-dark d-block text-truncate" style="max-width: 280px;">
+                                    {{ $cotizacion->obra->titulo ?? 'Sin Obra' }}
+                                </span>
+                                <small class="text-muted d-block text-truncate" style="max-width: 280px; font-size: 0.70rem;">
+                                    <i class="fas fa-building me-1"></i>{{ $cotizacion->obra->cliente->razon_social ?? 'Cliente General' }}
+                                </small>
+                            </td>
+                            <td class="text-end">
+                                <span class="fw-bold font-monospace text-dark" style="font-size: 0.86rem;">
+                                    @if($cotizacion->monto_total > 0)
+                                        S/ {{ number_format($cotizacion->monto_total, 2) }}
                                     @else
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">{{ $est ?: 'Borrador' }}</span>
+                                        <span class="text-muted small fst-italic">Por cotizar</span>
                                     @endif
-                                </td>
-                                <td class="pe-3 text-center">
-                                    <div class="d-flex align-items-center justify-content-center gap-1">
-                                        <button class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center" style="background-color: #ecfdf5; color: #059669; width: 28px; height: 28px;" title="Ver Detalle">
-                                            <i class="fas fa-eye" style="font-size: 0.75rem;"></i>
-                                        </button>
-                                        <button class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center" style="background-color: #f1f5f9; color: #0f172a; width: 28px; height: 28px;" title="Imprimir PDF">
-                                            <i class="fas fa-file-pdf text-danger" style="font-size: 0.75rem;"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center py-4 text-muted small">No se encontraron cotizaciones registradas.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                </span>
+                            </td>
+                            <td class="text-center" style="font-size: 0.72rem;">
+                                <div><i class="far fa-calendar-check text-muted me-1"></i>{{ $cotizacion->fecha_emision ? $cotizacion->fecha_emision->format('d/m/Y') : '-' }}</div>
+                                <div class="text-secondary">
+                                    @if($cotizacion->fecha_vencimiento)
+                                        <i class="far fa-calendar-times text-danger me-1"></i>{{ $cotizacion->fecha_vencimiento->format('d/m/Y H:i') }}
+                                    @else
+                                        <span class="text-muted fst-italic">Pendiente de envío</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-secondary d-block text-truncate" style="max-width: 220px; font-size: 0.74rem;">
+                                    {{ $cotizacion->observaciones ?: 'Sin observaciones' }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @php $est = strtoupper($cotizacion->estado_cotizacion ?? ''); @endphp
+                                @if($est === 'PROGRAMADA')
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; font-size: 0.65rem;">Programada</span>
+                                @elseif($est === 'APROBADA')
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 0.65rem;">Aprobada</span>
+                                @elseif($est === 'ENVIADA')
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.65rem;">Enviada</span>
+                                @elseif($est === 'ACEPTADA')
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-size: 0.65rem;">Aceptada</span>
+                                @elseif($est === 'RECHAZADA')
+                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-size: 0.65rem;">Rechazada</span>
+                                @else
+                                    <span class="badge rounded-pill px-2.5 py-1 bg-light text-dark border" style="font-size: 0.65rem;">{{ $est }}</span>
+                                @endif
+                            </td>
+                            <!-- BOTÓN QUE ABRE EL VISOR MODAL (IDÉNTICO A LA IMAGEN 1) -->
+                            <td class="pe-3 text-center">
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger p-0 d-inline-flex align-items-center justify-content-center" 
+                                        style="width: 30px; height: 30px; border-radius: 8px;" 
+                                        onclick="abrirVisorPdf('{{ route('comercial.cotizador.pdf', $cotizacion->id) }}', '{{ $cotizacion->codigo_cotizacion }}')"
+                                        title="Ver Expediente PDF">
+                                    <i class="fas fa-file-pdf"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted small">
+                                No se encontraron cotizaciones registradas.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    </div>
 
-    <!-- 5. PAGINACIÓN NUMERADA -->
-    <div class="dtl-pagination-wrapper">
-        @if(isset($cotizaciones) && method_exists($cotizaciones, 'links'))
-            {{ $cotizaciones->withQueryString()->links('pagination::bootstrap-5') }}
+        @if(isset($cotizaciones) && method_exists($cotizaciones, 'hasPages') && $cotizaciones->hasPages())
+            <div class="d-flex justify-content-between align-items-center p-2.5 bg-light border-top">
+                <small class="text-muted" style="font-size: 0.74rem;">Mostrando {{ $cotizaciones->firstItem() }} a {{ $cotizaciones->lastItem() }} de {{ $cotizaciones->total() }} registros</small>
+                <div class="dtl-pagination-wrapper">{{ $cotizaciones->links('pagination::bootstrap-5') }}</div>
+            </div>
         @endif
     </div>
 
 </div>
+
+<!-- VENTANA MODAL FLOTANTE (VISOR IDÉNTICO A IMAGEN 1) -->
+<div class="modal fade" id="modalVisorPdfCotizacion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" style="max-width: 88vw;">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+            
+            <div class="modal-header text-white py-2 px-3" style="background-color: var(--dtl-navy); border-bottom: 3.5px solid var(--dtl-green);">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-danger p-1"><i class="fas fa-file-pdf"></i></span>
+                    <h6 class="modal-title fw-bold mb-0 text-white" style="font-size: 0.85rem; letter-spacing: 0.3px;">
+                        EXPEDIENTE OFICIAL PDF: <span id="visorPdfCodigo" class="text-success font-monospace fw-bold"></span>
+                    </h6>
+                </div>
+                <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-0" style="height: 82vh; background-color: #525659;">
+                <iframe id="visorPdfIframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div class="modal-footer bg-white py-2 px-3 border-top d-flex justify-content-end">
+                <button type="button" class="btn btn-sm btn-secondary fw-semibold px-4" data-bs-dismiss="modal" style="font-size: 0.80rem;">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function abrirVisorPdf(urlPdf, codigoCotizacion) {
+        document.getElementById('visorPdfCodigo').innerText = codigoCotizacion;
+        document.getElementById('visorPdfIframe').src = urlPdf;
+        
+        const modal = new bootstrap.Modal(document.getElementById('modalVisorPdfCotizacion'));
+        modal.show();
+    }
+
+    document.getElementById('modalVisorPdfCotizacion').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('visorPdfIframe').src = '';
+    });
+</script>
 @endsection

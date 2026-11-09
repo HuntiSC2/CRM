@@ -17,7 +17,7 @@ class ClienteController extends Controller
     {
         $search = $request->get('search');
         
-        $clientes = Cliente::with('user')
+        $clientes = Cliente::with(['user', 'obras'])
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
                     $q->where('ruc', 'like', "%{$search}%")
@@ -32,6 +32,16 @@ class ClienteController extends Controller
     }
 
     /**
+     * Muestra la Bitácora y Historial 360° del Cliente (Obras, Inspecciones y Cotizaciones).
+     */
+    public function show($id)
+    {
+        $cliente = Cliente::with(['user', 'obras.inspecciones', 'obras.cotizaciones'])->findOrFail($id);
+
+        return view('comercial.clientes.show', compact('cliente'));
+    }
+
+    /**
      * Muestra el formulario para registrar una nueva ficha.
      */
     public function create()
@@ -41,7 +51,6 @@ class ClienteController extends Controller
 
     /**
      * Guarda la ficha comercial en MySQL utilizando validación mediante ClienteRequest.
-     * Retorna JSON para peticiones AJAX para mantener el formulario abierto ante observaciones.
      */
     public function store(ClienteRequest $request)
     {
@@ -54,7 +63,7 @@ class ClienteController extends Controller
             'nombre_contacto'   => $data['nombre_contacto'],
             'telefono_contacto' => $data['telefono_contacto'],
             'email_contacto'    => $data['email_contacto'],
-            'estado'            => 'EN_EVALUACION', // <--- Bloqueado por seguridad y lógica de negocio
+            'estado'            => 'INACTIVO', 
             'observaciones'     => $data['observaciones'] ?? null,
             'user_id'           => Auth::id(),
         ]);

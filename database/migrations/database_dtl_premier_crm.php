@@ -1,4 +1,4 @@
-_<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,10 +18,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            // Campos de control y roles
             $table->string('role')->default('comercial'); // admin, comercial, gerente
-            $table->integer('login_attempts')->default(0); // Control de intentos fallidos
-            $table->boolean('is_active')->default(true); // Bloqueo de cuenta
+            $table->integer('login_attempts')->default(0); 
+            $table->boolean('is_active')->default(true); 
             $table->rememberToken();
             $table->timestamps();
         });
@@ -43,33 +42,31 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
-        // 2. Tabla de Clientes (Directorio)
+        // 2. Tabla de Clientes (Directorio - Punto de partida del flujo)
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->char('ruc', 11)->unique(); // RUC de 11 dígitos
+            $table->char('ruc', 11)->unique(); 
             $table->string('razon_social');
             $table->string('direccion')->nullable();
             $table->string('nombre_contacto');
             $table->string('telefono_contacto', 20);
             $table->string('email_contacto');
-            $table->enum('estado', ['ACTIVO', 'INACTIVO', 'EN_EVALUACION'])->default('ACTIVO');
+            $table->enum('estado', ['ACTIVO', 'INACTIVO', 'EN_EVALUACION'])->default('INACTIVO');
             $table->text('observaciones')->nullable();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Ejecutivo asignado
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->timestamps();
         });
 
-        // 3. Tabla Principal de Obras (Pipeline / Kanban con los 3 estados exactos)
+        // 3. Tabla Principal de Obras (Pipeline / Kanban)
         Schema::create('obras', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo')->unique(); // Ej: #OBR-101
+            $table->string('codigo')->unique(); 
             $table->string('titulo'); 
             $table->decimal('monto', 12, 2)->default(0.00);
             $table->date('fecha');
-            // Los 3 estados definidos para tu Kanban
-            $table->enum('estado', ['Inspeccion', 'Cotizado', 'Aprobado'])->default('Inspeccion');
-            
+            $table->enum('estado', ['Prospecto', 'Inspeccion', 'Cotización', 'Cierre Comercial', 'Aceptada', 'Cancelada'])->default('Prospecto');
             $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Comercial responsable
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->timestamps();
         });
 
@@ -81,30 +78,54 @@ return new class extends Migration
             $table->string('ingeniero_asignado'); 
             $table->dateTime('fecha_inspeccion');
             $table->text('resultado')->nullable();
-            $table->enum('estado_inspeccion', ['Pendiente', 'Completada', 'Cancelada'])->default('Pendiente');
+            $table->enum('estado_inspeccion', ['Registrada', 'Pendiente', 'Completada', 'Cancelada'])->default('Registrada');
             $table->timestamps();
         });
 
-        // 5. Tabla de Bitácoras (Historial e incidencias con captura automática de sesión)
+        // 5. Tabla de Bitácoras (Historial e incidencias)
         Schema::create('bitacoras', function (Blueprint $table) {
             $table->id();
             $table->foreignId('obra_id')->constrained('obras')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Se registra solo desde la sesión
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
             $table->text('comentario');
-            $table->string('tipo_contacto')->default('Reunión'); // Llamada, Visita, WhatsApp, Correo
-            $table->string('archivo_path')->nullable(); // Para adjuntar fotos o minutas
+            $table->string('tipo_contacto')->default('Reunión'); 
+            $table->string('archivo_path')->nullable(); 
             $table->timestamps();
         });
 
-        // 6. Tabla de Cotizaciones
+        // 6. Tabla de Cotizaciones (Optimizada para control del sistema)
         Schema::create('cotizaciones', function (Blueprint $table) {
             $table->id();
             $table->foreignId('obra_id')->constrained('obras')->onDelete('cascade');
-            $table->string('codigo_cotizacion');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Auditoría: Quién emitió la cotización
+            $table->string('codigo_cotizacion')->unique();
             $table->decimal('monto_total', 12, 2);
-            $table->enum('estado_cotizacion', ['Borrador', 'Enviada', 'Aceptada', 'Rechazada'])->default('Borrador');
+            
+            // Fechas de control gobernadas por el backend
+            $table->date('fecha_emision');
             $table->integer('validez_dias')->default(15);
+            $table->date('fecha_vencimiento'); // Calculada automáticamente por el sistema al emitir
+            
+            // Estados controlados estrictamente por la lógica de negocio
+            $table->enum('estado_cotizacion', [
+                'Registrada', 
+                'Enviada', 
+                'Aceptada', 
+                'Rechazada', 
+                'Vencida', 
+                'Reemplazada'
+            ])->default('Registrada');
+
+
+           
+
             $table->text('observaciones')->nullable();
+            $table->text('motivo_rechazo')->nullable(); 
+            
+            // Control de versiones para enlazar re-cotizaciones de una misma obra
+            $table->unsignedBigInteger('cotizacion_padre_id')->nullable();
+            $table->foreign('cotizacion_padre_id')->references('id')->on('cotizaciones')->onDelete('set null');
+            
             $table->timestamps();
         });
     }
@@ -114,7 +135,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Se eliminan en orden inverso estricto para evitar conflictos de claves foráneas
         Schema::dropIfExists('cotizaciones');
         Schema::dropIfExists('bitacoras');
         Schema::dropIfExists('inspecciones');
@@ -125,3 +145,8 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
+
+
+
+
+

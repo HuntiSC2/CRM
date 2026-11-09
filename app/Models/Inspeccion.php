@@ -14,10 +14,14 @@ class Inspeccion extends Model
     protected $fillable = [
         'obra_id',
         'user_id',
-        'ingeniero_asignado', // <-- Agregado para permitir la asignación masiva
+        'ingeniero_asignado',
         'fecha_inspeccion',
         'resultado',
         'estado_inspeccion',
+    ];
+
+    protected $casts = [
+        'fecha_inspeccion' => 'datetime',
     ];
 
     public function obra()

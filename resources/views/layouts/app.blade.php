@@ -275,7 +275,7 @@
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="fas fa-chart-pie"></i>
-                        <span>Dashboard</span>
+                        <span>Inicio</span>
                     </a>
                 </li>
                 <hr class="border-secondary opacity-25 mx-2 my-2">

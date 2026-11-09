@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Comercial;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bitacora; // <--- Añade esta importación
-use App\Models\Obra;     // <--- Añade esta importación
+use App\Models\Bitacora;
+use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 
 class BitacoraController extends Controller
 {
@@ -26,9 +25,11 @@ class BitacoraController extends Controller
             ->latest()
             ->paginate(10);
 
-        $obras = Obra::select('id', 'titulo')->get();
+        // CORRECCIÓN: Cambiado a '$obrasDisponibles' para que coincida exactamente con tu vista Blade,
+        // y se incluyen los campos 'id', 'codigo' y 'titulo'.
+        $obrasDisponibles = Obra::select('id', 'codigo', 'titulo')->orderBy('titulo', 'asc')->get();
 
-        return view('comercial.bitacora.index', compact('bitacoras', 'obras'));
+        return view('comercial.bitacora.index', compact('bitacoras', 'obrasDisponibles'));
     }
 
     public function store(Request $request)

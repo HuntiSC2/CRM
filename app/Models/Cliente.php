@@ -14,7 +14,7 @@ class Cliente extends Model
     protected $fillable = [
         'ruc',
         'razon_social',
-        'direccion', // <--- Agregado para permitir guardar la dirección fiscal
+        'direccion',
         'nombre_contacto',
         'telefono_contacto',
         'email_contacto',
@@ -26,5 +26,11 @@ class Cliente extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // <-- Agrega esta relación para conectar 1 a muchos con las obras -->
+    public function obras()
+    {
+        return $this->hasMany(Obra::class, 'cliente_id');
     }
 }
