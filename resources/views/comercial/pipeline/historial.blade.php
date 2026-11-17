@@ -41,7 +41,7 @@
         padding: 0;
     }
 
-    .dtl-search-input:focus, .dtl-input:focus, .form-control:focus, .form-select:focus {
+    .dtl-search-input:focus, .form-control:focus, .form-select:focus {
         border-color: #059669 !important;
         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
         background-color: #ffffff !important;
@@ -221,7 +221,7 @@
         </div>
     </div>
 
-    <!-- 3. TABLA DE HISTORIAL CON TODOS LOS ESTADOS -->
+    <!-- 3. TABLA DE HISTORIAL CON ESTADO REAL DERIVADO DE REGISTROS -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -238,6 +238,7 @@
                     </thead>
                     <tbody>
                         @forelse($obrasHistorial as $obra)
+                            @php $estadoReal = $obra->estado_real; @endphp
                             <tr>
                                 <td class="ps-3">
                                     <span class="fw-bold" style="color: #059669; font-size: 0.78rem;">
@@ -260,33 +261,33 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    @if($obra->estado === 'Aceptada')
+                                    @if($estadoReal === 'Aceptada')
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
                                             <i class="fas fa-trophy me-1 text-success"></i> Ganada
                                         </span>
-                                    @elseif($obra->estado === 'Cancelada')
+                                    @elseif($estadoReal === 'Cancelada')
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">
                                             <i class="fas fa-times-circle me-1 text-danger"></i> Perdida
                                         </span>
-                                    @elseif($obra->estado === 'Prospecto')
+                                    @elseif($estadoReal === 'Prospecto')
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
                                             <i class="fas fa-folder-open me-1 text-primary"></i> Prospecto
                                         </span>
-                                    @elseif($obra->estado === 'Inspeccion')
+                                    @elseif($estadoReal === 'Inspeccion')
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fefce8; color: #a16207; border: 1px solid #fef08a;">
                                             <i class="fas fa-search me-1 text-warning"></i> Inspección
                                         </span>
-                                    @elseif($obra->estado === 'Cotización')
+                                    @elseif($estadoReal === 'Cotización')
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe;">
                                             <i class="fas fa-file-invoice-dollar me-1" style="color: #7c3aed;"></i> Cotización
                                         </span>
-                                    @elseif($obra->estado === 'Cierre Comercial')
+                                    @elseif($estadoReal === 'Cierre Comercial')
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;">
                                             <i class="fas fa-handshake me-1 text-success"></i> Cierre Comercial
                                         </span>
                                     @else
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;">
-                                            {{ $obra->estado }}
+                                            {{ $estadoReal }}
                                         </span>
                                     @endif
                                 </td>

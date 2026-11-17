@@ -21,7 +21,7 @@ class PipelineController extends Controller
 
         $obrasQuery = Obra::with(['cliente', 'inspecciones', 'cotizaciones'])
             ->whereNotIn('estado', ['Aceptada', 'Cancelada'])
-            ->latest()
+            ->latest('id')
             ->get();
 
         $obras = [
@@ -39,50 +39,108 @@ class PipelineController extends Controller
         ];
 
         foreach ($obrasQuery as $obra) {
-            $estado = $obra->estado;
+            $estadoCalculado = $obra->estado;
+            
+            $todasInsp = $obra->inspecciones->sortBy('id')->values();
+            $totalInspecciones = $todasInsp->count();
+            $inspCompletadasCount = $todasInsp->where('estado_inspeccion', 'Completada')->count();
+            $inspeccionPendiente = $todasInsp->where('estado_inspeccion', 'Pendiente')->last();
 
-            if (array_key_exists($estado, $obras)) {
-                $inspeccionPendiente  = $obra->inspecciones->where('estado_inspeccion', 'Pendiente')->sortByDesc('id')->first();
-                $inspeccionCompletada = $obra->inspecciones->where('estado_inspeccion', 'Completada')->sortByDesc('id')->first();
+            $todasCotizaciones = $obra->cotizaciones->sortBy('id')->values();
+            $totalCotizaciones = $todasCotizaciones->count();
+            $ultimaCot = $todasCotizaciones->last();
+            $estadoCotizacion = $ultimaCot?->estado_cotizacion;
 
-                $cotizacionPendiente  = $obra->cotizaciones->where('estado_cotizacion', 'Programada')->sortByDesc('id')->first();
-                $cotizacionEnviada    = $obra->cotizaciones->whereIn('estado_cotizacion', ['Enviada', 'Aprobada', 'Aceptada'])->sortByDesc('id')->first();
-                
-                $ultimaCotizacion     = $obra->cotizaciones->sortByDesc('id')->first();
-                $cotizacionAceptada   = $obra->cotizaciones->where('estado_cotizacion', 'Aceptada')->first();
-                $cotizacionRechazada  = $obra->cotizaciones->where('estado_cotizacion', 'Rechazada')->first();
+            // Si está en Cotización pero no tiene ninguna cotización registrada, su lugar es Inspección
+            if ($estadoCalculado === 'Cotización' && $totalCotizaciones === 0) {
+                $estadoCalculado = 'Inspeccion';
+            }
 
-                $obras[$estado][] = [
-                    'id'                            => $obra->id,
-                    'codigo'                        => $obra->codigo ?? ('OBR-' . str_pad($obra->id, 3, '0', STR_PAD_LEFT)),
-                    'titulo'                        => $obra->titulo,
-                    'cliente'                       => $obra->cliente ? $obra->cliente->razon_social : 'Sin Cliente',
-                    'monto'                         => 'S/ ' . number_format($obra->monto, 2),
-                    'monto_raw'                     => (float) $obra->monto,
-                    'fecha'                         => $obra->fecha ? Carbon::parse($obra->fecha)->format('d/m/Y') : '',
-                    'estado'                        => $obra->estado,
-                    
-                    // Inspección
-                    'tiene_inspeccion_pendiente'    => !is_null($inspeccionPendiente),
-                    'inspeccion_pendiente_id'       => $inspeccionPendiente?->id,
-                    'inspeccion_ingeniero'          => $inspeccionPendiente?->ingeniero_asignado ?? 'No asignado',
-                    'inspeccion_fecha'              => $inspeccionPendiente?->fecha_inspeccion ? Carbon::parse($inspeccionPendiente->fecha_inspeccion)->format('d/m/Y H:i') : '-',
-                    'inspeccion_es_completada'      => !is_null($inspeccionCompletada),
-                    
-                    // Cotización
-                    'tiene_cotizacion_pendiente'    => !is_null($cotizacionPendiente),
-                    'cotizacion_pendiente_id'       => $cotizacionPendiente?->id,
-                    'cotizacion_pendiente_codigo'   => $cotizacionPendiente?->codigo_cotizacion,
-                    'cotizacion_es_completada'      => !is_null($cotizacionEnviada),
-                    'cotizacion_es_rechazada'       => !is_null($cotizacionRechazada) && is_null($cotizacionEnviada) && is_null($cotizacionPendiente),
-                    
-                    // Cierre
-                    'tiene_cotizacion_aceptada'     => !is_null($cotizacionAceptada),
-                    'tiene_cotizacion_rechazada'    => !is_null($cotizacionRechazada),
-                    'estado_cotizacion_final'       => $ultimaCotizacion?->estado_cotizacion,
+            if (array_key_exists($estadoCalculado, $obras)) {
+                $cotizacionesCulminadasCount = $todasCotizaciones->whereIn('estado_cotizacion', ['Aceptada', 'Rechazada'])->count();
+                $cotizacionFinalizada = in_array($estadoCotizacion, ['Aceptada', 'Rechazada']);
+
+                // CICLO RECURSIVO 1:1:
+                // Una nueva inspección requiere que todas las fases anteriores tengan su cotización terminada
+                $cicloCerrado = ($inspCompletadasCount === $cotizacionesCulminadasCount) && is_null($inspeccionPendiente);
+                $puedeAgendarInspeccion = ($totalInspecciones === 0) || $cicloCerrado;
+
+                // Programar cotización solo si hay inspección completada que no tenga cotización creada aún
+                $hayInspeccionSinCotizar = ($inspCompletadasCount > $totalCotizaciones);
+                $puedeProgramarCotizacion = ($estadoCalculado !== 'Prospecto') && $hayInspeccionSinCotizar && ($estadoCotizacion !== 'Programada');
+
+                // CIERRE COMERCIAL: Requiere ciclo 100% cerrado en cotizaciones culminadas
+                $puedeIrACierre = ($estadoCalculado === 'Cotización') 
+                                && ($inspCompletadasCount > 0)
+                                && ($inspCompletadasCount === $cotizacionesCulminadasCount)
+                                && is_null($inspeccionPendiente);
+
+                $obras[$estadoCalculado][] = [
+                    'id'                          => $obra->id,
+                    'codigo'                      => $obra->codigo ?? ('OBR-' . str_pad($obra->id, 3, '0', STR_PAD_LEFT)),
+                    'titulo'                      => $obra->titulo,
+                    'cliente'                     => $obra->cliente ? $obra->cliente->razon_social : 'Sin Cliente',
+                    'monto'                       => 'S/ ' . number_format($obra->monto, 2),
+                    'monto_raw'                   => (float) $obra->monto,
+                    'fecha'                       => $obra->fecha ? Carbon::parse($obra->fecha)->format('d/m/Y') : '',
+                    'estado'                      => $estadoCalculado,
+
+                    // Inspecciones
+                    'total_inspecciones'          => $totalInspecciones,
+                    'insp_completadas_count'      => $inspCompletadasCount,
+                    'tiene_inspeccion_pendiente'  => !is_null($inspeccionPendiente),
+                    'inspeccion_pendiente_id'     => $inspeccionPendiente?->id,
+                    'inspeccion_ingeniero'        => $inspeccionPendiente?->ingeniero_asignado ?? 'No asignado',
+                    'inspeccion_fecha'            => $inspeccionPendiente?->fecha_inspeccion ? Carbon::parse($inspeccionPendiente->fecha_inspeccion)->format('d/m/Y H:i') : '-',
+                    'inspeccion_fecha_raw'        => $inspeccionPendiente?->fecha_inspeccion ? Carbon::parse($inspeccionPendiente->fecha_inspeccion)->format('Y-m-d\TH:i') : '',
+                    'inspeccion_es_completada'    => ($totalInspecciones > 0 && is_null($inspeccionPendiente)),
+                    'historial_inspecciones'      => $todasInsp->map(function ($ins, $idx) {
+                        return [
+                            'id'        => $ins->id,
+                            'numero'    => $idx + 1,
+                            'ingeniero' => $ins->ingeniero_asignado,
+                            'fecha'     => Carbon::parse($ins->fecha_inspeccion)->format('d/m/Y H:i'),
+                            'estado'    => $ins->estado_inspeccion,
+                            'resultado' => $ins->resultado,
+                        ];
+                    })->toArray(),
+
+                    // Cotizaciones (1:1)
+                    'total_cotizaciones'          => $totalCotizaciones,
+                    'cotizaciones_ok_count'       => $cotizacionesCulminadasCount,
+                    'tiene_cotizaciones'          => ($totalCotizaciones > 0),
+                    'cotizacion_id'               => $ultimaCot?->id,
+                    'cotizacion_codigo'           => $ultimaCot?->codigo_cotizacion,
+                    'cotizacion_monto'            => $ultimaCot?->monto_total ? 'S/ ' . number_format($ultimaCot->monto_total, 2) : 'S/ 0.00',
+                    'cotizacion_monto_raw'        => (float) ($ultimaCot?->monto_total ?? 0),
+                    'cotizacion_fecha_emision'    => $ultimaCot?->fecha_emision ? Carbon::parse($ultimaCot->fecha_emision)->format('Y-m-d') : date('Y-m-d'),
+                    'cotizacion_fecha_formato'    => $ultimaCot?->fecha_emision ? Carbon::parse($ultimaCot->fecha_emision)->format('d/m/Y') : '-',
+                    'cotizacion_observaciones'    => $ultimaCot?->observaciones ?? 'Sin observaciones.',
+                    'estado_cotizacion'           => $estadoCotizacion,
+                    'cotizacion_finalizada'       => $cotizacionFinalizada,
+                    'es_rechazada'                => ($estadoCotizacion === 'Rechazada'),
+                    'historial_cotizaciones'      => $todasCotizaciones->map(function ($cot, $idx) use ($todasInsp) {
+                        $inspAsociada = $todasInsp->get($idx);
+                        return [
+                            'id'             => $cot->id,
+                            'numero'         => $idx + 1,
+                            'codigo'         => $cot->codigo_cotizacion,
+                            'monto'          => 'S/ ' . number_format($cot->monto_total, 2),
+                            'fecha'          => Carbon::parse($cot->fecha_emision)->format('d/m/Y'),
+                            'estado'         => $cot->estado_cotizacion,
+                            'observaciones'  => $cot->observaciones,
+                            'insp_numero'    => $idx + 1,
+                            'insp_dictamen'  => $inspAsociada?->resultado ?? 'Inspección completada.',
+                            'insp_ingeniero' => $inspAsociada?->ingeniero_asignado ?? '-',
+                        ];
+                    })->toArray(),
+
+                    'puede_agendar_inspeccion'    => $puedeAgendarInspeccion,
+                    'puede_programar_cotizacion'  => $puedeProgramarCotizacion,
+                    'puede_ir_a_cierre'           => $puedeIrACierre,
                 ];
 
-                $totalesPorColumna[$estado] += (float) $obra->monto;
+                $totalesPorColumna[$estadoCalculado] += (float) $obra->monto;
             }
         }
 
@@ -92,8 +150,7 @@ class PipelineController extends Controller
     }
 
     /**
-     * 1. AGENDAR INSPECCIÓN:
-     * HITO TÉCNICO -> Fuerza la reubicación automática a la columna 'Inspeccion'.
+     * 1. AGENDAR INSPECCIÓN: MUEVE LA OBRA DE FORMA IMANTADA A 'INSPECCION' (CICLO 1, 2, N)
      */
     public function agendarInspeccion(Request $request)
     {
@@ -101,40 +158,54 @@ class PipelineController extends Controller
             'obra_id'            => 'required|exists:obras,id',
             'ingeniero_asignado' => 'required|string|min:3|max:150',
             'fecha_inspeccion'   => 'required|date',
-            'contacto_nombre'    => 'nullable|string|max:150',
-            'contacto_telefono'  => 'nullable|string|max:50',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $obra = Obra::with(['inspecciones', 'cotizaciones'])->findOrFail($request->obra_id);
+
+        if ($obra->inspecciones()->where('estado_inspeccion', 'Pendiente')->exists()) {
+            return response()->json(['success' => false, 'message' => 'Complete la inspección en curso antes de agendar otra.'], 422);
+        }
+
+        $ultimaCot = $obra->cotizaciones()->latest('id')->first();
+        if ($ultimaCot && !in_array($ultimaCot->estado_cotizacion, ['Aceptada', 'Rechazada'])) {
+            return response()->json(['success' => false, 'message' => 'Debe culminar la cotización actual antes de iniciar una nueva fase.'], 422);
+        }
+
+        DB::transaction(function () use ($obra, $request) {
             Inspeccion::create([
-                'obra_id'            => $request->obra_id,
+                'obra_id'            => $obra->id,
                 'user_id'            => Auth::id() ?? 1,
                 'ingeniero_asignado' => $request->ingeniero_asignado,
                 'fecha_inspeccion'   => $request->fecha_inspeccion,
-                'contacto_nombre'    => $request->contacto_nombre,
-                'contacto_telefono'  => $request->contacto_telefono,
                 'estado_inspeccion'  => 'Pendiente',
                 'resultado'          => null,
             ]);
 
-            // REGLA: Sin importar en qué columna esté, salta inmediatamente a 'Inspeccion'
-            $obra = Obra::find($request->obra_id);
-            if ($obra && $obra->estado !== 'Inspeccion') {
-                $obra->update(['estado' => 'Inspeccion']);
-                self::actualizarEstadoCliente($obra->cliente_id);
-            }
+            // TRASLADO IMANTADO: Siempre que se agenda una inspección nueva, la obra se mueve a 'Inspeccion'
+            $obra->update(['estado' => 'Inspeccion']);
+            self::actualizarEstadoCliente($obra->cliente_id);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Inspección agendada. El expediente avanzó a la columna Inspeccion.'
-        ]);
+        return response()->json(['success' => true, 'message' => 'Inspección agendada exitosamente. Expediente trasladado a Inspección.']);
     }
 
-    /**
-     * 2. COMPLETAR INSPECCIÓN:
-     * HITO TÉCNICO -> Dictamen realizado. Fuerza la reubicación a 'Cotización'.
-     */
+    public function reprogramarInspeccion(Request $request)
+    {
+        $request->validate([
+            'inspeccion_id'      => 'required|exists:inspecciones,id',
+            'nueva_fecha'        => 'required|date',
+            'ingeniero_asignado' => 'required|string|min:3|max:150',
+        ]);
+
+        $inspeccion = Inspeccion::findOrFail($request->inspeccion_id);
+        $inspeccion->update([
+            'fecha_inspeccion'   => $request->nueva_fecha,
+            'ingeniero_asignado' => $request->ingeniero_asignado,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Fecha reprogramada con éxito.']);
+    }
+
     public function completarInspeccion(Request $request)
     {
         $request->validate([
@@ -142,32 +213,23 @@ class PipelineController extends Controller
             'resultado'     => 'required|string|min:4',
         ]);
 
-        $inspeccion = Inspeccion::with('obra')->findOrFail($request->inspeccion_id);
+        $inspeccion = Inspeccion::findOrFail($request->inspeccion_id);
+        $fechaActual = now();
 
-        DB::transaction(function () use ($inspeccion, $request) {
-            $fechaActual = now();
-            $inspeccion->update([
-                'resultado'         => trim($request->resultado) . " (Completada el {$fechaActual->format('d/m/Y H:i')})",
-                'estado_inspeccion' => 'Completada',
-                'updated_at'        => $fechaActual
-            ]);
-
-            // REGLA: Al emitir el informe técnico, avanza directamente a 'Cotización'
-            if ($inspeccion->obra && $inspeccion->obra->estado !== 'Cotización') {
-                $inspeccion->obra->update(['estado' => 'Cotización']);
-                self::actualizarEstadoCliente($inspeccion->obra->cliente_id);
-            }
-        });
+        $inspeccion->update([
+            'resultado'         => trim($request->resultado),
+            'estado_inspeccion' => 'Completada',
+            'updated_at'        => $fechaActual
+        ]);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Inspección completada. El expediente avanzó a la columna Cotización.'
+            'success' => true, 
+            'message' => 'Inspección completada con éxito. Ya puede programar la cotización correspondiente.'
         ]);
     }
 
     /**
-     * 3. PROGRAMAR COTIZACIÓN:
-     * HITO TÉCNICO -> Prepara la emisión y asegura la obra en 'Cotización'.
+     * 2. PROGRAMAR COTIZACIÓN: MUEVE LA OBRA DE FORMA IMANTADA A 'COTIZACIÓN' (CICLO 1, 2, N)
      */
     public function programarCotizacion(Request $request)
     {
@@ -176,7 +238,17 @@ class PipelineController extends Controller
             'fecha_emision' => 'required|date',
         ]);
 
-        $obra = Obra::findOrFail($request->obra_id);
+        $obra = Obra::with(['inspecciones', 'cotizaciones'])->findOrFail($request->obra_id);
+
+        $completadas = $obra->inspecciones()->where('estado_inspeccion', 'Completada')->orderBy('id')->get();
+        $totalCots = $obra->cotizaciones()->count();
+
+        if ($completadas->count() <= $totalCots) {
+            return response()->json(['success' => false, 'message' => 'No hay inspecciones pendientes de cotizar.'], 422);
+        }
+
+        $inspeccionAsociada = $completadas->get($totalCots);
+        $numFase = $totalCots + 1;
 
         $anioActual = date('Y');
         $ultimaCotizacion = Cotizacion::where('codigo_cotizacion', 'like', "COT-{$anioActual}-%")
@@ -190,7 +262,9 @@ class PipelineController extends Controller
         $fechaEmision = Carbon::parse($request->fecha_emision);
         $fechaVencimiento = (clone $fechaEmision)->addDays($validezDias);
 
-        DB::transaction(function () use ($obra, $nuevoCodigo, $fechaEmision, $validezDias, $fechaVencimiento) {
+        $obsAuditoria = "[Fase #{$numFase} ⇄ Inspección #{$numFase} - {$inspeccionAsociada->ingeniero_asignado}] " . $inspeccionAsociada->resultado;
+
+        DB::transaction(function () use ($obra, $nuevoCodigo, $fechaEmision, $validezDias, $fechaVencimiento, $obsAuditoria) {
             Cotizacion::create([
                 'obra_id'           => $obra->id,
                 'user_id'           => Auth::id() ?? 1,
@@ -200,26 +274,42 @@ class PipelineController extends Controller
                 'validez_dias'      => $validezDias,
                 'fecha_vencimiento' => $fechaVencimiento->toDateString(),
                 'estado_cotizacion' => 'Programada',
-                'observaciones'     => null,
+                'observaciones'     => $obsAuditoria,
             ]);
 
-            // REGLA: Fuerza su ubicación en 'Cotización'
-            if ($obra->estado !== 'Cotización') {
-                $obra->update(['estado' => 'Cotización']);
-                self::actualizarEstadoCliente($obra->cliente_id);
-            }
+            // TRASLADO IMANTADO: Siempre que se programa una cotización nueva, la obra se mueve a 'Cotización'
+            $obra->update(['estado' => 'Cotización']);
+            self::actualizarEstadoCliente($obra->cliente_id);
         });
 
         return response()->json([
             'success' => true,
-            'message' => "Cotización {$nuevoCodigo} programada. Expediente ubicado en Cotización."
+            'message' => "Cotización {$nuevoCodigo} vinculada a la Inspección #{$numFase}. Expediente ubicado en Cotización."
         ]);
     }
 
-    /**
-     * 4. EMITIR Y ENVIAR COTIZACIÓN:
-     * HITO TÉCNICO -> Fija el monto real y fuerza la reubicación a 'Cierre Comercial'.
-     */
+    public function reprogramarCotizacion(Request $request)
+    {
+        $request->validate([
+            'cotizacion_id'       => 'required|exists:cotizaciones,id',
+            'nueva_fecha_emision' => 'required|date',
+        ]);
+
+        $cot = Cotizacion::findOrFail($request->cotizacion_id);
+        $nuevaFecha = Carbon::parse($request->nueva_fecha_emision);
+
+        $cot->update([
+            'fecha_emision'     => $nuevaFecha->toDateString(),
+            'fecha_vencimiento' => (clone $nuevaFecha)->addDays($cot->validez_dias ?? 15)->toDateString(),
+            'updated_at'        => now(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Fecha de emisión actualizada por retraso.'
+        ]);
+    }
+
     public function enviarCotizacion(Request $request)
     {
         $request->validate([
@@ -232,34 +322,152 @@ class PipelineController extends Controller
         $fechaActual = now();
 
         DB::transaction(function () use ($cotizacion, $request, $fechaActual) {
+            $obsFinal = $request->observaciones;
+            if (str_starts_with($cotizacion->observaciones ?? '', '[')) {
+                $prefijo = explode('] ', $cotizacion->observaciones)[0] . '] ';
+                $obsFinal = $prefijo . ($request->observaciones ?? '');
+            }
+
             $cotizacion->update([
-                'monto_total'        => $request->monto_total,
-                'observaciones'      => $request->observaciones,
-                'fecha_vencimiento'  => $fechaActual,
-                'estado_cotizacion'  => 'Enviada',
-                'updated_at'         => $fechaActual,
+                'monto_total'       => $request->monto_total,
+                'observaciones'     => $obsFinal,
+                'fecha_vencimiento' => $fechaActual,
+                'estado_cotizacion' => 'Enviada',
+                'updated_at'        => $fechaActual,
             ]);
 
             if ($cotizacion->obra) {
-                // REGLA: Actualiza monto ofertado y salta automáticamente a 'Cierre Comercial'
                 $cotizacion->obra->update([
-                    'monto'  => $request->monto_total,
-                    'estado' => 'Cierre Comercial'
+                    'monto' => $request->monto_total,
                 ]);
-                self::actualizarEstadoCliente($cotizacion->obra->cliente_id);
             }
         });
 
         return response()->json([
             'success' => true,
-            'message' => "Cotización emitida con éxito. Expediente trasladado a Cierre Comercial."
+            'message' => "Cotización emitida en estado 'Enviada'. Permanece en Cotización."
         ]);
     }
 
     /**
-     * 5. BITÁCORA RÁPIDA:
-     * Registro técnico sin alterar la posición actual del expediente.
+     * 3. AJUSTAR PRECIO PARA COTIZACIONES RECHAZADAS (NUEVO BOTÓN ESPECIAL)
      */
+    public function ajustarPrecioCotizacion(Request $request)
+    {
+        $request->validate([
+            'cotizacion_id'     => 'required|exists:cotizaciones,id',
+            'nuevo_monto'       => 'required|numeric|gt:0',
+            'motivo_reajuste'   => 'required|string|min:4',
+        ]);
+
+        $cotizacion = Cotizacion::with('obra')->findOrFail($request->cotizacion_id);
+        $fechaActual = now();
+
+        DB::transaction(function () use ($cotizacion, $request, $fechaActual) {
+            $obsAnterior = $cotizacion->observaciones ?? '';
+            $notaAjuste  = " [Reajuste por cliente: {$request->motivo_reajuste}]";
+
+            $cotizacion->update([
+                'monto_total'       => $request->nuevo_monto,
+                'observaciones'     => $obsAnterior . $notaAjuste,
+                'estado_cotizacion' => 'Enviada', // Vuelve a enviada con precio reajustado
+                'updated_at'        => $fechaActual,
+            ]);
+
+            if ($cotizacion->obra) {
+                $cotizacion->obra->update([
+                    'monto' => $request->nuevo_monto,
+                ]);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Precio reajustado exitosamente. La cotización vuelve a estado Enviada.'
+        ]);
+    }
+
+    public function responderCotizacion(Request $request)
+    {
+        $request->validate([
+            'cotizacion_id'      => 'required|exists:cotizaciones,id',
+            'estado_cotizacion'  => 'required|in:Aceptada,Rechazada',
+        ]);
+
+        $cot = Cotizacion::findOrFail($request->cotizacion_id);
+        $cot->update([
+            'estado_cotizacion' => $request->estado_cotizacion,
+            'updated_at'        => now()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Cotización actualizada como {$request->estado_cotizacion}."
+        ]);
+    }
+
+    public function trasladarACierre(Request $request)
+    {
+        $request->validate([
+            'obra_id' => 'required|exists:obras,id',
+        ]);
+
+        $obra = Obra::findOrFail($request->obra_id);
+        $obra->update(['estado' => 'Cierre Comercial']);
+        self::actualizarEstadoCliente($obra->cliente_id);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Obra trasladada a Cierre Comercial."
+        ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'obra_id'      => 'required|exists:obras,id',
+            'nuevo_estado' => 'required|string|in:Aceptada,Cancelada',
+        ]);
+
+        return $this->archivar(new Request([
+            'obra_id'      => $request->obra_id,
+            'estado_final' => $request->nuevo_estado
+        ]));
+    }
+
+    public function archivar(Request $request)
+    {
+        $request->validate([
+            'obra_id'      => 'required|exists:obras,id',
+            'estado_final' => 'required|string|in:Aceptada,Cancelada',
+        ]);
+
+        $obra = Obra::with('cliente')->findOrFail($request->obra_id);
+
+        DB::transaction(function () use ($obra, $request) {
+            $cotizacionReciente = Cotizacion::where('obra_id', $obra->id)->latest('id')->first();
+            if ($cotizacionReciente && $cotizacionReciente->monto_total > 0) {
+                $obra->monto = $cotizacionReciente->monto_total;
+            }
+
+            $obra->estado = $request->estado_final;
+            $obra->save();
+
+            Cotizacion::where('obra_id', $obra->id)->update([
+                'estado_cotizacion' => ($request->estado_final === 'Aceptada') ? 'Aceptada' : 'Rechazada'
+            ]);
+
+            if ($obra->cliente_id) {
+                self::actualizarEstadoCliente($obra->cliente_id);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => "Expediente finalizado como {$request->estado_final} y archivado en el Historial."
+        ]);
+    }
+
     public function agregarBitacora(Request $request)
     {
         $request->validate([
@@ -267,35 +475,24 @@ class PipelineController extends Controller
             'descripcion' => 'required|string|min:4|max:1000',
         ]);
 
-        if (class_exists('App\\Models\\Bitacora')) {
-            Bitacora::create([
-                'obra_id'     => $request->obra_id,
-                'user_id'     => Auth::id() ?? 1,
-                'fecha'       => now(),
-                'descripcion' => $request->descripcion,
-                'tipo'        => 'Seguimiento',
-            ]);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Nota registrada en la bitácora técnica.'
+        Bitacora::create([
+            'obra_id'       => $request->obra_id,
+            'user_id'       => Auth::id() ?? 1,
+            'comentario'    => $request->descripcion,
+            'tipo_contacto' => 'Seguimiento',
         ]);
+
+        return response()->json(['success' => true, 'message' => 'Nota registrada en la bitácora técnica.']);
     }
 
     public function store(Request $request)
     {
-        $request->merge([
-            'titulo' => trim(preg_replace('/\s+/', ' ', $request->titulo))
-        ]);
+        $request->merge(['titulo' => trim(preg_replace('/\s+/', ' ', $request->titulo))]);
 
         $request->validate([
             'cliente_id' => 'required|exists:clientes,id',
             'titulo'     => [
-                'required',
-                'string',
-                'min:5',
-                'max:255',
+                'required', 'string', 'min:5', 'max:255',
                 \Illuminate\Validation\Rule::unique('obras', 'titulo')->where(function ($query) use ($request) {
                     return $query->where('cliente_id', $request->cliente_id);
                 }),
@@ -325,101 +522,20 @@ class PipelineController extends Controller
             self::actualizarEstadoCliente($obra->cliente_id);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => "Expediente {$codigo} registrado en etapa Prospecto."
-        ]);
-    }
-
-    /**
-     * LIBERTAD VISUAL MANUAL:
-     * El usuario puede mover con el cursor la tarjeta a la columna que guste.
-     */
-    public function updateStatus(Request $request)
-    {
-        $request->validate([
-            'obra_id'      => 'required|exists:obras,id',
-            'nuevo_estado' => 'required|string|in:Prospecto,Inspeccion,Cotización,Cierre Comercial,Aceptada,Cancelada',
-        ]);
-
-        $obra = Obra::find($request->obra_id);
-        if (!$obra) {
-            return response()->json(['success' => false, 'message' => 'Expediente no encontrado.'], 404);
-        }
-
-        // Si es cierre final (Aceptada / Cancelada), se delega a archivar
-        if (in_array($request->nuevo_estado, ['Aceptada', 'Cancelada'])) {
-            return $this->archivar(new Request([
-                'obra_id'      => $obra->id,
-                'estado_final' => $request->nuevo_estado
-            ]));
-        }
-
-        $obra->estado = $request->nuevo_estado;
-        $obra->save();
-
-        if ($obra->cliente_id) {
-            self::actualizarEstadoCliente($obra->cliente_id);
-        }
-
-        return response()->json(['success' => true, 'message' => "Expediente movido a {$request->nuevo_estado}."]);
-    }
-
-    public function archivar(Request $request)
-    {
-        $request->validate([
-            'obra_id'      => 'required|exists:obras,id',
-            'estado_final' => 'required|string|in:Aceptada,Cancelada',
-        ]);
-
-        $obra = Obra::with('cliente')->findOrFail($request->obra_id);
-
-        DB::transaction(function () use ($obra, $request) {
-            $cotizacionReciente = Cotizacion::where('obra_id', $obra->id)->latest()->first();
-            if ($cotizacionReciente && $cotizacionReciente->monto_total > 0) {
-                $obra->monto = $cotizacionReciente->monto_total;
-            }
-
-            $obra->estado = $request->estado_final;
-            $obra->save();
-
-            Cotizacion::where('obra_id', $obra->id)->update([
-                'estado_cotizacion' => ($request->estado_final === 'Aceptada') ? 'Aceptada' : 'Rechazada'
-            ]);
-
-            if ($obra->cliente_id) {
-                self::actualizarEstadoCliente($obra->cliente_id);
-            }
-        });
-
-        return response()->json([
-            'success' => true, 
-            'message' => "Expediente finalizado exitosamente como {$request->estado_final}."
-        ]);
-    }
-
-    public function eliminar(Request $request)
-    {
-        $request->validate(['obra_id' => 'required|exists:obras,id']);
-        $obra = Obra::findOrFail($request->obra_id);
-
-        $clienteId = $obra->cliente_id;
-        $obra->delete();
-        if ($clienteId) self::actualizarEstadoCliente($clienteId);
-
-        return response()->json(['success' => true, 'message' => 'Expediente eliminado con éxito.']);
+        return response()->json(['success' => true, 'message' => "Expediente {$codigo} registrado en Prospecto."]);
     }
 
     public function historial(Request $request)
     {
         $search = $request->input('search');
         $obrasHistorial = Obra::with(['cliente', 'user', 'inspecciones', 'cotizaciones'])
+            ->whereIn('estado', ['Aceptada', 'Cancelada'])
             ->when($search, function ($query, $search) {
                 return $query->where('codigo', 'like', "%{$search}%")
                            ->orWhere('titulo', 'like', "%{$search}%")
                            ->orWhereHas('cliente', fn($q) => $q->where('razon_social', 'like', "%{$search}%"));
             })
-            ->latest()
+            ->latest('updated_at')
             ->paginate(10);
 
         return view('comercial.pipeline.historial', compact('obrasHistorial', 'search'));

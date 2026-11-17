@@ -6,16 +6,22 @@
     <style>
         @page {
             size: a4 portrait;
-            margin: 1cm 1.2cm 1cm 1.2cm;
+            margin-top: 14mm;
+            margin-left: 14mm;
+            margin-right: 14mm;
+            margin-bottom: 12mm;
         }
+
         * {
             box-sizing: border-box;
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            -webkit-print-color-adjust: exact;
         }
+
         body {
-            color: #1e293b;
-            font-size: 8.2pt;
-            line-height: 1.4;
+            color: #334155;
+            font-size: 8.5pt;
+            line-height: 1.45;
             margin: 0;
             padding: 0;
             background-color: #ffffff;
@@ -23,375 +29,453 @@
 
         .page-container {
             width: 100%;
-            margin: 0 auto;
         }
 
-        .text-navy { color: #0c192c; }
-        .text-green { color: #059669; }
-        .font-mono { font-family: monospace; }
-        .fw-bold { font-weight: bold; }
-        .text-center { text-align: center; }
-        .text-end { text-align: right; }
+        /* UTILIDADES */
+        .text-navy      { color: #0f2438; }
+        .text-green     { color: #059669; }
+        .text-muted     { color: #64748b; }
+        .text-danger    { color: #dc2626; }
+        .font-mono      { font-family: 'Courier New', Courier, monospace; }
+        .fw-bold        { font-weight: bold; }
+        .fw-semibold    { font-weight: 600; }
+        .text-center    { text-align: center; }
+        .text-end       { text-align: right; }
         .text-uppercase { text-transform: uppercase; }
 
-        /* 1. ENCABEZADO SUPERIOR */
-        .table-master-header {
+        /* ========================================================
+           CABECERA: LOGO Y CUADRO UNIFORME Y PROPORCIONADO
+        ======================================================== */
+        .header-top-table {
             width: 100%;
-            table-layout: fixed;
             border-collapse: collapse;
-            margin-bottom: 8px;
         }
-        .header-logo-cell {
-            width: 42%;
+        .header-top-table td {
             vertical-align: middle;
-            padding-bottom: 20px;
-            padding-top: 10px;
-        }
-        .header-info-cell {
-            width: 58%;
-            text-align: right;
-            vertical-align: middle;
-            font-size: 7.5pt;
-            color: #334155;
-            line-height: 1.35;
-            padding-bottom: 20px;
-            padding-top: 10px;
-        }
-        .header-line-cell {
-            height: 3px;
-            background-color: #0c192c;
-            border-bottom: 2px solid #059669;
-            padding: 0;
-        }
-        .title-left-cell {
-            padding-top: 50px;
-            vertical-align: middle;
-            width: 70%;
-        }
-        .title-right-cell {
-            padding-top: 50px;
-            vertical-align: middle;
-            text-align: right;
-            width: 30%;
-        }
-        .title-main {
-            font-size: 13.5pt;
-            font-weight: 800;
-            color: #0c192c;
-            margin: 0;
-            letter-spacing: 0.3px;
-        }
-        .title-sub {
-            font-size: 7.6pt;
-            color: #64748b;
-            margin-top: 2px;
-        }
-        .badge-code {
-            background-color: #0c192c;
-            color: #ffffff;
-            font-size: 9.5pt;
-            font-weight: bold;
-            padding: 5px 12px;
-            border-radius: 4px;
-            display: inline-block;
-            letter-spacing: 0.5px;
         }
 
-        /* 2. TABLAS CLIENTE Y PROYECTO */
-        .section-header {
-            background-color: #0c192c;
-            color: #ffffff;
-            font-size: 7.8pt;
-            font-weight: bold;
-            padding: 5px 9px;
-            letter-spacing: 0.4px;
-            border-left: 4px solid #059669;
-            margin-top: 20px;
-            margin-bottom: 4px;
-            width: 100%;
+        .brand-left-cell {
+            width: 60%;
+        }
+        .brand-logo-img {
+            max-height: 50px;
+            width: auto;
             display: block;
         }
 
-        .table-data {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
+        /* Recuadro RUC / COT con ancho ajustado y texto 100% uniforme */
+        .box-right-cell {
+            width: 40%;
+            text-align: right;
         }
-        .table-data td {
-            padding: 6px 8px;
-            border: 1px solid #cbd5e1;
-            font-size: 8pt;
+        .official-ruc-box {
+            width: 195px; /* Ancho aumentado un poco como solicitaste */
+            border: 1.2px solid #0f2438;
+            border-collapse: collapse;
+            border-radius: 4px;
+            overflow: hidden;
+            display: inline-table;
+        }
+        .ruc-header-line {
+            background-color: #0f2438;
+            color: #ffffff;
+            padding: 5px 6px;
+            font-size: 8.5pt; /* Tamaño uniforme */
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .ruc-code-line {
+            background-color: #ffffff;
+            color: #0f2438;
+            padding: 5px 6px;
+            font-size: 8.5pt; /* Mismo tamaño uniforme */
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* ========================================================
+           TÍTULO DEL DOCUMENTO: SIN SUBRAYADO Y CON MÁS ESPACIO
+        ======================================================== */
+        .doc-title-container {
+            text-align: center;
+            margin-top: 40px;    /* Mayor espacio superior */
+            margin-bottom: 40px; /* Mayor espacio inferior */
+        }
+        .doc-title-text {
+            font-size: 13.5pt;
+            font-weight: 800;
+            color: #0f2438;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: inline-block;
+            /* Subrayado eliminado */
+        }
+
+        /* ========================================================
+           BARRAS DE SECCIÓN Y TABLAS
+        ======================================================== */
+        .section-bar {
+            background-color: #f8fafc;
+            color: #0f2438;
+            font-size: 7.8pt;
+            font-weight: 700;
+            padding: 5px 9px;
+            letter-spacing: 0.4px;
+            border-left: 3.5px solid #10b981;
+            border-top: 1px solid #edf2f7;
+            border-right: 1px solid #edf2f7;
+            border-bottom: 1px solid #edf2f7;
+            border-radius: 0 4px 4px 0;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        /* TABLAS DE METADATOS */
+        .table-info {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 4px;
+        }
+        .table-info td {
+            padding: 5.5px 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 7.8pt;
             vertical-align: middle;
         }
-        .td-label {
-            background-color: #f8fafc;
-            font-weight: bold;
-            color: #0c192c;
-            width: 20%;
+        .table-info .lbl {
+            background-color: #fbfcfd;
+            color: #475569;
+            font-weight: 600;
+            width: 16%;
         }
-        .td-value {
-            color: #1e293b;
-            width: 30%;
+        .table-info .val {
+            color: #0f172a;
+            width: 34%;
         }
 
-        /* 3. TABLA DE ACTIVIDADES */
+        /* TABLA DE ACTIVIDADES */
         .table-items {
             width: 100%;
-            table-layout: fixed;
             border-collapse: collapse;
-            margin-top: 4px;
+            margin-top: 6px;
         }
         .table-items th {
-            background-color: #0c192c;
+            background-color: #0f2438;
             color: #ffffff;
             padding: 7px 8px;
-            font-size: 7.6pt;
-            font-weight: bold;
-            border: 1px solid #0c192c;
+            font-size: 7.4pt;
+            font-weight: 700;
+            border: 1px solid #0f2438;
+            letter-spacing: 0.4px;
         }
         .table-items td {
-            padding: 10px 8px;
+            padding: 8px;
             border: 1px solid #cbd5e1;
-            font-size: 8pt;
+            font-size: 7.8pt;
+            vertical-align: middle;
         }
 
-        /* 4. TOTALES */
+        /* TABLA DE TOTALES */
         .table-totals-container {
             width: 100%;
-            table-layout: fixed;
             border-collapse: collapse;
             margin-top: 12px;
         }
         .table-totals {
             width: 100%;
-            table-layout: fixed;
             border-collapse: collapse;
         }
         .table-totals td {
-            padding: 7px 10px;
-            font-size: 8.2pt;
+            padding: 5.5px 10px;
             border: 1px solid #cbd5e1;
+            font-size: 8pt;
         }
-        .total-row-highlight {
-            background-color: #059669 !important;
-            color: #ffffff !important;
+        .table-totals .tot-lbl {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            text-align: right;
+            width: 55%;
+        }
+        .table-totals .tot-val {
+            text-align: right;
+            font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            border: 1px solid #059669 !important;
+            color: #0f2438;
+            width: 45%;
+        }
+        .row-grand-total td {
+            background-color: #0f2438 !important;
+            color: #ffffff !important;
+            border: 1px solid #0f2438 !important;
+            font-weight: bold;
+            font-size: 8.8pt;
+        }
+        .row-grand-total .tot-val {
+            color: #34d399 !important;
+            font-size: 9.8pt;
         }
 
-        /* 5. FIRMA */
+        /* FIRMA (INFERIOR DERECHA) */
         .table-signatures {
             width: 100%;
-            table-layout: fixed;
             border-collapse: collapse;
-            margin-top: 80px;
+            margin-top: 60px;
+            page-break-inside: avoid;
         }
-        .sig-col-right {
-            width: 45%;
+        .sig-empty-col {
+            width: 58%;
+        }
+        .sig-right-col {
+            width: 42%;
             text-align: center;
             vertical-align: bottom;
         }
-        .sig-wrapper {
-            height: 52px;
-            margin-bottom: 2px;
+        .sig-box {
+            min-height: 55px;
             text-align: center;
             vertical-align: bottom;
+            margin-bottom: 4px;
         }
         .sig-img {
-            max-height: 60px;
-            max-width: 230px;
+            max-height: 55px;
+            max-width: 200px;
             display: inline-block;
         }
-        .sig-bar {
-            border-top: 1.5px solid #334155;
-            width: 230px;
+        .sig-badge-approved {
+            border: 1px solid #10b981;
+            background-color: #ecfdf5;
+            color: #047857;
+            font-size: 7pt;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+        .sig-line {
+            border-top: 1.5px solid #0f2438;
+            width: 100%;
+            max-width: 220px;
             margin: 0 auto;
-            padding-top: 5px;
-            font-size: 7.8pt;
+            padding-top: 4px;
+            font-size: 7.3pt;
             line-height: 1.35;
+            color: #475569;
+        }
+
+        /* PIE DE PÁGINA (ELEVADO PARA NO CORTARSE) */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0mm; /* Elevado para asegurar visibilidad total */
+            left: 0;
+            right: 0;
+            border-top: 1px solid #cbd5e1;
+            padding-top: 5px;
+            font-size: 7.2pt;
+            color: #475569;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .footer-fixed strong {
+            color: #0f2438;
         }
     </style>
 </head>
 <body>
 
-    @php
-        $pathFirmaGerente = file_exists(public_path('images/firma_gerente.JPG')) 
-            ? public_path('images/firma_gerente.JPG') 
-            : (file_exists(public_path('images/firma_gerente.jpg')) ? public_path('images/firma_gerente.jpg') : null);
+@php
+    $pathFirmaGerente = file_exists(public_path('images/firma_gerente.JPG'))
+        ? public_path('images/firma_gerente.JPG')
+        : (file_exists(public_path('images/firma_gerente.jpg')) ? public_path('images/firma_gerente.jpg') : null);
 
-        $estaAprobada = ($cotizacion->estado_cotizacion === 'Aceptada' || $cotizacion->estado_cotizacion === 'Aprobada' || $cotizacion->estado_cotizacion === 'Enviada' || str_contains($cotizacion->observaciones ?? '', '[APROBADO'));
+    $estaAprobada = ($cotizacion->estado_cotizacion === 'Aceptada' || $cotizacion->estado_cotizacion === 'Aprobada' || $cotizacion->estado_cotizacion === 'Enviada' || str_contains($cotizacion->observaciones ?? '', '[APROBADO'));
 
-        $montoTotal = (float) $cotizacion->monto_total;
-        $subtotal   = $montoTotal / 1.18;
-        $igv        = $montoTotal - $subtotal;
+    $montoTotal = (float) $cotizacion->monto_total;
+    $subtotal   = $montoTotal / 1.18;
+    $igv        = $montoTotal - $subtotal;
 
-        // CÁLCULO SEGURO DE FECHAS (Evita que PHP reviente)
-        $fechaEmisionCarbon = !empty($cotizacion->fecha_emision) ? \Carbon\Carbon::parse($cotizacion->fecha_emision) : now();
-        $diasValidez = (int) ($cotizacion->validez_dias ?? 15);
-        $fechaVencimientoCalculada = !empty($cotizacion->fecha_vencimiento) 
-            ? \Carbon\Carbon::parse($cotizacion->fecha_vencimiento)->format('d/m/Y')
-            : $fechaEmisionCarbon->copy()->addDays($diasValidez)->format('d/m/Y');
-    @endphp
+    // Fechas
+    $fechaEmisionCarbon = !empty($cotizacion->fecha_emision) ? \Carbon\Carbon::parse($cotizacion->fecha_emision) : now();
+    $diasValidez = (int) ($cotizacion->validez_dias ?? 15);
+    $fechaVencimientoCalculada = !empty($cotizacion->fecha_vencimiento)
+        ? \Carbon\Carbon::parse($cotizacion->fecha_vencimiento)->format('d/m/Y')
+        : $fechaEmisionCarbon->copy()->addDays($diasValidez)->format('d/m/Y');
+
+    $asesorNombre = $cotizacion->comercial->name ?? ($cotizacion->user->name ?? 'Carlos Mendoza (Comercial)');
+@endphp
+
+<!-- PIE DE PÁGINA -->
+<div class="footer-fixed">
+    <strong>Dirección:</strong> PJ. Lima Nro. 115, Huánuco, Perú &nbsp;&bull;&nbsp; <strong>Central Telefónica:</strong> (062) 512345 &bull; contacto@dtlpremier.pe
+</div>
 
 <div class="page-container">
 
-    <!-- 1. ENCABEZADO SUPERIOR -->
-    <table class="table-master-header">
+    <!-- CABECERA: LOGO Y RECUADRO CON ANCHO Y TEXTO UNIFORME -->
+    <table class="header-top-table">
         <tr>
-            <td class="header-logo-cell">
+            <td class="brand-left-cell">
                 @if(file_exists(public_path('images/logo-dtl.png')))
-                    <img src="{{ public_path('images/logo-dtl.png') }}" style="max-height: 55px;" alt="DTL PREMIER S.A.C.">
+                    <img src="{{ public_path('images/logo-dtl.png') }}" class="brand-logo-img" alt="DTL PREMIER">
                 @else
-                    <h2 style="color: #0c192c; margin: 0; font-size: 16pt; font-weight: 900;">DTL PREMIER</h2>
+                    <h1 style="color: #0f2438; margin: 0; font-size: 18pt; font-weight: 900;">DTL PREMIER</h1>
                 @endif
             </td>
-            <td class="header-info-cell">
-                <strong style="color: #059669; font-size: 8.8pt;">DTL PREMIER S.A.C.</strong> &bull; RUC: 20529193719<br>
-                PJ. LIMA NRO. 115, Huánuco - Huánuco - Huánuco<br>
-                Central: (062) 512345 &bull; comercial@dtlpremier.com &bull; www.dtlpremier.com
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" class="header-line-cell"></td>
-        </tr>
-        <tr>
-            <td class="title-left-cell">
-                <div class="title-main text-uppercase">PROPUESTA TÉCNICO - ECONÓMICA</div>
-                <div class="title-sub">Construcción, Mantenimiento y Servicios Especializados de Ingeniería</div>
-            </td>
-            <td class="title-right-cell">
-                <div class="badge-code font-mono">{{ $cotizacion->codigo_cotizacion }}</div>
-            </td>
-        </tr>
-    </table>
-
-    <!-- 2. TABLA 1: I. INFORMACIÓN DEL CLIENTE -->
-    <div class="section-header text-uppercase">I. INFORMACIÓN DE LA EMPRESA / CLIENTE</div>
-    <table class="table-data">
-        <tr>
-            <td class="td-label">Razón Social:</td>
-            <td colspan="3" class="td-value fw-bold text-navy" style="font-size: 8.3pt;">
-                {{ $cotizacion->obra->cliente->razon_social ?? 'NO ESPECIFICADO' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="td-label">RUC / DNI:</td>
-            <td class="td-value font-mono">{{ $cotizacion->obra->cliente->ruc ?? '-' }}</td>
-            <td class="td-label">Dirección Fiscal:</td>
-            <td class="td-value">{{ $cotizacion->obra->cliente->direccion ?? 'Huánuco, Perú' }}</td>
-        </tr>
-        <tr>
-            <td class="td-label">Contacto Comercial:</td>
-            <td class="td-value">{{ $cotizacion->obra->cliente->nombre_contacto ?? 'Atención Dirección' }}</td>
-            <td class="td-label">Teléfono / Celular:</td>
-            <td class="td-value font-mono">{{ $cotizacion->obra->cliente->telefono_contacto ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="td-label">Email de Contacto:</td>
-            <td colspan="3" class="td-value font-mono">{{ $cotizacion->obra->cliente->email_contacto ?? 'contacto@cliente.com' }}</td>
-        </tr>
-    </table>
-
-    <!-- 3. TABLA 2: II. CONDICIONES GENERALES Y PROYECTO -->
-    <div class="section-header text-uppercase">II. CONDICIONES GENERALES Y PROYECTO</div>
-    <table class="table-data">
-        <tr>
-            <td class="td-label">Nombre Proyecto:</td>
-            <td colspan="3" class="td-value fw-bold" style="font-size: 8.3pt;">
-                {{ $cotizacion->obra->titulo ?? 'PROYECTO GENERAL' }}
-            </td>
-        </tr>
-        <tr>
-            <td class="td-label">Código Obra:</td>
-            <td class="td-value font-mono fw-bold">{{ $cotizacion->obra->codigo ?? 'OBR-S/N' }}</td>
-            <td class="td-label">Fecha Emisión:</td>
-            <td class="td-value font-mono">{{ $fechaEmisionCarbon->format('d/m/Y') }}</td>
-        </tr>
-        <tr>
-            <td class="td-label">Validez Comercial:</td>
-            <td class="td-value">{{ $diasValidez }} días calendario</td>
-            <td class="td-label">Fecha Vencimiento:</td>
-            <td class="td-value font-mono fw-bold" style="color: #dc2626;">
-                {{ $fechaVencimientoCalculada }}
-            </td>
-        </tr>
-        <tr>
-            <td class="td-label">Asesor Comercial:</td>
-            <td class="td-value">{{ $cotizacion->comercial->name ?? 'Wilmer' }}</td>
-            <td class="td-label">Moneda:</td>
-            <td class="td-value fw-bold text-green">Soles Peruanos (PEN / S/)</td>
-        </tr>
-    </table>
-
-    <!-- 4. TABLA 3: III. DESCRIPCIÓN DE ACTIVIDADES Y ALCANCE -->
-    <div class="section-header text-uppercase">III. DESCRIPCIÓN DE ACTIVIDADES Y ALCANCE</div>
-    <table class="table-items">
-        <thead>
-            <tr class="text-uppercase">
-                <th style="width: 7%;" class="text-center">ÍTEM</th>
-                <th style="width: 58%; text-align: left;">DESCRIPCIÓN DETALLADA DE ACTIVIDADES</th>
-                <th style="width: 8%;" class="text-center">UND</th>
-                <th style="width: 9%;" class="text-center">CANT.</th>
-                <th style="width: 18%;" class="text-end">TOTAL NETO (S/)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-center fw-bold align-top" style="padding-top: 10px;">01</td>
-                <td>
-                    <strong class="text-navy" style="font-size: 8.4pt;">{{ $cotizacion->obra->titulo ?? 'Servicios Generales de Ingeniería' }}</strong>
-                    <p style="margin: 3px 0 0 0; font-size: 7.3pt; color: #475569; line-height: 1.35;">
-                        Ejecución de actividades, suministro de materiales certificados y dotación de mano de obra técnica especializada según especificaciones técnicas. Incluye supervisión en seguridad (SST), herramientas, equipos menores y cumplimiento estricto de los estándares de calidad DTL PREMIER.
-                    </p>
-                </td>
-                <td class="text-center align-middle font-mono">GLB</td>
-                <td class="text-center align-middle fw-bold font-mono">1.00</td>
-                <td class="text-end align-middle fw-bold font-mono" style="font-size: 8.8pt;">
-                    {{ number_format($subtotal, 2) }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- 5. TABLA 4: TOTALES -->
-    <table class="table-totals-container">
-        <tr>
-            <td style="width: 52%;"></td>
-            <td style="width: 48%; vertical-align: top;">
-                <table class="table-totals">
+            <td class="box-right-cell">
+                <table class="official-ruc-box" align="right">
                     <tr>
-                        <td class="td-label text-end" style="width: 55%; font-size: 7.8pt;">Sub-Total Ventas (S/):</td>
-                        <td class="text-end fw-bold font-mono" style="width: 45%; font-size: 8.5pt;">{{ number_format($subtotal, 2) }}</td>
+                        <td class="ruc-header-line">
+                            R.U.C. N° 20529193719
+                        </td>
                     </tr>
                     <tr>
-                        <td class="td-label text-end" style="font-size: 7.8pt;">I.G.V. (18.00%):</td>
-                        <td class="text-end fw-bold font-mono" style="font-size: 8.5pt;">{{ number_format($igv, 2) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="total-row-highlight text-end" style="font-size: 8.5pt;">TOTAL PROPUESTA (S/):</td>
-                        <td class="total-row-highlight text-end font-mono" style="font-size: 9.8pt;">S/ {{ number_format($montoTotal, 2) }}</td>
+                        <td class="ruc-code-line">
+                            {{ $cotizacion->codigo_cotizacion }}
+                        </td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
 
-    <!-- 6. FIRMA ÚNICA: GERENCIA GENERAL -->
-    <table class="table-signatures">
+    <!-- TÍTULO: PROPUESTA ECONÓMICA SIN SUBRAYADO Y CON ESPACIO AMPLIO -->
+    <div class="doc-title-container">
+        <span class="doc-title-text">PROPUESTA ECONÓMICA</span>
+    </div>
+
+    <!-- 1. I. DATOS DEL CLIENTE -->
+    <div class="section-bar text-uppercase">I. INFORMACIÓN DE LA EMPRESA / CLIENTE</div>
+    <table class="table-info">
+        <tr>
+            <td class="lbl">Razón Social:</td>
+            <td colspan="3" class="val fw-bold text-navy">
+                {{ $cotizacion->obra->cliente->razon_social ?? 'NO ESPECIFICADO' }}
+            </td>
+        </tr>
+        <tr>
+            <td class="lbl">RUC / DNI:</td>
+            <td class="val font-mono fw-semibold">{{ $cotizacion->obra->cliente->ruc ?? '-' }}</td>
+            <td class="lbl">Dirección:</td>
+            <td class="val">{{ $cotizacion->obra->cliente->direccion ?? 'Huánuco, Perú' }}</td>
+        </tr>
+        <tr>
+            <td class="lbl">Atención:</td>
+            <td class="val">{{ $cotizacion->obra->cliente->nombre_contacto ?? 'Atención Dirección' }}</td>
+            <td class="lbl">Teléfono:</td>
+            <td class="val font-mono">{{ $cotizacion->obra->cliente->telefono_contacto ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="lbl">Email:</td>
+            <td colspan="3" class="val font-mono text-muted">{{ $cotizacion->obra->cliente->email_contacto ?? 'contacto@cliente.com' }}</td>
+        </tr>
+    </table>
+
+    <!-- 2. II. CONDICIONES DEL PROYECTO -->
+    <div class="section-bar text-uppercase">II. CONDICIONES GENERALES Y PROYECTO</div>
+    <table class="table-info">
+        <tr>
+            <td class="lbl">Proyecto:</td>
+            <td colspan="3" class="val fw-bold text-navy">
+                {{ $cotizacion->obra->titulo ?? 'PROYECTO GENERAL' }}
+            </td>
+        </tr>
+        <tr>
+            <td class="lbl">Código Obra:</td>
+            <td class="val font-mono fw-semibold">{{ $cotizacion->obra->codigo ?? 'OBR-S/N' }}</td>
+            <td class="lbl">Emisión:</td>
+            <td class="val font-mono fw-semibold">{{ $fechaEmisionCarbon->format('d/m/Y') }}</td>
+        </tr>
+        <tr>
+            <td class="lbl">Validez:</td>
+            <td class="val">{{ $diasValidez }} días calendario</td>
+            <td class="lbl">Vencimiento:</td>
+            <td class="val font-mono fw-bold text-danger">{{ $fechaVencimientoCalculada }}</td>
+        </tr>
+        <tr>
+            <td class="lbl">Asesor:</td>
+            <td class="val">{{ $asesorNombre }}</td>
+            <td class="lbl">Moneda:</td>
+            <td class="val fw-bold text-green">Soles Peruanos (PEN / S/)</td>
+        </tr>
+    </table>
+
+    <!-- 3. III. ACTIVIDADES Y ALCANCE -->
+    <div class="section-bar text-uppercase">III. DESCRIPCIÓN DE ACTIVIDADES Y ALCANCE</div>
+    <table class="table-items">
+        <thead>
+            <tr class="text-uppercase">
+                <th style="width: 6%;" class="text-center">ÍTEM</th>
+                <th style="width: 58%; text-align: left;">DESCRIPCIÓN DETALLADA</th>
+                <th style="width: 8%;" class="text-center">UND</th>
+                <th style="width: 8%;" class="text-center">CANT.</th>
+                <th style="width: 20%;" class="text-end">SUBTOTAL (S/)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center fw-bold text-navy">01</td>
+                <td>
+                    <strong class="text-navy" style="font-size: 8.2pt;">{{ $cotizacion->obra->titulo ?? 'Servicios Generales de Ingeniería y Construcción' }}</strong>
+                    <div style="margin-top: 3px; font-size: 7.4pt; color: #475569; line-height: 1.35;">
+                        Ejecución de actividades, suministro de materiales certificados y dotación de mano de obra técnica especializada según especificaciones técnicas. Incluye supervisión en seguridad (SST), herramientas, equipos menores y cumplimiento estricto de los estándares de calidad DTL PREMIER.
+                    </div>
+                </td>
+                <td class="text-center font-mono">GLB</td>
+                <td class="text-center font-mono fw-bold">1.00</td>
+                <td class="text-end font-mono fw-bold text-navy" style="font-size: 8.6pt;">
+                    {{ number_format($subtotal, 2) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 4. TOTALES -->
+    <table class="table-totals-container">
         <tr>
             <td style="width: 55%;"></td>
-            <td class="sig-col-right">
-                <div class="sig-wrapper">
+            <td style="width: 45%; vertical-align: top;">
+                <table class="table-totals">
+                    <tr>
+                        <td class="tot-lbl">Sub-Total Ventas:</td>
+                        <td class="tot-val">S/ {{ number_format($subtotal, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="tot-lbl">I.G.V. (18.00%):</td>
+                        <td class="tot-val">S/ {{ number_format($igv, 2) }}</td>
+                    </tr>
+                    <tr class="row-grand-total">
+                        <td class="text-end" style="padding-right: 8px;">TOTAL PROPUESTA:</td>
+                        <td class="tot-val">S/ {{ number_format($montoTotal, 2) }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- 5. FIRMA INFERIOR DERECHA -->
+    <table class="table-signatures">
+        <tr>
+            <td class="sig-empty-col"></td>
+            <td class="sig-right-col">
+                <div class="sig-box">
                     @if($estaAprobada && $pathFirmaGerente)
                         <img src="{{ $pathFirmaGerente }}" class="sig-img" alt="Firma Gerente">
                     @elseif($estaAprobada)
-                        <div style="border: 1px solid #059669; background-color: #ecfdf5; color: #047857; font-size: 7pt; font-weight: bold; padding: 4px; border-radius: 4px; display: inline-block;">
+                        <div class="sig-badge-approved">
                             &bull; VISTO BUENO GERENCIA REGISTRADO &bull;
                         </div>
+                    @else
+                        <div style="height: 48px;"></div>
                     @endif
                 </div>
-                <div class="sig-bar">
-                    <strong class="text-navy" style="font-size: 8pt;">GERENCIA GENERAL</strong>
+                <div class="sig-line">
+                    <strong class="text-navy" style="font-size: 8pt; display: block;">GERECIA GENERAL</strong>
+                    <span>GERENCIA GENERAL &bull; DTL PREMIER S.A.C.</span>
                 </div>
             </td>
         </tr>

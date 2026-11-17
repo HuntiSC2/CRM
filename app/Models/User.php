@@ -2,48 +2,83 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'users';
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        'login_attempts',
+        'is_active',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'is_active'         => 'boolean',
+            'login_attempts'    => 'integer',
         ];
+    }
+
+    // =========================================================================
+    // RELACIONES PARA DIRECTORIO Y GESTIÓN COMERCIAL
+    // =========================================================================
+
+    public function clientes(): HasMany
+    {
+        return $this->hasMany(Cliente::class, 'user_id');
+    }
+
+    public function obras(): HasMany
+    {
+        return $this->hasMany(Obra::class, 'user_id');
+    }
+
+    public function bitacoras(): HasMany
+    {
+        return $this->hasMany(Bitacora::class, 'user_id');
+    }
+
+    public function cotizaciones(): HasMany
+    {
+        return $this->hasMany(Cotizacion::class, 'user_id');
+    }
+
+    public function inspecciones(): HasMany
+    {
+        return $this->hasMany(Inspeccion::class, 'user_id');
+    }
+
+    // Helper de roles
+    public function esAdmin(): bool
+    {
+        return $this->role === 'administrador';
+    }
+
+    public function esDirectivo(): bool
+    {
+        return $this->role === 'directivo';
+    }
+
+    public function esEjecutivo(): bool
+    {
+        return $this->role === 'ejecutivo';
     }
 }

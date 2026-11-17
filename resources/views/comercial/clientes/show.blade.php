@@ -3,24 +3,6 @@
 @section('content')
 <!-- Estilos Exclusivos DTL PREMIER -->
 <style>
-    .btn-dtl-action {
-        height: 38px;
-        padding: 0 16px;
-        font-size: 0.88rem;
-        font-weight: 700;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        transition: all 0.2s ease-in-out;
-        white-space: nowrap;
-    }
-    .btn-dtl-dark {
-        background-color: #0f172a !important;
-        border: 1px solid #0f172a !important;
-        color: #ffffff !important;
-    }
     .dtl-table-hover tbody tr:hover {
         background-color: #f1f5f9 !important;
     }
@@ -166,7 +148,7 @@
                                 </td>
                                 <td class="text-center">
                                     <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1;">
-                                        {{ $obra->estado }}
+                                        {{ $obra->estado_real }}
                                     </span>
                                 </td>
                                 <td>

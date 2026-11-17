@@ -2,9 +2,16 @@
 
 @section('content')
 <style>
-    .bg-dtl-navy { background-color: #0c192c !important; }
-    .text-dtl-navy { color: #0c192c !important; }
-    .border-dtl-green { border-top: 3.5px solid #059669 !important; }
+    :root {
+        --dtl-navy: #0f172a;
+        --dtl-navy-hover: #1e293b;
+        --dtl-green: #059669;
+        --dtl-green-hover: #047857;
+    }
+
+    .bg-dtl-navy { background-color: var(--dtl-navy) !important; }
+    .text-dtl-navy { color: var(--dtl-navy) !important; }
+    .border-dtl-green { border-top: 3.5px solid var(--dtl-green) !important; }
 
     .executive-kpi-card {
         background: #ffffff;
@@ -24,13 +31,13 @@
         height: 3.5px;
     }
     .kpi-amber::before   { background: #f59e0b; }
-    .kpi-emerald::before { background: #059669; }
-    .kpi-navy::before    { background: #0c192c; }
+    .kpi-emerald::before { background: var(--dtl-green); }
+    .kpi-navy::before    { background: var(--dtl-navy); }
 
     .executive-kpi-card:hover { transform: translateY(-3px); }
     .kpi-amber:hover   { box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.20) !important; border-color: #fde68a; }
     .kpi-emerald:hover { box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.20) !important; border-color: #a7f3d0; }
-    .kpi-navy:hover    { box-shadow: 0 10px 20px -5px rgba(12, 25, 44, 0.18) !important; border-color: #bfdbfe; }
+    .kpi-navy:hover    { box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.18) !important; border-color: #cbd5e1; }
 
     .kpi-icon-box {
         width: 48px;
@@ -47,7 +54,7 @@
         border: 1px solid #cbd5e1 !important;
         border-radius: 12px;
         padding: 0.75rem 1rem !important;
-        box-shadow: 0 2px 8px rgba(12, 25, 44, 0.04);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
     }
 
     .segmented-control-wrapper {
@@ -81,11 +88,11 @@
         transition: all 0.15s ease;
         white-space: nowrap;
     }
-    .segmented-btn:hover { color: #0c192c; background-color: #e2e8f0; }
+    .segmented-btn:hover { color: var(--dtl-navy); background-color: #e2e8f0; }
     .segmented-btn.active {
-        background-color: #0c192c !important;
+        background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
-        box-shadow: 0 2px 6px rgba(12, 25, 44, 0.25);
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
     }
 
     .input-dtl-control {
@@ -100,9 +107,9 @@
         padding: 0 16px !important;
         font-size: 0.78rem !important;
         font-weight: 700 !important;
-        background-color: #059669 !important;
+        background-color: var(--dtl-green) !important;
         color: #ffffff !important;
-        border: 1px solid #059669 !important;
+        border: 1px solid var(--dtl-green) !important;
         border-radius: 8px !important;
         display: inline-flex;
         align-items: center;
@@ -113,7 +120,7 @@
         white-space: nowrap;
     }
     .btn-dtl-green:hover {
-        background-color: #047857 !important;
+        background-color: var(--dtl-green-hover) !important;
         color: #ffffff !important;
         transform: translateY(-1px);
         box-shadow: 0 4px 10px rgba(5, 150, 105, 0.30);
@@ -131,21 +138,48 @@
         color: #64748b;
     }
 
+    /* TABLA INSTITUCIONAL ESTANDARIZADA */
+    .dtl-table tbody tr:hover {
+        background-color: #f1f5f9 !important;
+    }
+
     .dtl-table thead th {
-        background-color: #0c192c !important;
+        background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
         font-size: 0.68rem !important;
-        padding: 0.70rem 0.75rem !important;
+        padding-top: 0.55rem !important;
+        padding-bottom: 0.55rem !important;
         text-transform: uppercase;
-        letter-spacing: 0.4px;
-        border-color: #1e293b !important;
-        white-space: nowrap;
+        letter-spacing: 0.8px;
+        border: 1px solid #1e293b !important;
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
     .dtl-table tbody td {
         font-size: 0.78rem !important;
-        padding: 0.65rem 0.75rem !important;
+        padding: 0.6rem 0.75rem !important;
         vertical-align: middle;
-        border-color: #e2e8f0 !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    @media (max-width: 767.98px) {
+        .dtl-table thead th {
+            font-size: 0.52rem !important;
+            padding: 0.35rem 0.25rem !important;
+            letter-spacing: 0.2px !important;
+        }
+        .dtl-table tbody td {
+            font-size: 0.62rem !important;
+            padding: 0.35rem 0.35rem !important;
+        }
+        .dtl-table tbody td span, .dtl-table tbody td div {
+            font-size: 0.62rem !important;
+        }
+        .container-fluid {
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+        }
     }
 
     /* BOTONES DE ACCIÓN PROFESIONALES */
@@ -169,7 +203,7 @@
         border-color: #a7f3d0;
     }
     .btn-action-aceptar:hover {
-        background-color: #059669;
+        background-color: var(--dtl-green);
         color: #ffffff;
         transform: translateY(-1px);
         box-shadow: 0 3px 8px rgba(5, 150, 105, 0.25);
@@ -189,36 +223,117 @@
 
     .btn-action-pdf {
         background-color: #f8fafc;
-        color: #0c192c;
+        color: var(--dtl-navy);
         border-color: #cbd5e1;
         cursor: pointer;
     }
     .btn-action-pdf:hover {
-        background-color: #0c192c;
+        background-color: var(--dtl-navy);
         color: #ffffff;
         transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(12, 25, 44, 0.20);
+        box-shadow: 0 3px 8px rgba(15, 23, 42, 0.20);
+    }
+
+    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
+    .dtl-pagination-wrapper {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-top: 15px !important;
+        margin-bottom: 20px !important;
+        padding-right: 4px !important;
+    }
+
+    .dtl-pagination-wrapper nav {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper nav > div:first-child,
+    .dtl-pagination-wrapper p.small.text-muted,
+    .dtl-pagination-wrapper .text-muted {
+        display: none !important;
+    }
+
+    .dtl-pagination-wrapper nav > div:last-child,
+    .dtl-pagination-wrapper nav > div:nth-child(2) {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper .pagination {
+        margin-bottom: 0 !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 4px !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item .page-link {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 0 8px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+        color: var(--dtl-navy) !important;
+        font-weight: 700 !important;
+        font-size: 0.80rem !important;
+        text-decoration: none !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
+        background-color: var(--dtl-green) !important;
+        border-color: var(--dtl-green) !important;
+        color: #ffffff !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
+        background-color: #ffffff !important;
+        border-color: #e2e8f0 !important;
+        color: #cbd5e1 !important;
+        border-radius: 8px !important;
+    }
+
+    .status-pulse-green {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: inline-block;
     }
 </style>
 
 <div class="container-fluid px-2 px-md-4 py-3">
 
-    <!-- 1. ENCABEZADO -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 border-dtl-green" style="border: 1px solid #e2e8f0 !important;">
+    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
+        
         <div class="card-body p-2.5 p-md-3">
-            <div class="d-flex align-items-center gap-3">
-                <div class="p-1 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="width: 130px; height: 46px; border-color: #cbd5e1 !important;">
-                    <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER" style="max-height: 32px; max-width: 100%; object-fit: contain;">
-                </div>
-                <div class="border-start ps-3" style="border-color: #e2e8f0 !important;">
-                    <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase mb-1" style="background-color: #0c192c; color: #ffffff; font-size: 0.60rem;">
-                        💼 GESTIÓN GERENCIAL
-                    </span>
-                    <h2 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem; letter-spacing: -0.3px;">
-                        Solicitudes de Aprobación de Cotizaciones
-                    </h2>
-                </div>
+            <div class="d-flex flex-wrap align-items-center gap-1.5 mb-1">
+                <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
+                    💼 GESTIÓN GERENCIAL
+                </span>
+
+                <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                    <span class="status-pulse-green"></span> Solicitudes y Dictámenes en Espera
+                </span>
             </div>
+            
+            <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: var(--dtl-navy); letter-spacing: -0.3px;">
+                Solicitudes de Aprobación de Cotizaciones
+            </h3>
         </div>
     </div>
 
@@ -387,8 +502,8 @@
                                 </small>
                             </td>
                             <td>
-                                <span class="fw-bold text-dark d-block" style="font-size: 0.80rem;">{{ $cot->obra->cliente->razon_social ?? 'Cliente General' }}</span>
-                                <small class="text-muted d-block text-truncate" style="max-width: 280px; font-size: 0.70rem;">
+                                <span class="fw-bold text-dark d-block text-break" style="font-size: 0.80rem;">{{ $cot->obra->cliente->razon_social ?? 'Cliente General' }}</span>
+                                <small class="text-muted d-block text-break" style="font-size: 0.70rem;">
                                     <i class="fas fa-building me-1"></i>{{ $cot->obra->titulo ?? 'Sin Obra' }}
                                 </small>
                             </td>
@@ -478,12 +593,12 @@
             </table>
         </div>
 
-        @if($cotizaciones->hasPages())
-            <div class="d-flex justify-content-between align-items-center p-2.5 bg-light border-top">
-                <small class="text-muted" style="font-size: 0.74rem;">Mostrando {{ $cotizaciones->firstItem() }} a {{ $cotizaciones->lastItem() }} de {{ $cotizaciones->total() }} registros</small>
-                <div>{{ $cotizaciones->links('pagination::bootstrap-5') }}</div>
-            </div>
+    <!-- 5. PAGINACIÓN NUMERADA ESTANDARIZADA AL LADO DERECHO -->
+    <div class="dtl-pagination-wrapper">
+        @if(isset($cotizaciones) && method_exists($cotizaciones, 'links'))
+            {{ $cotizaciones->withQueryString()->links('pagination::bootstrap-5') }}
         @endif
+    </div>
     </div>
 
 </div>
@@ -492,7 +607,7 @@
 <div class="modal fade" id="modalVisorPDF" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" style="height: 90vh;">
         <div class="modal-content h-100 rounded-4 border-0 shadow">
-            <div class="modal-header text-white py-2 px-3" style="background-color: #0c192c; border-bottom: 3.5px solid #059669;">
+            <div class="modal-header text-white py-2 px-3" style="background-color: var(--dtl-navy); border-bottom: 3.5px solid var(--dtl-green);">
                 <h6 class="modal-title fw-bold text-uppercase mb-0" style="font-size: 0.85rem;">
                     <i class="fas fa-file-pdf text-danger me-1"></i> Expediente Oficial PDF: <span id="pdfModalCodigo" class="text-success font-monospace"></span>
                 </h6>

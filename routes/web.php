@@ -17,6 +17,9 @@ use App\Http\Controllers\Comercial\CotizadorController;
 use App\Http\Controllers\Gerente\AprobacionCotizacionController;
 use App\Http\Controllers\Gerente\DashboardGerencialController;
 
+use App\Http\Controllers\Soporte\PartidaController;
+use App\Http\Controllers\Soporte\SlaController;
+
 // Redirección inicial
 Route::get('/', function () {
     return redirect()->route('login');
@@ -55,9 +58,14 @@ Route::middleware(['auth', 'role:ejecutivo'])->prefix('comercial')->name('comerc
     
     // Acciones de Hitos Técnicos (El Imán del Pipeline)
     Route::post('/pipeline/agendar-inspeccion', [PipelineController::class, 'agendarInspeccion'])->name('pipeline.agendarInspeccion');
+    Route::post('/pipeline/reprogramar-inspeccion', [PipelineController::class, 'reprogramarInspeccion'])->name('pipeline.reprogramarInspeccion');
     Route::post('/pipeline/completar-inspeccion', [PipelineController::class, 'completarInspeccion'])->name('pipeline.completarInspeccion');
     Route::post('/pipeline/programar-cotizacion', [PipelineController::class, 'programarCotizacion'])->name('pipeline.programarCotizacion');
+    Route::post('/pipeline/reprogramar-cotizacion', [PipelineController::class, 'reprogramarCotizacion'])->name('pipeline.reprogramarCotizacion');
     Route::post('/pipeline/enviar-cotizacion', [PipelineController::class, 'enviarCotizacion'])->name('pipeline.enviarCotizacion');
+    Route::post('/pipeline/ajustar-precio', [PipelineController::class, 'ajustarPrecioCotizacion'])->name('pipeline.ajustarPrecio');
+    Route::post('/pipeline/responder-cotizacion', [PipelineController::class, 'responderCotizacion'])->name('pipeline.responderCotizacion');
+    Route::post('/pipeline/trasladar-cierre', [PipelineController::class, 'trasladarACierre'])->name('pipeline.trasladarCierre');
     Route::post('/pipeline/agregar-bitacora', [PipelineController::class, 'agregarBitacora'])->name('pipeline.agregarBitacora');
     
     // Módulos de Auditoría y Consulta Histórica
@@ -96,5 +104,13 @@ Route::middleware(['auth', 'role:directivo'])->get('/directorio', function () {
 })->name('directorio.index');
 
 Route::middleware(['auth', 'role:administrador'])->prefix('soporte')->name('soporte.')->group(function () {
-    // Rutas de administración
+    // HU-09: Catálogo de Partidas e Historial
+    Route::get('/partidas', [PartidaController::class, 'index'])->name('partidas.index');
+    Route::post('/partidas', [PartidaController::class, 'store'])->name('partidas.store');
+    Route::put('/partidas/{id}', [PartidaController::class, 'update'])->name('partidas.update');
+    Route::delete('/partidas/{id}', [PartidaController::class, 'destroy'])->name('partidas.destroy');
+
+    // HU-08: Alertas Semafóricas y SLAs
+    Route::get('/sla', [SlaController::class, 'index'])->name('sla.index');
+    Route::post('/sla/actualizar', [SlaController::class, 'update'])->name('sla.actualizar');
 });

@@ -1,252 +1,332 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Estilos Exclusivos Estandarizados DTL PREMIER -->
 <style>
     :root {
-        --dtl-navy: #0c192c;
+        --dtl-navy: #0f172a;
         --dtl-navy-hover: #1e293b;
         --dtl-green: #059669;
         --dtl-green-hover: #047857;
-        --dtl-amber: #f59e0b;
-        --dtl-red: #dc2626;
     }
 
-    .btn-dtl-green {
-        height: 38px !important;
-        padding: 0 16px !important;
-        font-size: 0.80rem !important;
-        font-weight: 700 !important;
-        background-color: var(--dtl-green) !important;
-        color: #ffffff !important;
-        border: 1px solid var(--dtl-green) !important;
-        border-radius: 8px !important;
+    .btn-dtl-action {
+        height: 38px;
+        padding: 0 16px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(5, 150, 105, 0.20);
+        transition: all 0.2s ease-in-out;
         white-space: nowrap;
-        text-decoration: none;
     }
-    .btn-dtl-green:hover {
+
+    .btn-dtl-primary {
+        background-color: var(--dtl-green) !important;
+        border: 1px solid var(--dtl-green) !important;
+        color: #ffffff !important;
+    }
+    .btn-dtl-primary:hover {
         background-color: var(--dtl-green-hover) !important;
         border-color: var(--dtl-green-hover) !important;
-        color: #ffffff !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 10px rgba(5, 150, 105, 0.30);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
     }
 
-    .btn-dtl-reset {
-        height: 38px;
+    .btn-dtl-dark {
+        background-color: var(--dtl-navy) !important;
+        border: 1px solid var(--dtl-navy) !important;
+        color: #ffffff !important;
+    }
+    .btn-dtl-dark:hover {
+        background-color: var(--dtl-navy-hover) !important;
+        border-color: var(--dtl-navy-hover) !important;
+        color: #ffffff !important;
+    }
+
+    .btn-dtl-icon-only {
         width: 38px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #cbd5e1;
-        background: #ffffff;
-        border-radius: 8px;
-        color: #64748b;
-        transition: all 0.15s ease;
-    }
-    .btn-dtl-reset:hover {
-        background: #f1f5f9;
-        color: var(--dtl-navy);
+        height: 38px;
+        padding: 0;
     }
 
-    .filter-card-dtl {
-        background: #ffffff;
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 12px;
-        padding: 0.85rem 1rem !important;
-    }
-
-    .input-dtl-control {
-        height: 38px !important;
-        font-size: 0.84rem !important;
-        border-color: #cbd5e1 !important;
-        border-radius: 8px !important;
-    }
-    .input-dtl-control:focus {
+    .dtl-search-input:focus, .form-control:focus, .form-select:focus {
         border-color: var(--dtl-green) !important;
         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
+        background-color: #ffffff !important;
     }
 
-    .table-responsive-inspecciones {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 0 0 12px 12px;
-    }
-    .table-responsive-inspecciones table {
-        min-width: 900px;
+    .dtl-search-input::placeholder {
+        color: #94a3b8 !important;
+        font-size: 0.82rem;
     }
 
-    .dtl-table thead th {
+    /* TABLA INSTITUCIONAL ESTANDARIZADA */
+    .dtl-table-hover tbody tr:hover {
+        background-color: #f1f5f9 !important;
+    }
+
+    .dtl-table-hover thead th {
         background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
-        border: none !important;
+        border: 1px solid #1e293b !important;
         font-size: 0.68rem !important;
-        letter-spacing: 0.5px;
-        padding: 0.75rem 0.85rem !important;
+        letter-spacing: 0.8px;
+        padding-top: 0.55rem !important;
+        padding-bottom: 0.55rem !important;
+        position: sticky;
+        top: 0;
+        z-index: 2;
         text-transform: uppercase;
     }
-    .dtl-table tbody td {
+
+    .dtl-table-hover td {
+        border: 1px solid #cbd5e1 !important;
         font-size: 0.78rem !important;
-        padding: 0.65rem 0.85rem !important;
+        padding: 0.6rem 0.75rem !important;
         vertical-align: middle;
-        border-bottom: 1px solid #f1f5f9 !important;
-    }
-    .dtl-table tbody tr:hover {
-        background-color: #f8fafc;
     }
 
-    .dtl-pagination-wrapper nav > div:first-child,
-    .dtl-pagination-wrapper p.small.text-muted {
-        display: none !important;
+    @media (max-width: 767.98px) {
+        .dtl-table-hover thead th {
+            font-size: 0.52rem !important;
+            padding: 0.35rem 0.25rem !important;
+            letter-spacing: 0.2px !important;
+        }
+        .dtl-table-hover td {
+            font-size: 0.62rem !important;
+            padding: 0.35rem 0.35rem !important;
+        }
+        .dtl-table-hover td span, .dtl-table-hover td div {
+            font-size: 0.62rem !important;
+        }
+        .container-fluid {
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+        }
     }
+
+    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
+        align-items: center !important;
+        width: 100% !important;
         margin-top: 15px !important;
+        margin-bottom: 20px !important;
+        padding-right: 4px !important;
+    }
+
+    .dtl-pagination-wrapper nav {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper nav > div:first-child,
+    .dtl-pagination-wrapper p.small.text-muted,
+    .dtl-pagination-wrapper .text-muted {
+        display: none !important;
+    }
+
+    .dtl-pagination-wrapper nav > div:last-child,
+    .dtl-pagination-wrapper nav > div:nth-child(2) {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper .pagination {
+        margin-bottom: 0 !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 4px !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item .page-link {
+        min-width: 32px !important;
+        height: 32px !important;
+        padding: 0 8px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+        color: var(--dtl-navy) !important;
+        font-weight: 700 !important;
+        font-size: 0.80rem !important;
+        text-decoration: none !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
+        background-color: var(--dtl-green) !important;
+        border-color: var(--dtl-green) !important;
+        color: #ffffff !important;
+    }
+
+    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
+        background-color: #ffffff !important;
+        border-color: #e2e8f0 !important;
+        color: #cbd5e1 !important;
+        border-radius: 8px !important;
+    }
+
+    .status-pulse-green {
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        display: inline-block;
     }
 </style>
 
 <div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO DTL PREMIER -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
-        <div class="position-absolute top-0 start-0 w-100" style="height: 3.5px; background-color: var(--dtl-green);"></div>
+    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
+        
         <div class="card-body p-2.5 p-md-3">
-            <div class="d-flex align-items-center gap-3">
-                <div class="p-1 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="width: 125px; height: 44px; border-color: #cbd5e1 !important;">
-                    <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER" style="max-height: 28px; max-width: 100%; object-fit: contain;">
-                </div>
-                <div class="border-start ps-3" style="border-color: #cbd5e1 !important;">
-                    <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
-                            <i class="fas fa-clipboard-check me-1" style="color: #10b981;"></i> GESTIÓN TÉCNICA
-                        </span>
-                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            Auditoría de Inspecciones & Campo
-                        </span>
-                    </div>
-                    <h2 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem; letter-spacing: -0.2px;">
-                        Control y Seguimiento de Inspecciones Técnicas
-                    </h2>
-                </div>
+            <div class="d-flex flex-wrap align-items-center gap-1.5 mb-1">
+                <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
+                    <i class="fas fa-clipboard-check me-1" style="color: #10b981;"></i> GESTIÓN TÉCNICA
+                </span>
+
+                <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                    <span class="status-pulse-green"></span> Auditoría de Inspecciones & Campo
+                </span>
             </div>
+            
+            <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: var(--dtl-navy); letter-spacing: -0.3px;">
+                Control y Seguimiento de Inspecciones Técnicas
+            </h3>
         </div>
     </div>
 
-    <!-- ALERTAS -->
+    <!-- 2. ALERTAS DEL SISTEMA -->
     @if (session('success'))
-        <div class="alert border-0 rounded-3 shadow-sm mb-3 py-2 px-3 small d-flex align-items-center gap-2" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
-            <i class="fas fa-circle-check fs-6 text-success"></i>
-            <span>{{ session('success') }}</span>
+        <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
+            <i class="fas fa-circle-check me-2 fs-5 flex-shrink-0" style="color: var(--dtl-green);"></i>
+            <div class="fw-medium small" style="font-size: 0.80rem;">{{ session('success') }}</div>
         </div>
     @endif
 
-    <!-- 2. BARRA DE BÚSQUEDA -->
-    <div class="card border-0 shadow-sm rounded-4 filter-card-dtl mb-3">
-        <!-- CÓDIGO EXPANDIDO A TODO LO ANCHO: -->
-        <form action="{{ route('comercial.visitas.index') }}" method="GET" class="d-flex align-items-center gap-2 w-100">
-            <div class="input-group flex-grow-1">
-                <span class="input-group-text bg-white border-end-0 text-muted px-2.5" style="border-color: #cbd5e1; height: 38px; border-radius: 8px 0 0 8px;">
-                    <i class="fas fa-search" style="font-size: 0.75rem;"></i>
-                </span>
-                <input type="text" name="search" value="{{ request('search') }}" 
-                       class="form-control border-start-0 input-dtl-control" 
-                       placeholder="Buscar por Obra, Ingeniero o Estado..."
-                       style="border-radius: 0 8px 8px 0 !important;">
+    @if (session('error'))
+        <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca !important;">
+            <i class="fas fa-triangle-exclamation me-2 fs-5 flex-shrink-0" style="color: #dc2626;"></i>
+            <div class="fw-medium small" style="font-size: 0.80rem;">{{ session('error') }}</div>
+        </div>
+    @endif
+
+    <!-- 3. BARRA DE BÚSQUEDA ANCHO COMPLETO -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3" style="border: 1px solid #e2e8f0 !important;">
+        <div class="card-body p-2.5 p-md-3">
+            <div class="d-flex align-items-center gap-2">
+                <form action="{{ route('comercial.visitas.index') }}" method="GET" class="input-group flex-grow-1">
+                    <span class="input-group-text border-end-0 ps-3" style="background-color: #f8fafc; border-color: #cbd5e1; color: #64748b; height: 38px;">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0 dtl-search-input" value="{{ request('search') }}" placeholder="Buscar por Obra, Ingeniero, Cliente..." style="background-color: #f8fafc; border-color: #cbd5e1; font-size: 0.85rem; color: #0f172a; height: 38px;">
+                    
+                    <button type="submit" class="btn btn-dtl-action btn-dtl-dark">
+                        <i class="fas fa-filter"></i>
+                        <span class="d-none d-sm-inline">Buscar</span>
+                    </button>
+
+                    @if(request('search'))
+                        <a href="{{ route('comercial.visitas.index') }}" class="btn btn-dtl-action btn-dtl-icon-only" style="background-color: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;" title="Limpiar búsqueda">
+                            <i class="fas fa-rotate-left"></i>
+                        </a>
+                    @endif
+                </form>
             </div>
-
-            <button type="submit" class="btn-dtl-green">
-                <i class="fas fa-filter"></i>
-                <span>Buscar</span>
-            </button>
-
-            @if(request('search'))
-                <a href="{{ route('comercial.visitas.index') }}" class="btn-dtl-reset" title="Limpiar filtro">
-                    <i class="fas fa-rotate-left"></i>
-                </a>
-            @endif
-        </form>
+        </div>
     </div>
 
-    <!-- 3. TABLA DE INSPECCIONES RESPONSIVA -->
+    <!-- 4. TABLA DE INSPECCIONES ESTANDARIZADA -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
-        <div class="table-responsive-inspecciones">
-            <table class="table dtl-table w-100 mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-3" style="width: 12%;">ID</th>
-                        <th style="width: 26%;">OBRA / PROYECTO</th>
-                        <th style="width: 18%;">INGENIERO ASIGNADO</th>
-                        <th class="text-center" style="width: 14%;">FECHA VISITA</th>
-                        <th style="width: 16%;">RESULTADO / NOTAS</th>
-                        <th class="text-center" style="width: 14%;">ESTADO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($inspecciones ?? [] as $inspeccion)
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover w-100" style="min-width: 860px;">
+                    <thead>
                         <tr>
-                            <td class="ps-3 font-monospace fw-bold" style="color: var(--dtl-navy);">
-                                #INS-{{ str_pad($inspeccion->id, 4, '0', STR_PAD_LEFT) }}
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark d-block text-truncate" style="max-width: 260px;">
-                                    {{ $inspeccion->obra->titulo ?? 'Sin Obra' }}
-                                </span>
-                                <small class="text-muted d-block text-truncate" style="max-width: 260px; font-size: 0.70rem;">
-                                    <i class="fas fa-building me-1"></i>{{ $inspeccion->obra->cliente->razon_social ?? 'Cliente General' }}
-                                </small>
-                            </td>
-                            <td>
-                                <span class="fw-semibold text-secondary d-block" style="font-size: 0.75rem;">
-                                    <i class="fas fa-user-tie me-1 opacity-50"></i>{{ $inspeccion->ingeniero_asignado ?? 'No asignado' }}
-                                </span>
-                            </td>
-                            <td class="text-center font-monospace" style="font-size: 0.74rem;">
-                                <i class="far fa-calendar-alt me-1 text-success"></i>
-                                {{ $inspeccion->fecha_inspeccion ? $inspeccion->fecha_inspeccion->format('d/m/Y H:i') : '-' }}
-                            </td>
-                            <td>
-                                <span class="text-secondary d-block text-truncate" style="max-width: 220px; font-size: 0.74rem;">
-                                    {{ $inspeccion->resultado ?: 'Visita pendiente de informe' }}
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                @php $est = ucfirst(strtolower($inspeccion->estado_inspeccion ?? '')); @endphp
-                                @if($est === 'Completada')
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.65rem;">
-                                        <i class="fas fa-check-circle me-1"></i>Completada
-                                    </span>
-                                @elseif($est === 'Pendiente')
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.65rem;">
-                                        <i class="fas fa-clock me-1"></i>Pendiente
-                                    </span>
-                                @else
-                                    <span class="badge rounded-pill fw-semibold px-2.5 py-1 bg-light text-dark border" style="font-size: 0.65rem;">{{ $est }}</span>
-                                @endif
-                            </td>
+                            <th class="ps-3 py-2.5 fw-bold" style="width: 12%;">ID</th>
+                            <th class="py-2.5 fw-bold" style="width: 26%;">OBRA / PROYECTO</th>
+                            <th class="py-2.5 fw-bold" style="width: 18%;">INGENIERO ASIGNADO</th>
+                            <th class="py-2.5 fw-bold text-center" style="width: 15%;">FECHA VISITA</th>
+                            <th class="py-2.5 fw-bold" style="width: 19%;">RESULTADO / DICTAMEN</th>
+                            <th class="pe-3 py-2.5 fw-bold text-center" style="width: 10%;">ESTADO</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-5 text-muted small">
-                                <i class="fas fa-clipboard-check text-muted fs-3 d-block mb-1 opacity-50"></i>
-                                No se encontraron inspecciones técnicas registradas.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        @if(isset($inspecciones) && method_exists($inspecciones, 'hasPages') && $inspecciones->hasPages())
-            <div class="d-flex justify-content-between align-items-center p-2.5 bg-light border-top">
-                <small class="text-muted" style="font-size: 0.74rem;">Mostrando {{ $inspecciones->firstItem() }} a {{ $inspecciones->lastItem() }} de {{ $inspecciones->total() }} registros</small>
-                <div class="dtl-pagination-wrapper">{{ $inspecciones->links('pagination::bootstrap-5') }}</div>
+                    </thead>
+                    <tbody>
+                        @forelse($inspecciones ?? [] as $inspeccion)
+                            <tr style="border-top: 1px solid #cbd5e1;">
+                                <td class="ps-3 font-monospace fw-bold" style="color: var(--dtl-navy); font-size: 0.78rem;">
+                                    #INS-{{ str_pad($inspeccion->id, 4, '0', STR_PAD_LEFT) }}
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark d-block text-break" style="font-size: 0.78rem;">
+                                        {{ $inspeccion->obra->titulo ?? 'Sin Obra' }}
+                                    </span>
+                                    <small class="text-muted d-block text-break" style="font-size: 0.70rem;">
+                                        <i class="fas fa-building me-1"></i>{{ $inspeccion->obra->cliente->razon_social ?? 'Cliente General' }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-secondary d-block text-break" style="font-size: 0.75rem;">
+                                        <i class="fas fa-user-tie me-1 opacity-50"></i>{{ $inspeccion->ingeniero_asignado ?? 'No asignado' }}
+                                    </span>
+                                </td>
+                                <td class="text-center font-monospace" style="font-size: 0.74rem;">
+                                    <span class="text-dark d-inline-flex align-items-center">
+                                        <i class="far fa-calendar-alt me-1 text-success"></i>
+                                        {{ $inspeccion->fecha_inspeccion ? \Carbon\Carbon::parse($inspeccion->fecha_inspeccion)->format('d/m/Y H:i') : '-' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-secondary d-block text-break" style="font-size: 0.74rem; line-height: 1.45;" title="{{ $inspeccion->resultado }}">
+                                        {{ $inspeccion->resultado ?: 'Visita pendiente de informe' }}
+                                    </span>
+                                </td>
+                                <td class="pe-3 text-center">
+                                    @php $est = ucfirst(strtolower($inspeccion->estado_inspeccion ?? '')); @endphp
+                                    @if($est === 'Completada')
+                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.65rem;">
+                                            <i class="fas fa-check-circle me-1"></i>Completada
+                                        </span>
+                                    @elseif($est === 'Pendiente')
+                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.65rem;">
+                                            <i class="fas fa-clock me-1"></i>Pendiente
+                                        </span>
+                                    @else
+                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1 bg-light text-dark border" style="font-size: 0.65rem;">{{ $est }}</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted small">No se encontraron inspecciones técnicas registradas.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+        </div>
+    </div>
+
+    <!-- 5. PAGINACIÓN NUMERADA ESTANDARIZADA AL LADO DERECHO -->
+    <div class="dtl-pagination-wrapper">
+        @if(isset($inspecciones) && method_exists($inspecciones, 'links'))
+            {{ $inspecciones->withQueryString()->links('pagination::bootstrap-5') }}
         @endif
     </div>
 

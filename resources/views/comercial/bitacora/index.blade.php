@@ -1,9 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Estilos Exclusivos DTL PREMIER -->
+<!-- Estilos Exclusivos Estandarizados DTL PREMIER -->
 <style>
-    /* Botones de Acción Superior */
+    :root {
+        --dtl-navy: #0f172a;
+        --dtl-navy-hover: #1e293b;
+        --dtl-green: #059669;
+        --dtl-green-hover: #047857;
+    }
+
     .btn-dtl-action {
         height: 38px;
         padding: 0 16px;
@@ -19,20 +25,25 @@
     }
 
     .btn-dtl-primary {
-        background-color: #059669 !important;
-        border: 1px solid #059669 !important;
+        background-color: var(--dtl-green) !important;
+        border: 1px solid var(--dtl-green) !important;
         color: #ffffff !important;
     }
     .btn-dtl-primary:hover {
-        background-color: #047857 !important;
-        border-color: #047857 !important;
+        background-color: var(--dtl-green-hover) !important;
+        border-color: var(--dtl-green-hover) !important;
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
     }
 
     .btn-dtl-dark {
-        background-color: #0f172a !important;
-        border: 1px solid #0f172a !important;
+        background-color: var(--dtl-navy) !important;
+        border: 1px solid var(--dtl-navy) !important;
+        color: #ffffff !important;
+    }
+    .btn-dtl-dark:hover {
+        background-color: var(--dtl-navy-hover) !important;
+        border-color: var(--dtl-navy-hover) !important;
         color: #ffffff !important;
     }
 
@@ -42,31 +53,31 @@
         padding: 0;
     }
 
-    /* Campos de Formulario */
-    .dtl-search-input:focus, .dtl-input:focus, .form-control:focus, .form-select:focus {
-        border-color: #059669 !important;
+    .dtl-search-input:focus, .form-control:focus, .form-select:focus {
+        border-color: var(--dtl-green) !important;
         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
         background-color: #ffffff !important;
     }
 
-    .dtl-search-input::placeholder, .dtl-input::placeholder {
+    .dtl-search-input::placeholder {
         color: #94a3b8 !important;
         font-size: 0.82rem;
     }
 
-    /* Tabla Base Escritorio */
+    /* TABLA INSTITUCIONAL ESTANDARIZADA */
     .dtl-table-hover tbody tr:hover {
         background-color: #f1f5f9 !important;
     }
 
     .dtl-table-hover thead th, .dtl-card-header-styled {
-        background-color: #0f172a !important;
+        background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
         border: 1px solid #1e293b !important;
         font-size: 0.68rem !important;
         letter-spacing: 0.8px;
         padding-top: 0.55rem !important;
         padding-bottom: 0.55rem !important;
+        text-transform: uppercase;
     }
 
     .dtl-table-hover thead th {
@@ -79,9 +90,9 @@
         border: 1px solid #cbd5e1 !important;
         font-size: 0.78rem !important;
         padding: 0.6rem 0.75rem !important;
+        vertical-align: middle;
     }
 
-    /* REDUCCIÓN COMPACTA EXCLUSIVA PARA PANTALLAS MÓVILES (CELULAR) */
     @media (max-width: 767.98px) {
         .dtl-table-hover thead th {
             font-size: 0.52rem !important;
@@ -101,21 +112,7 @@
         }
     }
 
-    /* Tarjetas Móviles opcionales */
-    .dtl-mobile-card {
-        border: 1px solid #e2e8f0 !important;
-        border-left: 5px solid #059669 !important;
-        margin-bottom: 8px !important;
-        border-radius: 12px !important;
-        background-color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    }
-
-    .dtl-mobile-card-header {
-        padding: 10px 14px !important;
-    }
-
-    /* Paginación Numerada alineada a la derecha */
+    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -166,7 +163,7 @@
         border-radius: 50% !important;
         border: 1px solid #cbd5e1 !important;
         background-color: #ffffff !important;
-        color: #0f172a !important;
+        color: var(--dtl-navy) !important;
         font-weight: 700 !important;
         font-size: 0.80rem !important;
         text-decoration: none !important;
@@ -174,8 +171,8 @@
     }
 
     .dtl-pagination-wrapper .pagination .page-item.active .page-link {
-        background-color: #059669 !important;
-        border-color: #059669 !important;
+        background-color: var(--dtl-green) !important;
+        border-color: var(--dtl-green) !important;
         color: #ffffff !important;
     }
 
@@ -201,34 +198,24 @@
 
 <div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL -->
+    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
-        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
+        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
         
         <div class="card-body p-2.5 p-md-3">
-            <div class="row align-items-center g-2 g-md-3">
-                <div class="col-auto">
-                    <div class="p-1.5 p-md-2 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="min-width: 125px; height: 48px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 34px; width: auto; object-fit: contain;">
-                    </div>
-                </div>
+            <div class="d-flex flex-wrap align-items-center gap-1.5 mb-1">
+                <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
+                    <i class="fas fa-book-bookmark me-1" style="color: #10b981;"></i> SEGUIMIENTO OPERATIVO
+                </span>
 
-                <div class="col border-start-md ps-md-3" style="border-color: #e2e8f0 !important;">
-                    <div class="d-flex flex-wrap align-items-center gap-1.5 mb-0.5">
-                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: #0f172a; color: #ffffff;">
-                            <i class="fas fa-book-bookmark me-1" style="color: #10b981;"></i> SEGUIMIENTO OPERATIVO
-                        </span>
-
-                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            <span class="status-pulse-green"></span> Historial de Interacciones
-                        </span>
-                    </div>
-                    
-                    <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: #0f172a; letter-spacing: -0.3px;">
-                        Bitácora de Eventos y Comunicaciones
-                    </h3>
-                </div>
+                <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                    <span class="status-pulse-green"></span> Historial de Interacciones
+                </span>
             </div>
+            
+            <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: var(--dtl-navy); letter-spacing: -0.3px;">
+                Bitácora de Eventos y Comunicaciones
+            </h3>
         </div>
     </div>
 
@@ -323,11 +310,9 @@
         </div>
     </div>
 
-    <!-- 4. TABLA Y VISTA MÓVIL DE BITÁCORAS -->
+    <!-- 4. TABLA DE BITÁCORAS -->
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
-            
-            <!-- VISTA TABLA RESPONSIVA (ESCRITORIO Y ADAPTADA A CELULAR) -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover w-100" style="min-width: 680px;">
                     <thead>
@@ -388,11 +373,10 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN ENUMERADA AL LADO DERECHO -->
+    <!-- 5. PAGINACIÓN NUMERADA AL LADO DERECHO -->
     <div class="dtl-pagination-wrapper">
         @if(isset($bitacoras) && method_exists($bitacoras, 'links'))
             {{ $bitacoras->withQueryString()->links('pagination::bootstrap-5') }}

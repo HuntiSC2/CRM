@@ -26,12 +26,12 @@
     }
 
     .kanban-col-dtl { 
-        width: 360px !important; 
+        width: 395px !important; 
         min-height: 640px; 
         background-color: var(--card-white) !important;
         border: 1px solid #cbd5e1 !important;
         border-radius: 14px !important;
-        padding: 0.85rem !important;
+        padding: 0.80rem !important;
         box-shadow: 0 4px 6px -1px rgba(12, 25, 44, 0.05), 0 2px 4px -2px rgba(12, 25, 44, 0.05);
         transition: border-color 0.2s ease, background-color 0.2s ease;
     }
@@ -67,7 +67,7 @@
         background-color: var(--dtl-green) !important;
         border: none !important;
         border-radius: 10px !important;
-        padding: 0.75rem 0.85rem !important;
+        padding: 0.70rem 0.75rem !important;
         color: #ffffff !important;
         box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
         cursor: grab;
@@ -80,8 +80,15 @@
     }
     .card-note-dtl:active { cursor: grabbing; }
 
+    .card-note-dtl:has(.dropdown-menu.show),
+    .card-note-dtl:has(.flyout-card-panel:not(.d-none)),
+    .card-note-dtl:focus-within,
+    .card-note-dtl.has-menu-open {
+        z-index: 2000 !important;
+    }
+
     .card-task-title {
-        font-size: 0.85rem;
+        font-size: 0.84rem;
         font-weight: 700;
         line-height: 1.3;
         color: #ffffff;
@@ -89,7 +96,7 @@
     }
 
     .card-task-client {
-        font-size: 0.74rem;
+        font-size: 0.73rem;
         font-weight: 500;
         color: #e6fffa;
         margin-bottom: 0.50rem;
@@ -115,72 +122,69 @@
     }
 
     /* PASTILLAS EN UNA SOLA LÍNEA */
-    .btn-pill-alerta-warning {
-        background-color: #fef3c7 !important;
-        color: #92400e !important;
-        border: 1px solid #fde68a !important;
-        font-size: 0.60rem !important;
+    .btn-pill-base {
+        font-size: 0.53rem !important;
         font-weight: 800 !important;
-        padding: 0.15rem 0.42rem !important;
+        padding: 0.10rem 0.35rem !important;
         border-radius: 50rem !important;
         display: inline-flex;
         align-items: center;
-        gap: 3px;
+        gap: 2.5px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-        cursor: pointer;
         transition: all 0.15s ease-in-out;
         line-height: 1.25;
         white-space: nowrap;
+        border: 1px solid transparent !important;
+        cursor: pointer;
     }
-    .btn-pill-alerta-warning:hover {
-        background-color: #fde68a !important;
+    .btn-pill-base:hover {
         transform: translateY(-1px);
     }
 
-    .pill-badge-ok-dtl {
+    .pill-amarillo {
+        background-color: #fef3c7 !important;
+        color: #92400e !important;
+        border-color: #fde68a !important;
+    }
+    .pill-amarillo:hover { background-color: #fde68a !important; }
+
+    .pill-azul-enviada {
+        background-color: #e0f2fe !important;
+        color: #0369a1 !important;
+        border-color: #bae6fd !important;
+    }
+    .pill-azul-enviada:hover { background-color: #bae6fd !important; }
+
+    .pill-verde-ok {
         background-color: #ffffff !important;
         color: #047857 !important;
-        border: 1px solid #a7f3d0 !important;
-        font-size: 0.60rem !important;
-        font-weight: 800 !important;
-        padding: 0.15rem 0.45rem !important;
-        border-radius: 50rem !important;
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-        line-height: 1.25;
-        white-space: nowrap;
+        border-color: #a7f3d0 !important;
     }
 
-    .pill-badge-cancel-dtl {
+    .pill-rojo-rechazada {
         background-color: #ffffff !important;
         color: #dc2626 !important;
-        border: 1px solid #fecaca !important;
-        font-size: 0.60rem !important;
-        font-weight: 800 !important;
-        padding: 0.15rem 0.45rem !important;
-        border-radius: 50rem !important;
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-        line-height: 1.25;
-        white-space: nowrap;
+        border-color: #fecaca !important;
     }
 
-    /* FLYOUTS Y POPOVERS */
+    .dropdown-menu-dtl {
+        z-index: 2050 !important;
+        box-shadow: 0 14px 28px rgba(12, 25, 44, 0.20), 0 10px 10px rgba(12, 25, 44, 0.08) !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    /* FLYOUTS BASE */
     .flyout-card-panel {
         position: absolute;
         top: 2px;
         left: calc(100% + 8px);
-        z-index: 1080;
-        width: 285px;
+        z-index: 2040;
+        width: 290px;
         background: #ffffff;
         border: 1px solid #cbd5e1;
         border-radius: 12px;
         padding: 0.75rem 0.85rem;
-        box-shadow: 0 12px 28px -4px rgba(12, 25, 44, 0.22);
+        box-shadow: 0 14px 30px rgba(12, 25, 44, 0.22);
         color: #1e293b;
         animation: flyoutSlide 0.12s ease-out;
     }
@@ -200,17 +204,125 @@
         border-bottom: 1px solid #cbd5e1;
         transform: rotate(45deg);
     }
-    .kanban-col-dtl:last-child .flyout-card-panel {
+
+    /* TARJETITA COMPACTA FLOTANTE AL LADO IZQUIERDO */
+    .flyout-insp-left {
+        left: auto !important;
+        right: calc(100% + 10px) !important;
+        width: 295px !important;
+        z-index: 2040 !important;
+        animation: flyoutSlideLeft 0.12s ease-out !important;
+    }
+    @keyframes flyoutSlideLeft {
+        from { opacity: 0; transform: translateX(6px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .flyout-insp-left::before {
+        left: auto !important;
+        right: -6px !important;
+        border-left: none !important;
+        border-bottom: none !important;
+        border-right: 1px solid #cbd5e1 !important;
+        border-top: 1px solid #cbd5e1 !important;
+    }
+
+    .kanban-col-dtl:first-child .flyout-insp-left {
+        left: calc(100% + 10px) !important;
+        right: auto !important;
+    }
+    .kanban-col-dtl:first-child .flyout-insp-left::before {
+        left: -6px !important;
+        right: auto !important;
+        border-right: none !important;
+        border-top: none !important;
+        border-left: 1px solid #cbd5e1 !important;
+        border-bottom: 1px solid #cbd5e1 !important;
+    }
+
+    .kanban-col-dtl:last-child .flyout-card-panel:not(.flyout-insp-left) {
         left: auto;
         right: calc(100% + 8px);
     }
-    .kanban-col-dtl:last-child .flyout-card-panel::before {
+    .kanban-col-dtl:last-child .flyout-card-panel:not(.flyout-insp-left)::before {
         left: auto;
         right: -6px;
         border-left: none;
         border-bottom: none;
         border-right: 1px solid #cbd5e1;
         border-top: 1px solid #cbd5e1;
+    }
+
+    .nav-partes-mini {
+        display: flex;
+        gap: 3px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        margin-bottom: 6px;
+    }
+    .btn-tab-parte {
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 0.15rem 0.40rem;
+        border-radius: 4px;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        color: #475569;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.12s;
+    }
+    .btn-tab-parte:hover { background: #e2e8f0; color: #0f172a; }
+    .btn-tab-parte.active {
+        background: var(--dtl-green) !important;
+        color: #ffffff !important;
+        border-color: var(--dtl-green) !important;
+    }
+
+    .btn-mini-action {
+        width: 100%;
+        padding: 0.38rem 0.50rem;
+        border-radius: 6px;
+        font-size: 0.70rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid transparent;
+        transition: all 0.12s ease;
+        cursor: pointer;
+    }
+    .btn-mini-ganada {
+        background-color: #ecfdf5;
+        color: #047857;
+        border-color: #a7f3d0;
+    }
+    .btn-mini-ganada:hover {
+        background-color: #059669;
+        color: #ffffff;
+    }
+    .btn-mini-cancelada {
+        background-color: #fef2f2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+    .btn-mini-cancelada:hover {
+        background-color: #dc2626;
+        color: #ffffff;
+    }
+
+    /* LÍNEA DE ERROR PROFESIONAL EN FORMULARIO COMPACTO (SIN ALERTS) */
+    .input-error-dtl {
+        border: 1.5px solid #ef4444 !important;
+        background-color: #fef2f2 !important;
+    }
+    .msg-error-dtl {
+        font-size: 0.64rem;
+        font-weight: 700;
+        color: #b91c1c;
+        margin-top: 3px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
     }
 
     .floating-new-obra-card {
@@ -243,42 +355,10 @@
         transform: rotate(45deg);
     }
 
-    .btn-mini-action {
-        width: 100%;
-        padding: 0.35rem 0.50rem;
-        border-radius: 6px;
-        font-size: 0.70rem;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border: 1px solid transparent;
-        transition: all 0.12s ease;
-        cursor: pointer;
-    }
-    .btn-mini-ganada {
-        background-color: #ecfdf5;
-        color: #047857;
-        border-color: #a7f3d0;
-    }
-    .btn-mini-ganada:hover {
-        background-color: #059669;
-        color: #ffffff;
-    }
-    .btn-mini-cancelada {
-        background-color: #fef2f2;
-        color: #dc2626;
-        border-color: #fecaca;
-    }
-    .btn-mini-cancelada:hover {
-        background-color: #dc2626;
-        color: #ffffff;
-    }
-
     @media (max-width: 767.98px) {
         .kanban-col-dtl { width: 100% !important; min-height: auto; }
-        .flyout-card-panel { left: 5% !important; right: 5% !important; top: 40px !important; width: 90% !important; }
-        .flyout-card-panel::before { display: none; }
+        .flyout-card-panel, .flyout-insp-left { left: 5% !important; right: 5% !important; top: 40px !important; width: 90% !important; }
+        .flyout-card-panel::before, .flyout-insp-left::before { display: none; }
         .floating-new-obra-card { right: 10px; left: 10px; width: auto; bottom: 75px; }
     }
 </style>
@@ -334,133 +414,363 @@
                         @if(isset($obras[$status]) && count($obras[$status]) > 0)
                             @foreach($obras[$status] as $obra)
                                 @php
-                                    $estadoActualObra  = $obra['estado'] ?? $status;
-                                    $esObraAceptada    = ($estadoActualObra === 'Aceptada');
-                                    $esObraCancelada   = ($estadoActualObra === 'Cancelada');
-                                    $tieneCotEmitida   = !empty($obra['cotizacion_es_completada']); // Hito técnico indispensable
+                                    $esProspectoColumna = ($status === 'Prospecto');
+                                    $esCierreColumna    = ($status === 'Cierre Comercial');
 
-                                    // REGLA ESTRICTA: Solo puede haber Cierre si la cotización ya fue emitida y aprobada técnicamente
-                                    $requiereCierre    = !$esObraAceptada && !$esObraCancelada && $tieneCotEmitida;
+                                    // LÓGICA DE AUDITORÍA 1:1:
+                                    // Solo se muestra '+ Siguiente Parte' si no estamos en Cierre y se completó el ciclo estricto
+                                    $puedeVerSiguienteParte = !$esCierreColumna && $obra['puede_agendar_inspeccion'];
+
+                                    // Menú de 3 puntos: En Cierre Comercial no se permite agendar nada.
+                                    $mostrarAgendarInspeccionMenu = false;
+                                    if (!$esCierreColumna && ($obra['puede_agendar_inspeccion'] ?? false)) {
+                                        $mostrarAgendarInspeccionMenu = true;
+                                    }
+
+                                    // ENUMERACIONES PRECISAS CORRELATIVAS
+                                    $enumInsp = '(' . $obra['insp_completadas_count'] . '/' . $obra['total_inspecciones'] . ')';
+                                    $enumCot  = '(' . $obra['cotizaciones_ok_count'] . '/' . $obra['total_cotizaciones'] . ')';
                                 @endphp
 
                                 <div class="card-note-dtl" draggable="true" ondragstart="dragStart(event)" 
-                                     id="obra-card-{{ $obra['id'] }}" data-id="{{ $obra['id'] }}">
+                                     id="obra-card-{{ $obra['id'] }}" data-id="{{ $obra['id'] }}" data-monto="{{ $obra['monto_raw'] }}">
                                     
                                     <!-- FILA DE ESTADOS / PASTILLAS -->
                                     <div class="d-flex align-items-center justify-content-between mb-1.5 position-relative">
                                         <div class="d-flex align-items-center gap-1 flex-nowrap" style="overflow-x: hidden;">
                                             
                                             <!-- CÓDIGO OBRA -->
-                                            <span class="badge px-1.5 py-0.5 text-uppercase font-monospace flex-shrink-0" style="background-color: rgba(0, 0, 0, 0.22); color: #ffffff; font-size: 0.65rem; font-weight: 700;">
+                                            <span class="badge px-1 py-0.5 text-uppercase font-monospace flex-shrink-0" style="background-color: rgba(0, 0, 0, 0.22); color: #ffffff; font-size: 0.58rem; font-weight: 700;">
                                                 #{{ $obra['codigo'] }}
                                             </span>
 
-                                            <!-- PASTILLA 1: INSPECCIÓN -->
+                                            <!-- PASTILLA 1: INSPECCIÓN (AMARILLA LIMPIA CON RELOJ) -->
                                             @if($obra['tiene_inspeccion_pendiente'])
-                                                <button type="button" class="btn-pill-alerta-warning flex-shrink-0" 
-                                                        onclick="toggleFlyout(event, 'flyout-insp-{{ $obra['id'] }}')"
-                                                        title="Completar dictamen técnico">
-                                                    <i class="fas fa-clock"></i> Insp. Pendiente
+                                                <button type="button" 
+                                                        class="btn-pill-base pill-amarillo flex-shrink-0" 
+                                                        onclick="toggleFlyoutInspLeft(event, 'flyout-compact-insp-{{ $obra['id'] }}')"
+                                                        title="Visita programada: {{ $obra['inspeccion_fecha'] }}">
+                                                    <i class="fas fa-clock"></i>
+                                                    Insp. Pend. {{ $enumInsp }}
                                                 </button>
-
-                                                <!-- POPOVER: COMPLETAR INSPECCIÓN (EL IMÁN MUEVE A COTIZACIÓN) -->
-                                                <div id="flyout-insp-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
-                                                    <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
-                                                        <span class="text-dark fw-bold" style="font-size: 0.72rem;">
-                                                            <i class="fas fa-clipboard-check text-success me-1"></i> Dictamen Técnico
-                                                        </span>
-                                                        <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-insp-{{ $obra['id'] }}')"></button>
-                                                    </div>
-
-                                                    <div class="mb-2">
-                                                        <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Informe de Campo / Dictamen *</label>
-                                                        <textarea id="insp-res-{{ $obra['id'] }}" rows="3" class="form-control form-control-sm" style="font-size: 0.74rem;" placeholder="Metrados, factibilidad y dictamen técnico..."></textarea>
-                                                    </div>
-
-                                                    <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
-                                                            style="background-color: var(--dtl-green); font-size: 0.72rem;"
-                                                            onclick="enviarInspDirecto(this, '{{ $obra['id'] }}', '{{ $obra['inspeccion_pendiente_id'] }}')">
-                                                        <i class="fas fa-check"></i> Completar y Reubicar en Cotización
-                                                    </button>
-                                                </div>
 
                                             @elseif($obra['inspeccion_es_completada'])
-                                                <span class="pill-badge-ok-dtl flex-shrink-0" title="Inspección completada con éxito">
-                                                    <i class="fas fa-check-circle"></i> Insp. OK
-                                                </span>
+                                                <button type="button" class="btn-pill-base pill-verde-ok flex-shrink-0" 
+                                                        onclick="toggleFlyoutInspLeft(event, 'flyout-compact-insp-{{ $obra['id'] }}')"
+                                                        title="Ver historial de inspecciones">
+                                                    <i class="fas fa-check-circle"></i> Insp. OK {{ $enumInsp }}
+                                                </button>
                                             @endif
 
-                                            <!-- PASTILLA 2: COTIZACIÓN -->
-                                            @if(!empty($obra['tiene_cotizacion_pendiente']))
-                                                <button type="button" class="btn-pill-alerta-warning flex-shrink-0" 
-                                                        onclick="toggleFlyout(event, 'flyout-cot-{{ $obra['id'] }}')"
-                                                        title="Completar y emitir presupuesto">
-                                                    <i class="fas fa-clock"></i> Cotiz. Pendiente
-                                                </button>
+                                            <!-- TARJETITA COMPACTA FLOTANTE AL LADO IZQUIERDO (INSPECCIÓN) -->
+                                            <div id="flyout-compact-insp-{{ $obra['id'] }}" class="flyout-card-panel flyout-insp-left d-none" onclick="event.stopPropagation();">
+                                                <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
+                                                    <span class="text-dark fw-bold" style="font-size: 0.74rem;">
+                                                        <i class="fas fa-clipboard-check text-success me-1"></i> Inspecciones Técnicas
+                                                    </span>
+                                                    <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-compact-insp-{{ $obra['id'] }}')"></button>
+                                                </div>
 
-                                                <!-- POPOVER: EMITIR COTIZACIÓN (EL IMÁN MUEVE A CIERRE COMERCIAL) -->
-                                                <div id="flyout-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
-                                                    <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
-                                                        <span class="text-dark fw-bold" style="font-size: 0.72rem;">
-                                                            <i class="fas fa-paper-plane text-primary me-1"></i> Emitir Presupuesto Final
-                                                        </span>
-                                                        <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-cot-{{ $obra['id'] }}')"></button>
+                                                <!-- SELECTOR RÁPIDO DE PARTES -->
+                                                @if($obra['total_inspecciones'] > 0)
+                                                    <div class="nav-partes-mini">
+                                                        @foreach($obra['historial_inspecciones'] as $k => $h)
+                                                            <button type="button" class="btn-tab-parte {{ $loop->last ? 'active' : '' }}" 
+                                                                    onclick="cambiarTabParte('{{ $obra['id'] }}', '{{ $k }}', this)">
+                                                                Parte #{{ $h['numero'] }}
+                                                            </button>
+                                                        @endforeach
+                                                        
+                                                        {{-- LÓGICA ESTRICTA: Solo aparece si el ciclo de la cotización anterior está 100% cerrado --}}
+                                                        @if($puedeVerSiguienteParte)
+                                                            <button type="button" class="btn-tab-parte text-success border-success" 
+                                                                    onclick="mostrarNuevaParteMini('{{ $obra['id'] }}')" title="Agendar siguiente etapa">
+                                                                <i class="fas fa-plus"></i> Siguiente Parte
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                @endif
+
+                                                <!-- CAJAS DE INFORMACIÓN DE CADA PARTE -->
+                                                @foreach($obra['historial_inspecciones'] as $k => $h)
+                                                    <div class="tab-parte-content-{{ $obra['id'] }} {{ $loop->last ? '' : 'd-none' }}" id="tab-box-{{ $obra['id'] }}-{{ $k }}">
+                                                        @if($h['estado'] === 'Pendiente')
+                                                            <div class="p-1.5 rounded border bg-light mb-1.5">
+                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                    <span class="fw-bold text-dark" style="font-size: 0.66rem;">Visita Pendiente en Curso</span>
+                                                                    <span class="badge bg-warning text-dark font-monospace" style="font-size: 0.58rem;">Pendiente</span>
+                                                                </div>
+
+                                                                <div class="mb-1">
+                                                                    <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Ingeniero Asignado:</label>
+                                                                    <input type="text" id="ing-act-{{ $obra['id'] }}-{{ $h['id'] }}" value="{{ $h['ingeniero'] }}" class="form-control form-control-sm py-0.5" style="font-size: 0.70rem; height: 26px;" oninput="limpiarErrorValidacion(this, 'msg-error-ing-{{ $obra['id'] }}-{{ $h['id'] }}')">
+                                                                    <div id="msg-error-ing-{{ $obra['id'] }}-{{ $h['id'] }}" class="msg-error-dtl d-none">
+                                                                        <i class="fas fa-circle-exclamation"></i> Ingrese el ingeniero asignado.
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-1">
+                                                                    <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Fecha Programada:</label>
+                                                                    <input type="datetime-local" id="fecha-act-{{ $obra['id'] }}-{{ $h['id'] }}" value="{{ $obra['inspeccion_fecha_raw'] }}" class="form-control form-control-sm py-0.5" style="font-size: 0.70rem; height: 26px;" oninput="limpiarErrorValidacion(this, 'msg-error-fecha-{{ $obra['id'] }}-{{ $h['id'] }}')">
+                                                                    <div id="msg-error-fecha-{{ $obra['id'] }}-{{ $h['id'] }}" class="msg-error-dtl d-none">
+                                                                        <i class="fas fa-circle-exclamation"></i> Seleccione una fecha válida.
+                                                                    </div>
+                                                                </div>
+
+                                                                <button type="button" class="btn btn-sm btn-outline-secondary w-100 py-0.5 mb-1.5 fw-bold" 
+                                                                        style="font-size: 0.64rem;" onclick="reprogramarFechaMini(this, '{{ $h['id'] }}', '{{ $obra['id'] }}')">
+                                                                    <i class="fas fa-clock-rotate-left me-1"></i> Actualizar Fecha por Retraso
+                                                                </button>
+
+                                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.66rem;">Dictamen / Metrado de Campo *</label>
+                                                                <textarea id="dictamen-act-{{ $obra['id'] }}-{{ $h['id'] }}" rows="2" class="form-control form-control-sm mb-0.5" style="font-size: 0.70rem;" placeholder="Metrados y factibilidad técnica de esta etapa..." oninput="limpiarErrorValidacion(this, 'msg-error-dictamen-{{ $obra['id'] }}-{{ $h['id'] }}')"></textarea>
+                                                                
+                                                                <!-- LÍNEA DE ERROR PROFESIONAL EN EL RECUADRO -->
+                                                                <div id="msg-error-dictamen-{{ $obra['id'] }}-{{ $h['id'] }}" class="msg-error-dtl d-none mb-1">
+                                                                    <i class="fas fa-circle-exclamation"></i> Ingrese el dictamen o metrado de campo.
+                                                                </div>
+
+                                                                <button type="button" class="btn btn-sm w-100 fw-bold text-white py-1 mt-1" 
+                                                                        style="background-color: var(--dtl-green); font-size: 0.68rem;"
+                                                                        onclick="finalizarInspMini(this, '{{ $h['id'] }}', '{{ $obra['id'] }}')">
+                                                                    <i class="fas fa-check-circle me-1"></i> Completar Dictamen de Inspección
+                                                                </button>
+                                                            </div>
+                                                        @else
+                                                            <div class="p-1.5 rounded border bg-light mb-1.5" style="font-size: 0.68rem;">
+                                                                <div class="d-flex justify-content-between mb-0.5">
+                                                                    <span class="fw-bold text-dark">{{ $h['ingeniero'] }}</span>
+                                                                    <span class="badge bg-success" style="font-size: 0.58rem;">Completada</span>
+                                                                </div>
+                                                                <div class="text-muted mb-1" style="font-size: 0.63rem;"><i class="fas fa-calendar-day me-1"></i>{{ $h['fecha'] }}</div>
+                                                                <div class="text-secondary p-1 rounded bg-white border" style="font-size: 0.65rem;">
+                                                                    {{ $h['resultado'] ?? 'Sin dictamen registrado.' }}
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+
+                                                <!-- FORMULARIO AGENDAR NUEVA PARTE -->
+                                                @if($puedeVerSiguienteParte)
+                                                    <div id="box-nueva-parte-{{ $obra['id'] }}" class="d-none p-1.5 rounded border bg-light">
+                                                        <div class="fw-bold text-dark mb-1" style="font-size: 0.68rem;">
+                                                            <i class="fas fa-calendar-plus text-success me-1"></i> Agendar Inspección / Nueva Etapa
+                                                        </div>
+                                                        <div class="mb-1">
+                                                            <input type="text" id="nueva-ing-{{ $obra['id'] }}" class="form-control form-control-sm py-0.5" style="font-size: 0.70rem; height: 26px;" placeholder="Ingeniero Asignado *" oninput="limpiarErrorValidacion(this, 'msg-error-nueva-ing-{{ $obra['id'] }}')">
+                                                            <div id="msg-error-nueva-ing-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                <i class="fas fa-circle-exclamation"></i> Ingrese el ingeniero responsable.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-1.5">
+                                                            <input type="datetime-local" id="nueva-fecha-{{ $obra['id'] }}" value="{{ date('Y-m-d\T09:00') }}" class="form-control form-control-sm py-0.5" style="font-size: 0.70rem; height: 26px;">
+                                                        </div>
+                                                        <button type="button" class="btn btn-sm btn-success w-100 fw-bold py-1" style="font-size: 0.68rem;" onclick="guardarNuevaParteMini(this, '{{ $obra['id'] }}')">
+                                                            <i class="fas fa-save me-1"></i> Guardar Visita
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- PASTILLA 2: COTIZACIÓN (CON ENUMERACIÓN, REAJUSTE DE PRECIO Y AUDITORÍA) -->
+                                            @if($obra['tiene_cotizaciones'])
+                                                @if($obra['estado_cotizacion'] === 'Programada')
+                                                    <!-- 1. PROGRAMADA (AMARILLO) -->
+                                                    <button type="button" class="btn-pill-base pill-amarillo flex-shrink-0" 
+                                                            onclick="toggleFlyout(event, 'flyout-cot-{{ $obra['id'] }}')"
+                                                            title="Cotización programada. Clic para gestionar.">
+                                                        <i class="fas fa-clock"></i> Cotiz. Pend. {{ $enumCot }}
+                                                    </button>
+
+                                                    <div id="flyout-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 290px;" onclick="event.stopPropagation();">
+                                                        <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
+                                                            <span class="text-dark fw-bold" style="font-size: 0.72rem;">
+                                                                <i class="fas fa-paper-plane text-primary me-1"></i> Gestión de Cotización
+                                                            </span>
+                                                            <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-cot-{{ $obra['id'] }}')"></button>
+                                                        </div>
+
+                                                        <div class="p-1.5 rounded border bg-light mb-2">
+                                                            <label class="form-label text-muted mb-0.5" style="font-size: 0.63rem;">Fecha de Emisión Programada:</label>
+                                                            <input type="date" id="reprog-cot-fecha-{{ $obra['id'] }}" value="{{ $obra['cotizacion_fecha_emision'] }}" class="form-control form-control-sm py-0.5 mb-1" style="font-size: 0.70rem; height: 26px;">
+                                                            
+                                                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 py-0.5 fw-bold" 
+                                                                    style="font-size: 0.64rem;" onclick="reprogramarCotizacionFecha(this, '{{ $obra['cotizacion_id'] }}', '{{ $obra['id'] }}')">
+                                                                <i class="fas fa-clock-rotate-left me-1"></i> Actualizar Fecha por Retraso
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="mb-1.5">
+                                                            <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Monto Cotizado (S/) *</label>
+                                                            <div class="input-group input-group-sm">
+                                                                <span class="input-group-text bg-light fw-bold" style="font-size: 0.68rem;">S/</span>
+                                                                <input type="number" step="0.01" min="1" id="cot-monto-{{ $obra['id'] }}" class="form-control form-control-sm font-monospace fw-bold" placeholder="0.00" oninput="limpiarErrorValidacion(this, 'msg-error-cotmonto-{{ $obra['id'] }}')">
+                                                            </div>
+                                                            <div id="msg-error-cotmonto-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                <i class="fas fa-circle-exclamation"></i> Ingrese un monto válido mayor a 0.
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mb-2">
+                                                            <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Condiciones / Observaciones</label>
+                                                            <textarea id="cot-obs-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.72rem;" placeholder="Validez de oferta, condiciones de pago..."></textarea>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
+                                                                style="background-color: var(--dtl-green); font-size: 0.72rem;"
+                                                                onclick="enviarCotDirecto(this, '{{ $obra['id'] }}', '{{ $obra['cotizacion_id'] }}')">
+                                                            <i class="fas fa-paper-plane"></i> Emitir Cotización
+                                                        </button>
                                                     </div>
 
-                                                    <div class="mb-2">
-                                                        <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Monto Cotizado (S/) *</label>
-                                                        <div class="input-group input-group-sm">
-                                                            <span class="input-group-text bg-light fw-bold" style="font-size: 0.68rem;">S/</span>
-                                                            <input type="number" step="0.01" min="1" id="cot-monto-{{ $obra['id'] }}" class="form-control form-control-sm font-monospace fw-bold" placeholder="0.00">
+                                                @elseif($obra['estado_cotizacion'] === 'Enviada')
+                                                    <!-- 2. ENVIADA (AZUL) -->
+                                                    <button type="button" class="btn-pill-base pill-azul-enviada flex-shrink-0" 
+                                                            onclick="toggleFlyout(event, 'flyout-responder-cot-{{ $obra['id'] }}')"
+                                                            title="Cotización enviada. Clic para registrar respuesta.">
+                                                        <i class="fas fa-paper-plane"></i> Cotiz. Enviada {{ $enumCot }}
+                                                    </button>
+
+                                                    <div id="flyout-responder-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 235px;" onclick="event.stopPropagation();">
+                                                        <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
+                                                            <span class="text-dark fw-bold" style="font-size: 0.70rem;">
+                                                                <i class="fas fa-reply text-primary me-1"></i> Respuesta del Cliente
+                                                            </span>
+                                                            <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-responder-cot-{{ $obra['id'] }}')"></button>
+                                                        </div>
+                                                        <p class="text-muted mb-2" style="font-size: 0.65rem; line-height: 1.25;">
+                                                            ¿Cuál fue la resolución del cliente respecto a la cotización emitida?
+                                                        </p>
+                                                        <div class="d-flex flex-column gap-1.5">
+                                                            <button type="button" class="btn-mini-action btn-mini-ganada" 
+                                                                    onclick="ejecutarRespuestaCotizacion(this, '{{ $obra['cotizacion_id'] }}', 'Aceptada')">
+                                                                <span><i class="fas fa-check-double me-1 text-success"></i> Cotización Aceptada</span>
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                            <button type="button" class="btn-mini-action btn-mini-cancelada" 
+                                                                    onclick="ejecutarRespuestaCotizacion(this, '{{ $obra['cotizacion_id'] }}', 'Rechazada')">
+                                                                <span><i class="fas fa-times-circle me-1 text-danger"></i> Cotización Rechazada</span>
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
                                                         </div>
                                                     </div>
 
-                                                    <div class="mb-2">
-                                                        <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Condiciones / Observaciones</label>
-                                                        <textarea id="cot-obs-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.72rem;" placeholder="Validez de oferta, condiciones de pago..."></textarea>
-                                                    </div>
-
-                                                    <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
-                                                            style="background-color: var(--dtl-green); font-size: 0.72rem;"
-                                                            onclick="enviarCotDirecto(this, '{{ $obra['id'] }}', '{{ $obra['cotizacion_pendiente_id'] }}')">
-                                                        <i class="fas fa-paper-plane"></i> Emitir y Reubicar en Cierre
+                                                @elseif($obra['estado_cotizacion'] === 'Aceptada')
+                                                    <!-- 3. ACEPTADA (VERDE) -->
+                                                    <button type="button" class="btn-pill-base pill-verde-ok flex-shrink-0" 
+                                                            onclick="toggleFlyout(event, 'flyout-view-cot-{{ $obra['id'] }}')"
+                                                            title="Clic para ver detalle de cotización">
+                                                        <i class="fas fa-check-circle"></i> Cotiz. OK {{ $enumCot }}
                                                     </button>
-                                                </div>
 
-                                            @elseif(!empty($obra['cotizacion_es_rechazada']))
-                                                <span class="pill-badge-cancel-dtl flex-shrink-0" title="Cotización rechazada">
-                                                    <i class="fas fa-times-circle"></i> Cotiz. Rechazada
-                                                </span>
-                                            @elseif(!empty($obra['cotizacion_es_completada']))
-                                                <span class="pill-badge-ok-dtl flex-shrink-0" title="Cotización emitida exitosamente">
-                                                    <i class="fas fa-check-circle"></i> Cotiz. OK
-                                                </span>
+                                                @elseif($obra['estado_cotizacion'] === 'Rechazada')
+                                                    <!-- 4. RECHAZADA (ROJO) -->
+                                                    <button type="button" class="btn-pill-base pill-rojo-rechazada flex-shrink-0" 
+                                                            onclick="toggleFlyout(event, 'flyout-view-cot-{{ $obra['id'] }}')"
+                                                            title="Clic para ver detalle de cotización">
+                                                        <i class="fas fa-times-circle"></i> Cotiz. Rech. {{ $enumCot }}
+                                                    </button>
+                                                @endif
+
+                                                {{-- POPOVER DE HISTORIAL AUDITABLE CON PESTAÑAS Y BOTÓN ESPECIAL 'AJUSTAR PRECIO' --}}
+                                                @if($obra['cotizacion_finalizada'])
+                                                    <div id="flyout-view-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 295px;" onclick="event.stopPropagation();">
+                                                        <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
+                                                            <span class="text-dark fw-bold" style="font-size: 0.74rem;">
+                                                                <i class="fas fa-file-invoice text-success me-1"></i> Cotizaciones Emitidas
+                                                            </span>
+                                                            <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-view-cot-{{ $obra['id'] }}')"></button>
+                                                        </div>
+
+                                                        @if(count($obra['historial_cotizaciones']) > 0)
+                                                            <div class="nav-partes-mini">
+                                                                @foreach($obra['historial_cotizaciones'] as $ck => $cotItem)
+                                                                    <button type="button" class="btn-tab-parte {{ $loop->last ? 'active' : '' }}" 
+                                                                            onclick="cambiarTabCotizacion('{{ $obra['id'] }}', '{{ $ck }}', this)">
+                                                                        Fase #{{ $cotItem['numero'] }}
+                                                                    </button>
+                                                                @endforeach
+                                                            </div>
+
+                                                            @foreach($obra['historial_cotizaciones'] as $ck => $cotItem)
+                                                                <div class="tab-cot-content-{{ $obra['id'] }} {{ $loop->last ? '' : 'd-none' }}" id="tab-box-cot-{{ $obra['id'] }}-{{ $ck }}">
+                                                                    <div class="p-1.5 rounded border bg-light mb-1" style="font-size: 0.68rem;">
+                                                                        <div class="d-flex justify-content-between text-muted mb-1">
+                                                                            <span><strong>Cód:</strong> {{ $cotItem['codigo'] }}</span>
+                                                                            <span class="badge {{ $cotItem['estado'] === 'Aceptada' ? 'bg-success' : 'bg-danger' }}" style="font-size: 0.58rem;">{{ $cotItem['estado'] }}</span>
+                                                                        </div>
+                                                                        <div class="mb-1 text-dark"><strong>Monto:</strong> <span class="font-monospace fw-bold">{{ $cotItem['monto'] }}</span></div>
+                                                                        <div class="mb-1 text-muted"><strong>Fecha:</strong> {{ $cotItem['fecha'] }}</div>
+                                                                        
+                                                                        <div class="p-1 rounded bg-white border mt-1" style="font-size: 0.64rem;">
+                                                                            <div class="text-success fw-bold mb-0.5">
+                                                                                <i class="fas fa-link me-1"></i> Vinculada a Inspección #{{ $cotItem['insp_numero'] }} ({{ $cotItem['insp_ingeniero'] }})
+                                                                            </div>
+                                                                            <div class="text-secondary text-truncate" title="{{ $cotItem['insp_dictamen'] }}">
+                                                                                {{ $cotItem['insp_dictamen'] }}
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {{-- BOTÓN ESPECIAL 'AJUSTAR PRECIO' PARA COTIZACIONES RECHAZADAS --}}
+                                                                        @if($cotItem['estado'] === 'Rechazada' && !$esCierreColumna)
+                                                                            <div class="mt-2 pt-1 border-top">
+                                                                                <button type="button" class="btn btn-sm btn-outline-warning w-100 fw-bold py-1 text-dark d-flex align-items-center justify-content-center gap-1"
+                                                                                        style="font-size: 0.66rem; background-color: #fef3c7;"
+                                                                                        onclick="abrirFormAjustarPrecio('{{ $obra['id'] }}', '{{ $cotItem['id'] }}')">
+                                                                                    <i class="fas fa-calculator text-warning"></i> Ajustar Precio de Cotización
+                                                                                </button>
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+
+                                                        <!-- FORMULARIO COMPACTO PARA AJUSTAR PRECIO -->
+                                                        <div id="box-ajustar-precio-{{ $obra['id'] }}" class="d-none p-2 rounded border bg-white mt-1">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1 pb-1 border-bottom">
+                                                                <span class="fw-bold text-dark" style="font-size: 0.68rem;"><i class="fas fa-edit text-warning me-1"></i> Reajuste Económico</span>
+                                                                <button type="button" class="btn-close p-0" style="font-size: 0.45rem;" onclick="cerrarFormAjustarPrecio('{{ $obra['id'] }}')"></button>
+                                                            </div>
+                                                            <input type="hidden" id="ajuste-cot-id-{{ $obra['id'] }}">
+                                                            
+                                                            <div class="mb-1">
+                                                                <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Nuevo Monto (S/) *</label>
+                                                                <input type="number" step="0.01" min="1" id="ajuste-monto-{{ $obra['id'] }}" class="form-control form-control-sm font-monospace fw-bold py-0.5" style="font-size: 0.70rem; height: 26px;" placeholder="0.00" oninput="limpiarErrorValidacion(this, 'msg-error-ajustemonto-{{ $obra['id'] }}')">
+                                                                <div id="msg-error-ajustemonto-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                    <i class="fas fa-circle-exclamation"></i> Ingrese el nuevo monto.
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="mb-1.5">
+                                                                <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Motivo del Reajuste / Alcance *</label>
+                                                                <textarea id="ajuste-motivo-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.68rem;" placeholder="Ej. Cambio de especificaciones técnicas por menor espesor..." oninput="limpiarErrorValidacion(this, 'msg-error-ajustemotivo-{{ $obra['id'] }}')"></textarea>
+                                                                <div id="msg-error-ajustemotivo-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                    <i class="fas fa-circle-exclamation"></i> Indique el motivo del reajuste.
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button" class="btn btn-sm btn-success w-100 fw-bold py-1" style="font-size: 0.68rem;" onclick="guardarAjustePrecioAjax(this, '{{ $obra['id'] }}')">
+                                                                <i class="fas fa-check me-1"></i> Guardar y Reemitir
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             @endif
 
-                                          <!-- PASTILLA 3: CIERRE COMERCIAL -->
-                                           
-                                          <!-- PASTILLA 3: CIERRE COMERCIAL -->
-                                                @if($esObraAceptada)
-                                                    <span class="pill-badge-ok-dtl flex-shrink-0" title="Obra Ganada">
-                                                        <i class="fas fa-trophy"></i> Ganada
-                                                    </span>
-                                                @elseif($esObraCancelada)
-                                                    <span class="pill-badge-cancel-dtl flex-shrink-0" title="Obra Cancelada">
-                                                        <i class="fas fa-times-circle"></i> Cancelada
-                                                    </span>
-                                                @elseif($requiereCierre)
-                                                    <button type="button" class="btn-pill-alerta-warning flex-shrink-0" 
-                                                            onclick="toggleFlyout(event, 'flyout-cierre-{{ $obra['id'] }}')"
-                                                            title="Definir resolución comercial">
-                                                        <i class="fas fa-flag-checkered text-warning"></i> Cierre
-                                                    </button>
-                                                ...
+                                            <!-- PASTILLA 3: CIERRE COMERCIAL -->
+                                            @if($esCierreColumna)
+                                                <button type="button" class="btn-pill-base pill-amarillo flex-shrink-0" 
+                                                        onclick="toggleFlyout(event, 'flyout-cierre-{{ $obra['id'] }}')"
+                                                        title="Definir resolución final de la obra">
+                                                    <i class="fas fa-flag-checkered text-warning"></i> Cierre
+                                                </button>
 
-                                                <!-- POPOVER: CIERRE DEFINITIVO -->
-                                                <div id="flyout-cierre-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 210px;" onclick="event.stopPropagation();">
-                                                    <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
-                                                        <span class="text-dark fw-bold text-uppercase" style="font-size: 0.65rem;">
-                                                            <i class="fas fa-handshake text-warning me-1"></i> Resolución
+                                                <div id="flyout-cierre-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 220px;" onclick="event.stopPropagation();">
+                                                    <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
+                                                        <span class="text-dark fw-bold" style="font-size: 0.68rem;">
+                                                            <i class="fas fa-handshake text-warning me-1"></i> RESOLUCIÓN
                                                         </span>
                                                         <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-cierre-{{ $obra['id'] }}')"></button>
                                                     </div>
@@ -468,13 +778,13 @@
                                                     <div class="d-flex flex-column gap-1.5">
                                                         <button type="button" class="btn-mini-action btn-mini-ganada" 
                                                                 onclick="ejecutarCierreDirecto(this, '{{ $obra['id'] }}', 'Aceptada')">
-                                                            <span><i class="fas fa-trophy me-1"></i> Obra Ganada</span>
+                                                            <span><i class="fas fa-trophy me-1 text-success"></i> Obra Ganada</span>
                                                             <i class="fas fa-check"></i>
                                                         </button>
 
                                                         <button type="button" class="btn-mini-action btn-mini-cancelada" 
                                                                 onclick="ejecutarCierreDirecto(this, '{{ $obra['id'] }}', 'Cancelada')">
-                                                            <span><i class="fas fa-ban me-1"></i> Cancelar Obra</span>
+                                                            <span><i class="fas fa-ban me-1 text-danger"></i> Cancelar Obra</span>
                                                             <i class="fas fa-times"></i>
                                                         </button>
                                                     </div>
@@ -490,20 +800,42 @@
                                                     style="width: 20px; height: 20px;">
                                                 <i class="fas fa-ellipsis-h" style="font-size: 0.82rem;"></i>
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2" style="font-size: 0.76rem; min-width: 205px; z-index: 1060;">
+                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 dropdown-menu-dtl" style="font-size: 0.76rem; min-width: 215px;">
                                                 <li><h6 class="dropdown-header text-uppercase fw-bold px-2 py-0.5 text-muted" style="font-size: 0.62rem;">Hitos Técnicos</h6></li>
                                                 
-                                                <li>
-                                                    <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="toggleFlyout(event, 'flyout-agendar-insp-{{ $obra['id'] }}')">
-                                                        <i class="fas fa-calendar-plus text-success me-1.5"></i> Agendar Inspección
-                                                    </button>
-                                                </li>
+                                                @if(!$esCierreColumna)
+                                                    {{-- AGENDAR INSPECCIÓN: Si la cotización culminó, permite iniciar nueva fase trasladando a Inspección --}}
+                                                    @if($mostrarAgendarInspeccionMenu)
+                                                        <li>
+                                                            <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="toggleFlyoutInspLeft(event, 'flyout-compact-insp-{{ $obra['id'] }}', true)">
+                                                                <i class="fas fa-calendar-plus text-success me-1.5"></i> Agendar Inspección
+                                                            </button>
+                                                        </li>
+                                                    @elseif($obra['tiene_inspeccion_pendiente'])
+                                                        <li>
+                                                            <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium text-warning" onclick="toggleFlyoutInspLeft(event, 'flyout-compact-insp-{{ $obra['id'] }}')">
+                                                                <i class="fas fa-clock-rotate-left me-1.5"></i> Ver / Reprogramar Visita
+                                                            </button>
+                                                        </li>
+                                                    @endif
 
-                                                <li>
-                                                    <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="toggleFlyout(event, 'flyout-programar-cot-{{ $obra['id'] }}')">
-                                                        <i class="fas fa-file-invoice-dollar text-primary me-1.5"></i> Programar Cotización
-                                                    </button>
-                                                </li>
+                                                    @if(!$esProspectoColumna && $obra['puede_programar_cotizacion'])
+                                                        <li>
+                                                            <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="toggleFlyout(event, 'flyout-programar-cot-{{ $obra['id'] }}')">
+                                                                <i class="fas fa-file-invoice-dollar text-primary me-1.5"></i> Programar Cotización
+                                                            </button>
+                                                        </li>
+                                                    @endif
+
+                                                    {{-- BOTÓN IR A CIERRE COMERCIAL: Solo cuando el ciclo 1:1 esté cerrado --}}
+                                                    @if($obra['puede_ir_a_cierre'])
+                                                        <li>
+                                                            <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-bold text-success" onclick="trasladarACierreDirecto(this, '{{ $obra['id'] }}')">
+                                                                <i class="fas fa-magnet text-success me-1.5"></i> Ir a Cierre Comercial
+                                                            </button>
+                                                        </li>
+                                                    @endif
+                                                @endif
 
                                                 <li>
                                                     <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="toggleFlyout(event, 'flyout-bitacora-{{ $obra['id'] }}')">
@@ -512,82 +844,48 @@
                                                 </li>
 
                                                 <li><hr class="dropdown-divider my-1"></li>
-                                                <li><h6 class="dropdown-header text-uppercase fw-bold px-2 py-0.5 text-muted" style="font-size: 0.62rem;">Libertad Manual (Mover)</h6></li>
+                                                <li><h6 class="dropdown-header text-uppercase fw-bold px-2 py-0.5 text-muted" style="font-size: 0.62rem;">Libertad Manual (Solo Visual)</h6></li>
                                                 @foreach($statuses as $targetStatus)
-                                                    @if($targetStatus !== $status)
-                                                        <li>
-                                                            <button class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="updateStatusBackend('{{ $obra['id'] }}', '{{ $targetStatus }}')">
-                                                                <i class="fas fa-arrow-right text-muted me-1.5"></i> A {{ $targetStatus }}
-                                                            </button>
-                                                        </li>
-                                                    @endif
+                                                    <li>
+                                                        <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="moverTarjetaPorMenu('{{ $obra['id'] }}', '{{ $targetStatus }}')">
+                                                            <i class="fas fa-arrow-right text-muted me-1.5"></i> A {{ $targetStatus }}
+                                                        </button>
+                                                    </li>
                                                 @endforeach
                                             </ul>
                                         </div>
 
-                                        <!-- POPOVER 1: AGENDAR INSPECCIÓN (EL IMÁN MUEVE A INSPECCION) -->
-                                        <div id="flyout-agendar-insp-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
-                                            <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
-                                                <span class="text-dark fw-bold" style="font-size: 0.72rem;">
-                                                    <i class="fas fa-calendar-check text-success me-1"></i> Agendar Inspección
-                                                </span>
-                                                <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-agendar-insp-{{ $obra['id'] }}')"></button>
-                                            </div>
-
-                                            <div class="mb-1.5">
-                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Ingeniero Responsable *</label>
-                                                <input type="text" id="agendar-ing-{{ $obra['id'] }}" class="form-control form-control-sm" style="font-size: 0.72rem;" placeholder="Ej. Ing. Carlos Pérez" required>
-                                            </div>
-
-                                            <div class="mb-1.5">
-                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Fecha y Hora Programada *</label>
-                                                <input type="datetime-local" id="agendar-fecha-{{ $obra['id'] }}" value="{{ date('Y-m-d\T09:00') }}" class="form-control form-control-sm" style="font-size: 0.72rem;" required>
-                                            </div>
-
-                                            <div class="row g-1 mb-2">
-                                                <div class="col-6">
-                                                    <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.65rem;">Contacto</label>
-                                                    <input type="text" id="agendar-contacto-{{ $obra['id'] }}" class="form-control form-control-sm" style="font-size: 0.70rem;" placeholder="Nombre">
+                                        <!-- POPOVER: PROGRAMAR COTIZACIÓN -->
+                                        @if(!$esProspectoColumna && !$esCierreColumna)
+                                            <div id="flyout-programar-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
+                                                <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
+                                                    <span class="text-dark fw-bold" style="font-size: 0.72rem;">
+                                                        <i class="fas fa-file-invoice-dollar text-primary me-1"></i> Programar Cotización
+                                                    </span>
+                                                    <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-programar-cot-{{ $obra['id'] }}')"></button>
                                                 </div>
-                                                <div class="col-6">
-                                                    <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.65rem;">Teléfono</label>
-                                                    <input type="text" id="agendar-tel-{{ $obra['id'] }}" class="form-control form-control-sm" style="font-size: 0.70rem;" placeholder="999-999-999">
+
+                                                <div class="mb-2">
+                                                    <small class="text-muted d-block" style="font-size: 0.68rem;">Proyecto: <strong>{{ $obra['titulo'] }}</strong></small>
                                                 </div>
+
+                                                <div class="mb-2">
+                                                    <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Fecha de Emisión *</label>
+                                                    <input type="date" id="prog-fecha-emision-{{ $obra['id'] }}" value="{{ date('Y-m-d') }}" class="form-control form-control-sm" style="font-size: 0.72rem;" required oninput="limpiarErrorValidacion(this, 'msg-error-progfecha-{{ $obra['id'] }}')">
+                                                    <div id="msg-error-progfecha-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                        <i class="fas fa-circle-exclamation"></i> Seleccione una fecha válida.
+                                                    </div>
+                                                </div>
+
+                                                <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
+                                                        style="background-color: var(--dtl-green); font-size: 0.72rem;"
+                                                        onclick="enviarProgramarCotizacionDirecto(this, '{{ $obra['id'] }}')">
+                                                    <i class="fas fa-check me-1"></i> Programar y Ubicar en Cotización
+                                                </button>
                                             </div>
+                                        @endif
 
-                                            <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
-                                                    style="background-color: var(--dtl-green); font-size: 0.72rem;"
-                                                    onclick="enviarAgendarInspeccionDirecto(this, '{{ $obra['id'] }}')">
-                                                <i class="fas fa-save me-1"></i> Agendar y Reubicar en Inspección
-                                            </button>
-                                        </div>
-
-                                        <!-- POPOVER 2: PROGRAMAR COTIZACIÓN (EL IMÁN MUEVE A COTIZACIÓN) -->
-                                        <div id="flyout-programar-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
-                                            <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
-                                                <span class="text-dark fw-bold" style="font-size: 0.72rem;">
-                                                    <i class="fas fa-file-invoice-dollar text-primary me-1"></i> Programar Cotización
-                                                </span>
-                                                <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-programar-cot-{{ $obra['id'] }}')"></button>
-                                            </div>
-
-                                            <div class="mb-2">
-                                                <small class="text-muted d-block" style="font-size: 0.68rem;">Proyecto: <strong>{{ $obra['titulo'] }}</strong></small>
-                                            </div>
-
-                                            <div class="mb-2">
-                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Fecha de Emisión *</label>
-                                                <input type="date" id="prog-fecha-emision-{{ $obra['id'] }}" value="{{ date('Y-m-d') }}" class="form-control form-control-sm" style="font-size: 0.72rem;" required>
-                                            </div>
-
-                                            <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
-                                                    style="background-color: var(--dtl-green); font-size: 0.72rem;"
-                                                    onclick="enviarProgramarCotizacionDirecto(this, '{{ $obra['id'] }}')">
-                                                <i class="fas fa-check me-1"></i> Programar y Reubicar en Cotización
-                                            </button>
-                                        </div>
-
-                                        <!-- POPOVER 3: NOTA DE BITÁCORA -->
+                                        <!-- POPOVER: NOTA DE BITÁCORA -->
                                         <div id="flyout-bitacora-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
                                             <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
                                                 <span class="text-dark fw-bold" style="font-size: 0.72rem;">
@@ -598,7 +896,10 @@
 
                                             <div class="mb-2">
                                                 <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Nota / Suceso de Seguimiento *</label>
-                                                <textarea id="bitacora-desc-{{ $obra['id'] }}" rows="3" class="form-control form-control-sm" style="font-size: 0.74rem;" placeholder="Acuerdos con cliente, especificaciones..." required></textarea>
+                                                <textarea id="bitacora-desc-{{ $obra['id'] }}" rows="3" class="form-control form-control-sm" style="font-size: 0.74rem;" placeholder="Acuerdos con cliente, especificaciones..." oninput="limpiarErrorValidacion(this, 'msg-error-bitacora-{{ $obra['id'] }}')"></textarea>
+                                                <div id="msg-error-bitacora-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                    <i class="fas fa-circle-exclamation"></i> Ingrese la nota de seguimiento.
+                                                </div>
                                             </div>
 
                                             <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
@@ -631,7 +932,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="text-center py-5 my-auto" style="opacity: 0.4;">
+                            <div class="text-center py-5 my-auto empty-col-placeholder" style="opacity: 0.4;">
                                 <i class="fas fa-clipboard-check fs-3 mb-1 text-muted"></i>
                                 <p class="mb-0 small fw-bold text-uppercase text-muted" style="font-size: 0.65rem;">Sin proyectos</p>
                             </div>
@@ -709,6 +1010,434 @@
 </div>
 
 <script>
+    document.addEventListener('show.bs.dropdown', function (event) {
+        const card = event.target.closest('.card-note-dtl');
+        if (card) card.classList.add('has-menu-open');
+    });
+
+    document.addEventListener('hide.bs.dropdown', function (event) {
+        const card = event.target.closest('.card-note-dtl');
+        if (card) card.classList.remove('has-menu-open');
+    });
+
+    if (window.jQuery) {
+        $(document).on('show.bs.dropdown', '.dropdown', function () {
+            $(this).closest('.card-note-dtl').addClass('has-menu-open');
+        });
+        $(document).on('hide.bs.dropdown', '.dropdown', function () {
+            $(this).closest('.card-note-dtl').removeClass('has-menu-open');
+        });
+    }
+
+    // LIMPIEZA DINÁMICA DE ERRORES AL ESCRIBIR
+    function limpiarErrorValidacion(input, errorId) {
+        input.classList.remove('input-error-dtl');
+        const msg = document.getElementById(errorId);
+        if (msg) msg.classList.add('d-none');
+    }
+
+    function toggleFlyoutInspLeft(ev, flyoutId, forzarNueva = false) {
+        ev.stopPropagation();
+        cerrarTarjetaNuevaObra();
+
+        document.querySelectorAll('.flyout-card-panel').forEach(el => {
+            if (el.id !== flyoutId) el.classList.add('d-none');
+        });
+
+        document.querySelectorAll('.card-note-dtl').forEach(c => c.classList.remove('has-menu-open'));
+
+        const panel = document.getElementById(flyoutId);
+        if (panel) {
+            const card = panel.closest('.card-note-dtl');
+            if (card) card.classList.toggle('has-menu-open');
+
+            panel.classList.toggle('d-none');
+            if (forzarNueva) {
+                const obraId = flyoutId.replace('flyout-compact-insp-', '');
+                mostrarNuevaParteMini(obraId);
+            }
+        }
+    }
+
+    function cambiarTabParte(obraId, index, btn) {
+        document.querySelectorAll(`.tab-parte-content-${obraId}`).forEach(el => el.classList.add('d-none'));
+        const boxNueva = document.getElementById(`box-nueva-parte-${obraId}`);
+        if (boxNueva) boxNueva.classList.add('d-none');
+
+        const tabBox = document.getElementById(`tab-box-${obraId}-${index}`);
+        if (tabBox) tabBox.classList.remove('d-none');
+
+        const parentNav = btn.closest('.nav-partes-mini');
+        if (parentNav) {
+            parentNav.querySelectorAll('.btn-tab-parte').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    }
+
+    function cambiarTabCotizacion(obraId, index, btn) {
+        document.querySelectorAll(`.tab-cot-content-${obraId}`).forEach(el => el.classList.add('d-none'));
+        const boxAjuste = document.getElementById(`box-ajustar-precio-${obraId}`);
+        if (boxAjuste) boxAjuste.classList.add('d-none');
+
+        const tabBox = document.getElementById(`tab-box-cot-${obraId}-${index}`);
+        if (tabBox) tabBox.classList.remove('d-none');
+
+        const parentNav = btn.closest('.nav-partes-mini');
+        if (parentNav) {
+            parentNav.querySelectorAll('.btn-tab-parte').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+    }
+
+    function mostrarNuevaParteMini(obraId) {
+        document.querySelectorAll(`.tab-parte-content-${obraId}`).forEach(el => el.classList.add('d-none'));
+        const boxNueva = document.getElementById(`box-nueva-parte-${obraId}`);
+        if (boxNueva) boxNueva.classList.remove('d-none');
+
+        const card = document.getElementById(`flyout-compact-insp-${obraId}`);
+        if (card) {
+            card.querySelectorAll('.btn-tab-parte').forEach(b => b.classList.remove('active'));
+        }
+    }
+
+    // AJUSTAR PRECIO: Abre y Cierra el formulario compacto
+    function abrirFormAjustarPrecio(obraId, cotId) {
+        document.getElementById(`ajuste-cot-id-${obraId}`).value = cotId;
+        const box = document.getElementById(`box-ajustar-precio-${obraId}`);
+        if (box) box.classList.remove('d-none');
+    }
+
+    function cerrarFormAjustarPrecio(obraId) {
+        const box = document.getElementById(`box-ajustar-precio-${obraId}`);
+        if (box) box.classList.add('d-none');
+    }
+
+    function guardarAjustePrecioAjax(btn, obraId) {
+        const cotId = document.getElementById(`ajuste-cot-id-${obraId}`).value;
+        const montoInput = document.getElementById(`ajuste-monto-${obraId}`);
+        const motivoInput = document.getElementById(`ajuste-motivo-${obraId}`);
+
+        let hayError = false;
+        if (!montoInput.value || parseFloat(montoInput.value) <= 0) {
+            montoInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-ajustemonto-${obraId}`).classList.remove('d-none');
+            hayError = true;
+        }
+
+        if (!motivoInput.value.trim()) {
+            motivoInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-ajustemotivo-${obraId}`).classList.remove('d-none');
+            hayError = true;
+        }
+
+        if (hayError) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Reajustando...`;
+
+        fetch("{{ route('comercial.pipeline.ajustarPrecio') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                cotizacion_id: cotId,
+                nuevo_monto: montoInput.value,
+                motivo_reajuste: motivoInput.value.trim()
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-check me-1"></i> Guardar y Reemitir`;
+            }
+        });
+    }
+
+    function reprogramarFechaMini(btn, inspId, obraId) {
+        const nuevaFecha = document.getElementById(`fecha-act-${obraId}-${inspId}`).value;
+        const ing = document.getElementById(`ing-act-${obraId}-${inspId}`).value.trim();
+
+        if (!nuevaFecha || !ing) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+
+        fetch("{{ route('comercial.pipeline.reprogramarInspeccion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                inspeccion_id: inspId,
+                nueva_fecha: nuevaFecha,
+                ingeniero_asignado: ing
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-clock-rotate-left me-1"></i> Actualizar Fecha por Retraso`;
+            }
+        });
+    }
+
+    function finalizarInspMini(btn, inspId, obraId) {
+        const textarea = document.getElementById(`dictamen-act-${obraId}-${inspId}`);
+        const dictamen = textarea.value.trim();
+        const msgError = document.getElementById(`msg-error-dictamen-${obraId}-${inspId}`);
+
+        if (!dictamen) {
+            textarea.classList.add('input-error-dtl');
+            if (msgError) msgError.classList.remove('d-none');
+            textarea.focus();
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+
+        fetch("{{ route('comercial.pipeline.completarInspeccion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                inspeccion_id: inspId,
+                resultado: dictamen
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-check-circle me-1"></i> Completar Dictamen de Inspección`;
+            }
+        });
+    }
+
+    function guardarNuevaParteMini(btn, obraId) {
+        const ingInput = document.getElementById(`nueva-ing-${obraId}`);
+        const fechaInput = document.getElementById(`nueva-fecha-${obraId}`);
+
+        let hayError = false;
+        if (!ingInput.value.trim()) {
+            ingInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-nueva-ing-${obraId}`).classList.remove('d-none');
+            hayError = true;
+        }
+
+        if (!fechaInput.value) {
+            hayError = true;
+        }
+
+        if (hayError) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Agendando...`;
+
+        fetch("{{ route('comercial.pipeline.agendarInspeccion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                obra_id: obraId,
+                ingeniero_asignado: ingInput.value.trim(),
+                fecha_inspeccion: fechaInput.value
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-save me-1"></i> Guardar Visita`;
+            }
+        });
+    }
+
+    function enviarProgramarCotizacionDirecto(btn, obraId) {
+        const fechaInput = document.getElementById('prog-fecha-emision-' + obraId);
+        if (!fechaInput.value) {
+            fechaInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-progfecha-${obraId}`).classList.remove('d-none');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Reubicando...`;
+
+        fetch("{{ route('comercial.pipeline.programarCotizacion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                obra_id: obraId,
+                fecha_emision: fechaInput.value
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function reprogramarCotizacionFecha(btn, cotId, obraId) {
+        const nuevaFecha = document.getElementById('reprog-cot-fecha-' + obraId).value;
+        if (!nuevaFecha) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+
+        fetch("{{ route('comercial.pipeline.reprogramarCotizacion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                cotizacion_id: cotId,
+                nueva_fecha_emision: nuevaFecha
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-clock-rotate-left me-1"></i> Actualizar Fecha por Retraso`;
+            }
+        });
+    }
+
+    function enviarCotDirecto(btn, obraId, cotId) {
+        const montoInput = document.getElementById('cot-monto-' + obraId);
+        const obs = document.getElementById('cot-obs-' + obraId).value;
+
+        if (!montoInput.value || parseFloat(montoInput.value) <= 0) {
+            montoInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-cotmonto-${obraId}`).classList.remove('d-none');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+
+        fetch("{{ route('comercial.pipeline.enviarCotizacion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                cotizacion_id: cotId,
+                monto_total: montoInput.value,
+                observaciones: obs
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function ejecutarRespuestaCotizacion(btn, cotId, estadoCotizacion) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+
+        fetch("{{ route('comercial.pipeline.responderCotizacion') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                cotizacion_id: cotId,
+                estado_cotizacion: estadoCotizacion
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function trasladarACierreDirecto(btn, obraId) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Trasladando...`;
+
+        fetch("{{ route('comercial.pipeline.trasladarCierre') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ obra_id: obraId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function ejecutarCierreDirecto(btn, obraId, nuevoEstado) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Archivando...`;
+
+        fetch("{{ route('comercial.pipeline.updateStatus') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ 
+                obra_id: obraId, 
+                nuevo_estado: nuevoEstado 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                btn.disabled = false;
+            }
+        });
+    }
+
     function toggleTarjetaNuevaObra(ev) {
         ev.stopPropagation();
         document.querySelectorAll('.flyout-card-panel').forEach(el => el.classList.add('d-none'));
@@ -728,10 +1457,7 @@
         const monto = document.getElementById('new-monto').value;
         const fecha = document.getElementById('new-fecha').value;
 
-        if (!clienteId || !titulo || !monto || parseFloat(monto) <= 0) {
-            alert('Por favor complete todos los campos obligatorios correctamente.');
-            return;
-        }
+        if (!clienteId || !titulo || !monto || parseFloat(monto) <= 0) return;
 
         btn.disabled = true;
         btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
@@ -754,7 +1480,6 @@
             if (data.success) {
                 location.reload();
             } else {
-                alert(data.message || 'Error al guardar la obra.');
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fas fa-save me-1"></i> Guardar`;
             }
@@ -770,174 +1495,36 @@
             if (el.id !== flyoutId) el.classList.add('d-none');
         });
 
+        document.querySelectorAll('.card-note-dtl').forEach(c => c.classList.remove('has-menu-open'));
+
         const panel = document.getElementById(flyoutId);
         if (panel) {
+            const card = panel.closest('.card-note-dtl');
+            if (card) card.classList.toggle('has-menu-open');
             panel.classList.toggle('d-none');
         }
     }
 
     function cerrarFlyout(flyoutId) {
         const panel = document.getElementById(flyoutId);
-        if (panel) panel.classList.add('d-none');
+        if (panel) {
+            panel.classList.add('d-none');
+            const card = panel.closest('.card-note-dtl');
+            if (card) card.classList.remove('has-menu-open');
+        }
     }
 
     document.addEventListener('click', function () {
         cerrarTarjetaNuevaObra();
         document.querySelectorAll('.flyout-card-panel').forEach(el => el.classList.add('d-none'));
+        document.querySelectorAll('.card-note-dtl').forEach(c => c.classList.remove('has-menu-open'));
     });
 
-    // 1. EL IMÁN: AGENDAR INSPECCIÓN -> REUBICA EN 'INSPECCION'
-    function enviarAgendarInspeccionDirecto(btn, obraId) {
-        const ing = document.getElementById('agendar-ing-' + obraId).value.trim();
-        const fecha = document.getElementById('agendar-fecha-' + obraId).value;
-        const contacto = document.getElementById('agendar-contacto-' + obraId).value.trim();
-        const tel = document.getElementById('agendar-tel-' + obraId).value.trim();
-
-        if (!ing || !fecha) {
-            alert('Debe ingresar el ingeniero responsable y la fecha programada.');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Reubicando...`;
-
-        fetch("{{ route('comercial.pipeline.agendarInspeccion') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-                obra_id: obraId,
-                ingeniero_asignado: ing,
-                fecha_inspeccion: fecha,
-                contacto_nombre: contacto,
-                contacto_telefono: tel
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'Error al agendar inspección.');
-                btn.disabled = false;
-            }
-        });
-    }
-
-    // 2. EL IMÁN: PROGRAMAR COTIZACIÓN -> REUBICA EN 'COTIZACIÓN'
-    function enviarProgramarCotizacionDirecto(btn, obraId) {
-        const fecha = document.getElementById('prog-fecha-emision-' + obraId).value;
-
-        if (!fecha) {
-            alert('Seleccione una fecha de emisión válida.');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Reubicando...`;
-
-        fetch("{{ route('comercial.pipeline.programarCotizacion') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-                obra_id: obraId,
-                fecha_emision: fecha
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'Error al programar la cotización.');
-                btn.disabled = false;
-            }
-        });
-    }
-
-    // 3. EL IMÁN: COMPLETAR INSPECCIÓN -> REUBICA EN 'COTIZACIÓN'
-    function enviarInspDirecto(btn, obraId, inspId) {
-        const resultado = document.getElementById('insp-res-' + obraId).value.trim();
-
-        if (!resultado) {
-            alert('Debe ingresar el dictamen o informe técnico de campo.');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Reubicando...`;
-
-        fetch("{{ route('comercial.pipeline.completarInspeccion') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ 
-                inspeccion_id: inspId, 
-                resultado: resultado 
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'Error al completar la inspección.');
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fas fa-check"></i> Finalizar`;
-            }
-        });
-    }
-
-    // 4. EL IMÁN: EMITIR COTIZACIÓN -> REUBICA EN 'CIERRE COMERCIAL'
-    function enviarCotDirecto(btn, obraId, cotId) {
-        const monto = document.getElementById('cot-monto-' + obraId).value;
-        const obs   = document.getElementById('cot-obs-' + obraId).value;
-
-        if (!monto || parseFloat(monto) <= 0) {
-            alert('Ingrese un monto válido mayor a 0 para emitir la cotización.');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Reubicando...`;
-
-        fetch("{{ route('comercial.pipeline.enviarCotizacion') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-                cotizacion_id: cotId,
-                monto_total: monto,
-                observaciones: obs
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'Error al emitir la cotización.');
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fas fa-paper-plane"></i> Emitir Presupuesto Final`;
-            }
-        });
-    }
-
-    // 5. REGISTRAR BITÁCORA
     function enviarBitacoraDirecto(btn, obraId) {
-        const desc = document.getElementById('bitacora-desc-' + obraId).value.trim();
-
-        if (!desc) {
-            alert('Ingrese la nota de seguimiento para la bitácora.');
+        const descInput = document.getElementById('bitacora-desc-' + obraId);
+        if (!descInput.value.trim()) {
+            descInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-bitacora-${obraId}`).classList.remove('d-none');
             return;
         }
 
@@ -952,58 +1539,22 @@
             },
             body: JSON.stringify({
                 obra_id: obraId,
-                descripcion: desc
+                descripcion: descInput.value.trim()
             })
         })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert('Nota registrada en bitácora técnica.');
                 cerrarFlyout('flyout-bitacora-' + obraId);
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fas fa-save me-1"></i> Guardar en Bitácora`;
-                document.getElementById('bitacora-desc-' + obraId).value = '';
+                descInput.value = '';
             } else {
-                alert('Error al registrar en bitácora.');
                 btn.disabled = false;
             }
         });
     }
 
-    // 6. RESOLUCIÓN DE CIERRE COMERCIAL
-    function ejecutarCierreDirecto(btn, obraId, nuevoEstado) {
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" style="width: 0.65rem; height: 0.65rem;"></span> Procesando...`;
-
-        fetch("{{ route('comercial.pipeline.updateStatus') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ 
-                obra_id: obraId, 
-                nuevo_estado: nuevoEstado 
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'No se pudo actualizar el cierre.');
-                btn.disabled = false;
-            }
-        })
-        .catch(() => {
-            alert('Error de conexión.');
-            btn.disabled = false;
-        });
-    }
-
-    // ==========================================
-    // LIBERTAD TOTAL: DRAG AND DROP MANUAL
-    // ==========================================
+    // DRAG AND DROP VISUAL
     let draggedCardId = null;
 
     function allowDrop(ev) { 
@@ -1030,30 +1581,53 @@
         const col = ev.target.closest('.kanban-col-dtl');
         if (col) {
             col.classList.remove('drag-over');
-            const targetStatus = col.dataset.colStatus;
-            if (draggedCardId && targetStatus) {
-                updateStatusBackend(draggedCardId, targetStatus);
-            }
+            const cardId = draggedCardId || ev.dataTransfer.getData('text/plain');
+            if (cardId) moverTarjetaSoloVisual(cardId, col);
         }
+        draggedCardId = null;
     }
 
-    function updateStatusBackend(obraId, newStatus) {
-        fetch("{{ route('comercial.pipeline.updateStatus') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ obra_id: obraId, nuevo_estado: newStatus })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert(data.message || 'No se pudo mover el expediente.');
-            }
-        });
+    function moverTarjetaPorMenu(obraId, targetStatus) {
+        const col = document.querySelector(`.kanban-col-dtl[data-col-status="${targetStatus}"]`);
+        if (col) moverTarjetaSoloVisual(obraId, col);
+    }
+
+    function moverTarjetaSoloVisual(obraId, targetCol) {
+        const card = document.getElementById('obra-card-' + obraId);
+        if (!card) return;
+
+        const sourceCol = card.closest('.kanban-col-dtl');
+        if (!sourceCol || sourceCol === targetCol) return;
+
+        const sourceContainer = sourceCol.querySelector('.kanban-cards-container');
+        const targetContainer = targetCol.querySelector('.kanban-cards-container');
+
+        const emptyPlaceholder = targetContainer.querySelector('.empty-col-placeholder');
+        if (emptyPlaceholder) emptyPlaceholder.remove();
+
+        targetContainer.appendChild(card);
+
+        if (sourceContainer.querySelectorAll('.card-note-dtl').length === 0) {
+            sourceContainer.innerHTML = `
+                <div class="text-center py-5 my-auto empty-col-placeholder" style="opacity: 0.4;">
+                    <i class="fas fa-clipboard-check fs-3 mb-1 text-muted"></i>
+                    <p class="mb-0 small fw-bold text-uppercase text-muted" style="font-size: 0.65rem;">Sin proyectos</p>
+                </div>`;
+        }
+
+        recalcularSubtituloColumna(sourceCol);
+        recalcularSubtituloColumna(targetCol);
+    }
+
+    function recalcularSubtituloColumna(col) {
+        const cards = col.querySelectorAll('.card-note-dtl');
+        let total = 0;
+        cards.forEach(c => { total += parseFloat(c.dataset.monto || 0); });
+        const formato = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const subtitle = col.querySelector('.col-header-subtitle');
+        if (subtitle) {
+            subtitle.innerHTML = `${cards.length} EXPEDIENTES &bull; S/ ${formato}`;
+        }
     }
 </script>
 @endsection

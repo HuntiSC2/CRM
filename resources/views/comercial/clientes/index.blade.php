@@ -1,8 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Estilos Exclusivos DTL PREMIER -->
+<!-- Estilos Exclusivos Estandarizados DTL PREMIER -->
 <style>
+    :root {
+        --dtl-navy: #0f172a;
+        --dtl-navy-hover: #1e293b;
+        --dtl-green: #059669;
+        --dtl-green-hover: #047857;
+    }
+
     .btn-dtl-action {
         height: 38px;
         padding: 0 16px;
@@ -41,7 +48,7 @@
         padding: 0;
     }
 
-    .dtl-search-input:focus, .dtl-input:focus, .form-control:focus, .form-select:focus {
+    .dtl-search-input:focus, .form-control:focus, .form-select:focus {
         border-color: #059669 !important;
         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15) !important;
         background-color: #ffffff !important;
@@ -51,15 +58,15 @@
         background-color: #f1f5f9 !important;
     }
 
-    /* Cabecera unificada y exacta para la tabla y el formulario */
     .dtl-table-hover thead th, .dtl-card-header-styled {
-        background-color: #0f172a !important;
+        background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
         border: 1px solid #1e293b !important;
         font-size: 0.68rem !important;
         letter-spacing: 0.8px;
         padding-top: 0.55rem !important;
         padding-bottom: 0.55rem !important;
+        text-transform: uppercase;
     }
 
     .dtl-table-hover thead th {
@@ -72,9 +79,9 @@
         border: 1px solid #cbd5e1 !important;
         font-size: 0.78rem !important;
         padding: 0.6rem 0.75rem !important;
+        vertical-align: middle;
     }
 
-    /* REDUCCIÓN PROPORCIONAL Y COMPACTA PARA RESOLUCIÓN DE CELULAR */
     @media (max-width: 767.98px) {
         .dtl-table-hover thead th {
             font-size: 0.52rem !important;
@@ -94,14 +101,7 @@
         }
     }
 
-    /* Ocultar texto de la paginación de Laravel */
-    .dtl-pagination-wrapper nav > div:first-child,
-    .dtl-pagination-wrapper p.small.text-muted,
-    .dtl-pagination-wrapper .text-muted {
-        display: none !important;
-    }
-
-    /* Paginación Numerada en círculos alineada a la derecha */
+    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -116,6 +116,12 @@
         display: flex !important;
         justify-content: flex-end !important;
         width: 100% !important;
+    }
+
+    .dtl-pagination-wrapper nav > div:first-child,
+    .dtl-pagination-wrapper p.small.text-muted,
+    .dtl-pagination-wrapper .text-muted {
+        display: none !important;
     }
 
     .dtl-pagination-wrapper nav > div:last-child,
@@ -146,7 +152,7 @@
         border-radius: 50% !important;
         border: 1px solid #cbd5e1 !important;
         background-color: #ffffff !important;
-        color: #0f172a !important;
+        color: var(--dtl-navy) !important;
         font-weight: 700 !important;
         font-size: 0.80rem !important;
         text-decoration: none !important;
@@ -154,8 +160,8 @@
     }
 
     .dtl-pagination-wrapper .pagination .page-item.active .page-link {
-        background-color: #059669 !important;
-        border-color: #059669 !important;
+        background-color: var(--dtl-green) !important;
+        border-color: var(--dtl-green) !important;
         color: #ffffff !important;
     }
 
@@ -181,34 +187,24 @@
 
 <div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL -->
+    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
-        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
+        <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
         
         <div class="card-body p-2.5 p-md-3">
-            <div class="row align-items-center g-2 g-md-3">
-                <div class="col-auto">
-                    <div class="p-1.5 p-md-2 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="min-width: 125px; height: 48px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 34px; width: auto; object-fit: contain;">
-                    </div>
-                </div>
+            <div class="d-flex flex-wrap align-items-center gap-1.5 mb-1">
+                <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
+                    <i class="fas fa-briefcase me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
+                </span>
 
-                <div class="col border-start-md ps-md-3" style="border-color: #e2e8f0 !important;">
-                    <div class="d-flex flex-wrap align-items-center gap-1.5 mb-0.5">
-                        <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: #0f172a; color: #ffffff;">
-                            <i class="fas fa-briefcase me-1" style="color: #10b981;"></i> GESTIÓN COMERCIAL
-                        </span>
-
-                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                            <span class="status-pulse-green"></span> Expedientes Activos
-                        </span>
-                    </div>
-                    
-                    <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: #0f172a; letter-spacing: -0.3px;">
-                        Directorio de Clientes
-                    </h3>
-                </div>
+                <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                    <span class="status-pulse-green"></span> Expedientes Activos
+                </span>
             </div>
+            
+            <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: var(--dtl-navy); letter-spacing: -0.3px;">
+                Directorio de Clientes
+            </h3>
         </div>
     </div>
 
@@ -268,7 +264,6 @@
                 <div class="card-body p-3" style="background-color: #f8fafc;">
                     <div class="row g-2.5">
                         
-                        <!-- FILA 1: RUC y Razón Social -->
                         <div class="col-12 col-md-3">
                             <label class="form-label fw-semibold extra-small mb-1 text-dark">RUC (11 Dígitos) <span class="text-danger">*</span></label>
                             <input type="text" name="ruc" class="form-control form-control-sm py-1" maxlength="11" placeholder="Ej: 20100017491" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
@@ -279,7 +274,6 @@
                             <input type="text" name="razon_social" class="form-control form-control-sm py-1" placeholder="Ej: DTL PREMIER S.A.C." style="font-size: 0.82rem; border-color: #cbd5e1;" required>
                         </div>
 
-                        <!-- FILA 2: Nombre de Contacto, Teléfono y Correo Electrónico -->
                         <div class="col-12 col-md-4">
                             <label class="form-label fw-semibold extra-small mb-1 text-dark">Nombre de Contacto <span class="text-danger">*</span></label>
                             <input type="text" name="nombre_contacto" class="form-control form-control-sm py-1" placeholder="Ej: Ing. Carlos Mendoza" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
@@ -295,7 +289,6 @@
                             <input type="email" name="email_contacto" class="form-control form-control-sm py-1" placeholder="Ej: contacto@dtlpremier.com" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
                         </div>
 
-                        <!-- FILA 3: Dirección Fiscal y Observaciones alineadas en paralelo (2 líneas) -->
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold extra-small mb-1 text-dark">Dirección Fiscal / Oficina</label>
                             <input type="text" name="direccion" class="form-control form-control-sm py-1" placeholder="Ej: Av. Javier Prado Este 4200, Surco" style="font-size: 0.82rem; border-color: #cbd5e1;">
@@ -321,32 +314,32 @@
     <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover" style="min-width: 650px;">
+                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover w-100" style="min-width: 860px;">
                     <thead>
                         <tr>
-                            <th class="ps-3 py-2.5 fw-bold">RUC</th>
-                            <th class="py-2.5 fw-bold">RAZÓN SOCIAL</th>
-                            <th class="py-2.5 fw-bold">DIRECCIÓN</th>
-                            <th class="py-2.5 fw-bold">CONTACTO</th>
-                            <th class="py-2.5 fw-bold text-center">ESTADO</th>
-                            <th class="py-2.5 fw-bold text-center">ASIGNADO (CRM)</th>
-                            <th class="pe-3 py-2.5 fw-bold text-center">ACCIONES</th>
+                            <th class="ps-3 py-2.5 fw-bold" style="width: 12%;">RUC</th>
+                            <th class="py-2.5 fw-bold" style="width: 24%;">RAZÓN SOCIAL</th>
+                            <th class="py-2.5 fw-bold" style="width: 20%;">DIRECCIÓN</th>
+                            <th class="py-2.5 fw-bold" style="width: 20%;">CONTACTO</th>
+                            <th class="py-2.5 fw-bold text-center" style="width: 10%;">ESTADO</th>
+                            <th class="py-2.5 fw-bold text-center" style="width: 8%;">ASIGNADO (CRM)</th>
+                            <th class="pe-3 py-2.5 fw-bold text-center" style="width: 6%;">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($clientes ?? [] as $cliente)
                             <tr style="border-top: 1px solid #cbd5e1;">
-                                <td class="ps-3">
-                                    <span class="fw-bold" style="color: #059669; font-size: 0.78rem;">
-                                        {{ $cliente->ruc }}
-                                    </span>
+                                <td class="ps-3 font-monospace fw-bold" style="color: var(--dtl-green); font-size: 0.78rem;">
+                                    {{ $cliente->ruc }}
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-dark text-uppercase" style="font-size: 0.78rem;">
+                                    <span class="fw-bold text-dark text-uppercase d-block" style="font-size: 0.78rem;">
                                         {{ $cliente->razon_social }}
                                     </span>
                                 </td>
-                                <td><span class="text-secondary" style="font-size: 0.78rem;">{{ $cliente->direccion ?? '---' }}</span></td>
+                                <td>
+                                    <span class="text-secondary d-block" style="font-size: 0.78rem;">{{ $cliente->direccion ?? '---' }}</span>
+                                </td>
                                 <td>
                                     <div style="font-size: 0.78rem;" class="fw-semibold text-dark">{{ $cliente->nombre_contacto }}</div>
                                     <div style="font-size: 0.70rem;" class="text-muted">{{ $cliente->telefono_contacto }} | {{ $cliente->email_contacto }}</div>
@@ -361,10 +354,11 @@
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">Inactivo</span>
                                     @endif
                                 </td>
-                                <td class="text-center"><span class="text-muted fw-semibold" style="font-size: 0.78rem;">{{ $cliente->user->name ?? 'Asesor Comercial' }}</span></td>
+                                <td class="text-center">
+                                    <span class="text-muted fw-semibold" style="font-size: 0.78rem;">{{ $cliente->user->name ?? 'Asesor Comercial' }}</span>
+                                </td>
                                 <td class="pe-3 text-center">
-                                    <!-- Enlace funcional que conecta con el Historial 360° del cliente -->
-                                    <a href="{{ route('comercial.clientes.show', $cliente->id) }}" class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center text-decoration-none" style="background-color: #ecfdf5; color: #059669; width: 28px; height: 28px;" title="Ver Bitácora e Historial 360°">
+                                    <a href="{{ route('comercial.clientes.show', $cliente->id) }}" class="btn btn-sm p-1 rounded-3 border-0 d-inline-flex align-items-center justify-content-center text-decoration-none" style="background-color: #ecfdf5; color: var(--dtl-green); width: 28px; height: 28px;" title="Ver Bitácora e Historial 360°">
                                         <i class="fas fa-eye" style="font-size: 0.75rem;"></i>
                                     </a>
                                 </td>
@@ -380,7 +374,7 @@
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN NUMERADA -->
+    <!-- 5. PAGINACIÓN NUMERADA ESTANDARIZADA AL LADO DERECHO -->
     <div class="dtl-pagination-wrapper">
         @if(isset($clientes) && method_exists($clientes, 'links'))
             {{ $clientes->withQueryString()->links('pagination::bootstrap-5') }}
