@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\User;
 
@@ -13,15 +14,13 @@ class DatabaseSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        // =====================================================================
-        // 1. USUARIOS DEL CRM (DIRECTORIO DE ACCESO Y AUDITORÍA)
-        // =====================================================================
+        // 1. USUARIOS (Con Hash::make para permitir login)
         $admin = User::firstOrCreate(
             ['email' => 'admin@dtlpremier.pe'],
             [
                 'name'              => 'Administrador Sistema',
                 'email_verified_at' => $now,
-                'password'          => 'admin123',
+                'password'          => Hash::make('admin123'),
                 'role'              => 'administrador',
                 'login_attempts'    => 0,
                 'is_active'         => true,
@@ -33,7 +32,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'              => 'Ing. Ricardo Paredes (Gerencia)',
                 'email_verified_at' => $now,
-                'password'          => 'gerencia123',
+                'password'          => Hash::make('gerencia123'),
                 'role'              => 'directivo',
                 'login_attempts'    => 0,
                 'is_active'         => true,
@@ -45,7 +44,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'              => 'Carlos Mendoza (Comercial)',
                 'email_verified_at' => $now,
-                'password'          => 'comercial123',
+                'password'          => Hash::make('comercial123'),
                 'role'              => 'ejecutivo',
                 'login_attempts'    => 0,
                 'is_active'         => true,
@@ -57,7 +56,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'              => 'Lucía Vargas (Comercial)',
                 'email_verified_at' => $now,
-                'password'          => 'comercial123',
+                'password'          => Hash::make('comercial123'),
                 'role'              => 'ejecutivo',
                 'login_attempts'    => 0,
                 'is_active'         => true,
@@ -67,9 +66,7 @@ class DatabaseSeeder extends Seeder
         $adminId  = $admin->id;
         $asesores = [$asesor1->id, $asesor2->id];
 
-        // =====================================================================
-        // 2. POLÍTICAS INSTITUCIONALES SLA
-        // =====================================================================
+        // 2. POLÍTICAS SLA
         $politicaVisitaId = DB::table('sla_politicas')->insertGetId([
             'user_id'             => $adminId,
             'etapa_evaluada'      => 'VISITA_INSPECCION',
@@ -92,9 +89,7 @@ class DatabaseSeeder extends Seeder
             'updated_at'          => $now,
         ]);
 
-        // =====================================================================
-        // 3. 20 CLIENTES CORPORATIVOS
-        // =====================================================================
+        // 3. CLIENTES
         $clientesData = [
             ['20100010724', 'COSAPI S.A.', 'Av. República de Colombia 791, San Isidro', 'Ing. Jorge Ramírez', '987654321', 'jramirez@cosapi.com.pe', 'ACTIVO'],
             ['20508608889', 'AESA INFRAESTRUCTURA Y MINERIA S.A.', 'Av. Javier Prado Este 4403, Surco', 'Ing. Paola Quispe', '984112233', 'pquispe@aesa.com.pe', 'ACTIVO'],
@@ -135,9 +130,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // =====================================================================
-        // 4. 20 PARTIDAS DEL CATÁLOGO MAESTRO + HISTORIAL
-        // =====================================================================
+        // 4. PARTIDAS
         $partidasData = [
             ['PAR-001', 'Inspección Estructural con Esclerómetro y Ultrasonido', 'Evaluación Estructural', 'global', 3850.00],
             ['PAR-002', 'Estudio de Mecánica de Suelos con Calicatas (hasta 3m)', 'Geotecnia', 'global', 4500.00],
@@ -189,41 +182,26 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // =====================================================================
-        // 5. 20 OBRAS CON CONFIGURACIÓN EXACTA DE ESTADOS REALES
-        // =====================================================================
-        // Formato: [Título, Monto, EstadoObra, HorasRetroceso, Escenario]
+        // 5. OBRAS
         $obrasConfig = [
-            // --- 3 PROSPECTOS ---
             ['Inspección Estructural Torre San Isidro',        48000.00,  'Prospecto',        141, 'PROSPECTO_SIN_VISITA'],
             ['Mantenimiento de Túneles Vía de Evitamiento',    185000.00, 'Prospecto',        165, 'PROSPECTO_SIN_VISITA'],
             ['Evaluación de Losa Industrial Almacén Norte',    62000.00,  'Prospecto',        4,   'PROSPECTO_NUEVO'],
-
-            // --- 7 INSPECCIÓN (4 con visita Pendiente + 3 con Insp. OK listas para cotizar) ---
             ['Pavimentación y Zanjas Centro Logístico Lurín',  245000.00, 'Inspeccion',       69,  'INSP_VENCIDA_2_PARTES'],
             ['Cimentación Profunda Subestación Eléctrica Sur', 310000.00, 'Inspeccion',       52,  'INSP_VENCIDA'],
             ['Reforzamiento de Vigas Puente Peatonal Rimac',   128000.00, 'Inspeccion',       8,   'INSP_PENDIENTE_A_TIEMPO'],
             ['Impermeabilización Reservorio Planta Callao',    74500.00,  'Inspeccion',       14,  'INSP_PENDIENTE_A_TIEMPO'],
-            // Las 3 que se quedan en Inspección porque NO tienen cotización programada:
             ['Edificio Multifamiliar San Isidro Suites',       420000.00, 'Inspeccion',       120, 'INSP_COMPLETADA_SIN_COTIZ'],
             ['Estudio de Mecánica de Suelos Torre Ferreyros',  38500.00,  'Inspeccion',       96,  'INSP_COMPLETADA_SIN_COTIZ'],
             ['Nave Industrial y Piso Pulido Chilca KM 62',     560000.00, 'Inspeccion',       72,  'INSP_COMPLETADA_SIN_COTIZ'],
-
-            // --- 4 COTIZACIÓN (Representando los 4 Estados Distintivos) ---
-            ['Ampliación Planta Industrial Huachipa Etapa II', 390000.00, 'Cotización',       10,  'COTIZ_PROGRAMADA'], // Amarillo: Cotiz. Pend.
-            ['Construcción Muro de Contención Costa Verde',    275000.00, 'Cotización',       18,  'COTIZ_ENVIADA'],    // Azul: Cotiz. Enviada
-            ['Rehabilitación de Pavimentos Complejo Callao',   315000.00, 'Cotización',       25,  'COTIZ_ACEPTADA'],   // Verde: Cotiz. OK
-            ['Canal de Derivación y Drenaje Pluvial Lurín',    185000.00, 'Cotización',       30,  'COTIZ_RECHAZADA'],  // Rojo: Cotiz. Rech.
-
-            // --- 2 CIERRE COMERCIAL (Cotizaciones listas para dar "Obra Ganada" o "Cancelar") ---
+            ['Ampliación Planta Industrial Huachipa Etapa II', 390000.00, 'Cotización',       10,  'COTIZ_PROGRAMADA'],
+            ['Construcción Muro de Contención Costa Verde',    275000.00, 'Cotización',       18,  'COTIZ_ENVIADA'],
+            ['Rehabilitación de Pavimentos Complejo Callao',   315000.00, 'Cotización',       25,  'COTIZ_ACEPTADA'],
+            ['Canal de Derivación y Drenaje Pluvial Lurín',    185000.00, 'Cotización',       30,  'COTIZ_RECHAZADA'],
             ['Reparación Estructural Muelle Callao Zona 4',    680000.00, 'Cierre Comercial', 2,   'CIERRE_COMERCIAL'],
             ['Instalación Línea Tubería HDPE Planta Cementos', 198000.00, 'Cierre Comercial', 1,   'CIERRE_COMERCIAL'],
-
-            // --- 2 ACEPTADAS (Archivadas en Historial) ---
             ['Construcción Almacén Central Cosapi Sur',        890000.00, 'Aceptada',         1,   'GANADA_HISTORIAL'],
             ['Rehabilitación Vial Acceso Mina Aesa',           740000.00, 'Aceptada',         2,   'GANADA_HISTORIAL'],
-
-            // --- 2 CANCELADAS (Archivadas en Historial) ---
             ['Cerco Perimétrico y Garitas Condominio Sur',     145000.00, 'Cancelada',        1,   'CANCELADA_HISTORIAL'],
             ['Techado Metálico Patio de Carga Norte',          220000.00, 'Cancelada',        2,   'CANCELADA_HISTORIAL'],
         ];
@@ -269,7 +247,6 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => $now,
             ]);
 
-            // A) BITÁCORAS DE SEGUIMIENTO (1 por cada obra)
             DB::table('bitacoras')->insert([
                 'obra_id'       => $obraId,
                 'user_id'       => $asesorId,
@@ -280,10 +257,8 @@ class DatabaseSeeder extends Seeder
                 'updated_at'    => $createdAt->copy()->addHours(2),
             ]);
 
-            // B) INSPECCIONES TÉCNICAS
             if ($estado !== 'Prospecto') {
                 if ($escenario === 'INSP_VENCIDA_2_PARTES') {
-                    // Parte #1 Completada
                     DB::table('inspecciones')->insert([
                         'obra_id'            => $obraId,
                         'user_id'            => $asesorId,
@@ -294,12 +269,11 @@ class DatabaseSeeder extends Seeder
                         'created_at'         => $now->copy()->subDays(5),
                         'updated_at'         => $now->copy()->subDays(5),
                     ]);
-                    // Parte #2 Pendiente y Vencida
                     DB::table('inspecciones')->insert([
                         'obra_id'            => $obraId,
                         'user_id'            => $asesorId,
                         'ingeniero_asignado' => 'Ing. Patricia Paredes',
-                        'fecha_inspeccion'   => $now->copy()->subHours(24), // Fecha pasada -> pulso rojo
+                        'fecha_inspeccion'   => $now->copy()->subHours(24),
                         'resultado'          => null,
                         'estado_inspeccion'  => 'Pendiente',
                         'created_at'         => $now->copy()->subDays(2),
@@ -310,7 +284,7 @@ class DatabaseSeeder extends Seeder
                         'obra_id'            => $obraId,
                         'user_id'            => $asesorId,
                         'ingeniero_asignado' => $ingeniero,
-                        'fecha_inspeccion'   => $now->copy()->subHours(36), // Vencida
+                        'fecha_inspeccion'   => $now->copy()->subHours(36),
                         'resultado'          => null,
                         'estado_inspeccion'  => 'Pendiente',
                         'created_at'         => $now->copy()->subDays(2),
@@ -321,14 +295,13 @@ class DatabaseSeeder extends Seeder
                         'obra_id'            => $obraId,
                         'user_id'            => $asesorId,
                         'ingeniero_asignado' => $ingeniero,
-                        'fecha_inspeccion'   => $now->copy()->addDays(2), // Futura -> a tiempo
+                        'fecha_inspeccion'   => $now->copy()->addDays(2),
                         'resultado'          => null,
                         'estado_inspeccion'  => 'Pendiente',
                         'created_at'         => $now,
                         'updated_at'         => $now,
                     ]);
                 } else {
-                    // Completadas
                     DB::table('inspecciones')->insert([
                         'obra_id'            => $obraId,
                         'user_id'            => $asesorId,
@@ -342,7 +315,6 @@ class DatabaseSeeder extends Seeder
                 }
             }
 
-            // C) COTIZACIONES (Configuradas con precisión quirúrgica)
             $requiereCotizacion = in_array($escenario, [
                 'COTIZ_PROGRAMADA', 'COTIZ_ENVIADA', 'COTIZ_ACEPTADA', 'COTIZ_RECHAZADA',
                 'CIERRE_COMERCIAL', 'GANADA_HISTORIAL', 'CANCELADA_HISTORIAL'
@@ -352,10 +324,10 @@ class DatabaseSeeder extends Seeder
                 $codCot = 'COT-2026-' . str_pad($cotCounter++, 4, '0', STR_PAD_LEFT);
 
                 $estadoCot = match ($escenario) {
-                    'COTIZ_PROGRAMADA'    => 'Programada', // Amarillo: Cotiz. Pend.
-                    'COTIZ_ENVIADA'       => 'Enviada',    // Azul: Cotiz. Enviada
-                    'COTIZ_ACEPTADA'      => 'Aceptada',   // Verde: Cotiz. OK
-                    'COTIZ_RECHAZADA'     => 'Rechazada',  // Rojo: Cotiz. Rech.
+                    'COTIZ_PROGRAMADA'    => 'Programada',
+                    'COTIZ_ENVIADA'       => 'Enviada',
+                    'COTIZ_ACEPTADA'      => 'Aceptada',
+                    'COTIZ_RECHAZADA'     => 'Rechazada',
                     'CIERRE_COMERCIAL'    => 'Aceptada',
                     'GANADA_HISTORIAL'    => 'Aceptada',
                     default               => 'Rechazada',
@@ -380,7 +352,6 @@ class DatabaseSeeder extends Seeder
                     'updated_at'        => $fechaEnvio ?? $fechaEmision,
                 ]);
 
-                // Detalles de cotización con partidas del catálogo
                 if ($montoCot > 0) {
                     $p1 = $partidaIds[$idx % 20];
                     $p2 = $partidaIds[($idx + 5) % 20];
@@ -410,7 +381,6 @@ class DatabaseSeeder extends Seeder
                 }
             }
 
-            // D) LOGS DE ALERTAS SLA
             if ($escenario === 'INSP_VENCIDA' || $escenario === 'INSP_VENCIDA_2_PARTES') {
                 DB::table('sla_alertas_logs')->insert([
                     'obra_id'                  => $obraId,
