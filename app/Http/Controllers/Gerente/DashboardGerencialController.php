@@ -96,7 +96,7 @@ class DashboardGerencialController extends Controller
         $clientesLabels = $topClientesData->pluck('razon_social')->map(fn($nombre) => strlen($nombre) > 18 ? substr($nombre, 0, 16) . '...' : $nombre)->toArray();
         $clientesMontos = $topClientesData->pluck('total_cliente')->map(fn($v) => (float)$v)->toArray();
 
-        return view('gerencia.hu-10.index', compact(
+        return view('gerencia.dashboard.index', compact(
             'fechaInicio',
             'fechaFin',
             'totalCotizaciones',

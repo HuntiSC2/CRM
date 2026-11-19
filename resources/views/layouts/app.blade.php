@@ -241,6 +241,267 @@
             z-index: 1040;
         }
         .sidebar-backdrop.show { display: block; }
+
+        /* =====================================================================
+           RESPONSIVE UNIFICADO DTL PREMIER (TABLET Y MÓVIL)
+           - Formularios, encabezados y controles conservan su estilo.
+           - En móvil, cada tabla se convierte en lista de "tarjetas":
+             cada registro ocupa el ancho completo y es más ancho que alto.
+        ===================================================================== */
+        @media (min-width: 768px) and (max-width: 1199.98px) {
+            .container-fluid { padding-left: 12px !important; padding-right: 12px !important; }
+        }
+
+        @media (max-width: 767.98px) {
+            .container-fluid { padding-left: 8px !important; padding-right: 8px !important; }
+            .card-body { padding: 0.85rem !important; }
+            .table-responsive { overflow-x: visible !important; }
+            .modal-dialog { margin: 0.5rem !important; max-width: calc(100% - 1rem) !important; }
+            .modal-body iframe { min-height: 65vh !important; }
+
+            /* --- CONVERSIÓN DE TABLAS EN TARJETAS APILADAS --- */
+            .dtl-responsive-table,
+            .dtl-table-hover,
+            .dtl-table {
+                min-width: 0 !important;
+                width: 100% !important;
+                border: 0 !important;
+                background: transparent !important;
+            }
+
+            .dtl-responsive-table thead,
+            .dtl-table-hover thead,
+            .dtl-table thead {
+                display: none !important;
+            }
+
+            .dtl-responsive-table tbody,
+            .dtl-table-hover tbody,
+            .dtl-table tbody {
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .dtl-responsive-table tbody tr,
+            .dtl-table-hover tbody tr,
+            .dtl-table tbody tr {
+                display: block !important;
+                width: 100% !important;
+                margin-bottom: 0.85rem !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 12px !important;
+                background-color: #ffffff !important;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06) !important;
+                padding: 0.55rem 0.65rem !important;
+                overflow: hidden;
+            }
+
+            .dtl-responsive-table tbody td,
+            .dtl-table-hover tbody td,
+            .dtl-table tbody td {
+                display: flex !important;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 0.75rem;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0.38rem 0 !important;
+                border: 0 !important;
+                border-bottom: 1px dashed #e2e8f0 !important;
+                text-align: right !important;
+                font-size: 0.78rem !important;
+                white-space: normal !important;
+                word-break: break-word !important;
+            }
+
+            .dtl-responsive-table tbody td:last-child,
+            .dtl-table-hover tbody td:last-child,
+            .dtl-table tbody td:last-child {
+                border-bottom: 0 !important;
+            }
+
+            .dtl-responsive-table tbody td::before,
+            .dtl-table-hover tbody td::before,
+            .dtl-table tbody td::before {
+                content: attr(data-label);
+                flex: 0 0 42%;
+                max-width: 42%;
+                text-align: left;
+                font-size: 0.62rem !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.4px;
+                text-transform: uppercase;
+                color: #64748b !important;
+                line-height: 1.35;
+                padding-top: 1px;
+            }
+
+            .dtl-responsive-table tbody td[data-label=""]::before,
+            .dtl-table-hover tbody td[data-label=""]::before,
+            .dtl-table tbody td[data-label=""]::before,
+            .dtl-responsive-table tbody td.dtl-td-plain::before,
+            .dtl-table-hover tbody td.dtl-td-plain::before,
+            .dtl-table tbody td.dtl-td-plain::before {
+                content: none !important;
+                display: none !important;
+            }
+
+            .dtl-responsive-table tbody td > *,
+            .dtl-table-hover tbody td > *,
+            .dtl-table tbody td > * {
+                max-width: 100%;
+            }
+
+            .dtl-responsive-table tbody td.text-center,
+            .dtl-table-hover tbody td.text-center,
+            .dtl-table tbody td.text-center {
+                text-align: right !important;
+            }
+
+            .dtl-responsive-table tbody tr td[colspan],
+            .dtl-table-hover tbody tr td[colspan],
+            .dtl-table tbody tr td[colspan] {
+                justify-content: center !important;
+                text-align: center !important;
+                border-bottom: 0 !important;
+                color: #64748b !important;
+            }
+            .dtl-responsive-table tbody tr td[colspan]::before,
+            .dtl-table-hover tbody tr td[colspan]::before,
+            .dtl-table tbody tr td[colspan]::before {
+                content: none !important;
+            }
+
+            /* =================================================================
+               JERARQUÍA VISUAL EN MÓVIL (PRIMARIAS VS SECUNDARIAS)
+               - Las tarjetas primarias (registros) llevan fondo blanco con
+                 acento verde a la izquierda y propagan el color de su fila.
+               - Las tarjetas secundarias (filtros, encabezados, formularios)
+                 llevan fondo gris muy suave para diferenciarse.
+            ================================================================= */
+
+            /* Tarjetas primarias: encabezado de cada página */
+            .card.dtl-header-primary {
+                background-color: #ffffff !important;
+                border: 1px solid #a7f3d0 !important;
+                box-shadow: 0 2px 10px rgba(5, 150, 105, 0.08) !important;
+                border-left: 4px solid #059669 !important;
+            }
+
+            /* Tarjetas secundarias: filtros, buscadores, formularios */
+            .card.dtl-card-secondary,
+            .card:has(> .card-header.dtl-card-header-styled),
+            .filter-toolbar-card {
+                background-color: #f1f5f9 !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
+                border-left: 4px solid #cbd5e1 !important;
+            }
+
+            .card.dtl-card-secondary .card-body,
+            .filter-toolbar-card .card-body,
+            .card:has(> .card-header.dtl-card-header-styled) .card-body {
+                background-color: #f1f5f9 !important;
+            }
+
+            /* Contenedor de tabla: fondo neutro para que resalten los registros */
+            .card.dtl-card-table {
+                background-color: #eef2f7 !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
+                padding: 0.35rem !important;
+            }
+
+            /* Registros convertidos en tarjetas (primarios) */
+            .dtl-responsive-table tbody tr:not(:has(td[colspan])),
+            .dtl-table-hover tbody tr:not(:has(td[colspan])),
+            .dtl-table tbody tr:not(:has(td[colspan])) {
+                background-color: #ffffff !important;
+                border: 1px solid #d7e0ea !important;
+                border-left: 4px solid #059669 !important;
+                box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06) !important;
+            }
+
+            /* Registros alternos con tinte suave para lectura rápida */
+            .dtl-responsive-table tbody tr:nth-of-type(even):not(:has(td[colspan])),
+            .dtl-table-hover tbody tr:nth-of-type(even):not(:has(td[colspan])),
+            .dtl-table tbody tr:nth-of-type(even):not(:has(td[colspan])) {
+                background-color: #fbfdfc !important;
+            }
+
+            /* Cabecera interna del registro (primera celda) destacada */
+            .dtl-responsive-table tbody td:first-child,
+            .dtl-table-hover tbody td:first-child,
+            .dtl-table tbody td:first-child {
+                background-color: #f8fafc !important;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                font-weight: 700;
+            }
+
+            /* Celdas secundarias dentro del registro: etiquetas grises */
+            .dtl-responsive-table tbody td::before,
+            .dtl-table-hover tbody td::before,
+            .dtl-table tbody td::before {
+                color: #94a3b8 !important;
+            }
+
+            /* Fila vacía: estilo neutral, no se presenta como tarjeta */
+            .dtl-responsive-table tbody tr:has(td[colspan]),
+            .dtl-table-hover tbody tr:has(td[colspan]),
+            .dtl-table tbody tr:has(td[colspan]) {
+                background-color: #f8fafc !important;
+                border: 1px dashed #cbd5e1 !important;
+                box-shadow: none !important;
+            }
+
+            .dtl-pagination-wrapper,
+            .dtl-pagination-wrapper nav,
+            .dtl-pagination-wrapper .pagination {
+                justify-content: center !important;
+                padding-right: 0 !important;
+            }
+
+            /* --- HEADERS DE TARJETA Y CONTROLES --- */
+            .card-header.dtl-card-header-styled {
+                padding: 0.6rem 0.75rem !important;
+                font-size: 0.62rem !important;
+                line-height: 1.35 !important;
+                white-space: normal !important;
+                text-align: left !important;
+            }
+            .card { border-radius: 14px !important; }
+            .alert { font-size: 0.78rem !important; padding: 0.65rem !important; border-radius: 12px !important; }
+
+            /* Títulos de página */
+            h3.fw-bold { font-size: 0.92rem !important; }
+
+            /* Inputs, selects y buscadores full width */
+            .card-body .input-group { flex-wrap: nowrap; }
+            .form-control, .form-select { font-size: 0.82rem !important; }
+            .btn-dtl-action { padding: 0 12px !important; font-size: 0.80rem !important; }
+
+            /* Badges y pastillas compactas */
+            .badge { max-width: 100%; white-space: normal !important; text-align: left; }
+
+            /* Botón flotante volver adaptado */
+            .btn-floating-volver {
+                bottom: 14px !important;
+                right: 14px !important;
+                padding: 0.55rem 1rem !important;
+                font-size: 0.78rem !important;
+            }
+
+            /* Grillas de métricas / KPIs a una columna */
+            .row.g-3 > [class*="col-"] { --bs-gutter-y: 0.75rem; }
+        }
+
+        /* Tablas anchas en tablet: scroll horizontal controlado y cabecera sticky */
+        @media (min-width: 768px) and (max-width: 1199.98px) {
+            .table-responsive { -webkit-overflow-scrolling: touch; }
+            .dtl-table-hover thead th, .dtl-table thead th { font-size: 0.62rem !important; }
+            .dtl-table-hover td, .dtl-table td { font-size: 0.74rem !important; padding: 0.5rem !important; }
+        }
     </style>
 </head>
 <body>

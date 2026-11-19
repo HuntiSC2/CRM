@@ -15,26 +15,34 @@
         background-color: var(--bg-gray-soft);
         min-height: 94vh;
         border-radius: 16px;
-        padding: 1rem 0.5rem;
+        padding: 1rem 0.75rem;
     }
 
+    /* KANBAN HORIZONTAL */
     .kanban-board-container { 
-        gap: 1.25rem !important;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 3.5rem;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 1rem !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 2.5rem;
+        width: 100% !important;
     }
 
+    /* Columnas en escritorio: fluidas y proporcionales */
     .kanban-col-dtl { 
-        width: 395px !important; 
+        flex: 1 1 0px !important;
+        min-width: 320px !important;
         min-height: 640px; 
         background-color: var(--card-white) !important;
         border: 1px solid #cbd5e1 !important;
         border-radius: 14px !important;
-        padding: 0.80rem !important;
+        padding: 0.85rem !important;
         box-shadow: 0 4px 6px -1px rgba(12, 25, 44, 0.05), 0 2px 4px -2px rgba(12, 25, 44, 0.05);
         transition: border-color 0.2s ease, background-color 0.2s ease;
     }
+
     .kanban-col-dtl.drag-over {
         border-color: var(--dtl-green) !important;
         background-color: #ecfdf5 !important;
@@ -67,12 +75,13 @@
         background-color: var(--dtl-green) !important;
         border: none !important;
         border-radius: 10px !important;
-        padding: 0.70rem 0.75rem !important;
+        padding: 0.75rem 0.85rem !important;
         color: #ffffff !important;
         box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
         cursor: grab;
         position: relative;
         transition: transform 0.15s ease, box-shadow 0.15s ease;
+        width: 100% !important;
     }
     .card-note-dtl:hover {
         transform: translateY(-2px);
@@ -87,19 +96,37 @@
         z-index: 2000 !important;
     }
 
+    .card-header-pills {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        flex-grow: 1;
+        min-width: 0;
+    }
+
     .card-task-title {
-        font-size: 0.84rem;
+        font-size: 0.85rem;
         font-weight: 700;
-        line-height: 1.3;
+        line-height: 1.35;
         color: #ffffff;
-        margin-bottom: 0.30rem;
+        margin-bottom: 0.35rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-word;
     }
 
     .card-task-client {
-        font-size: 0.73rem;
+        font-size: 0.74rem;
         font-weight: 500;
         color: #e6fffa;
         margin-bottom: 0.50rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .card-note-lines {
@@ -108,28 +135,28 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 0.70rem;
+        font-size: 0.72rem;
         font-weight: 700;
         color: #ffffff;
     }
 
     .card-amount-pill {
         background: rgba(0, 0, 0, 0.22);
-        padding: 0.18rem 0.50rem;
+        padding: 0.18rem 0.55rem;
         border-radius: 6px;
         font-family: monospace;
         letter-spacing: 0.3px;
     }
 
-    /* PASTILLAS EN UNA SOLA LÍNEA */
+    /* PASTILLAS */
     .btn-pill-base {
-        font-size: 0.53rem !important;
+        font-size: 0.55rem !important;
         font-weight: 800 !important;
-        padding: 0.10rem 0.35rem !important;
+        padding: 0.12rem 0.40rem !important;
         border-radius: 50rem !important;
         display: inline-flex;
         align-items: center;
-        gap: 2.5px;
+        gap: 3px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
         transition: all 0.15s ease-in-out;
         line-height: 1.25;
@@ -205,7 +232,6 @@
         transform: rotate(45deg);
     }
 
-    /* TARJETITA COMPACTA FLOTANTE AL LADO IZQUIERDO */
     .flyout-insp-left {
         left: auto !important;
         right: calc(100% + 10px) !important;
@@ -310,7 +336,6 @@
         color: #ffffff;
     }
 
-    /* LÍNEA DE ERROR PROFESIONAL EN FORMULARIO COMPACTO (SIN ALERTS) */
     .input-error-dtl {
         border: 1.5px solid #ef4444 !important;
         background-color: #fef2f2 !important;
@@ -355,10 +380,81 @@
         transform: rotate(45deg);
     }
 
+    /* ==========================================================
+       OPTIMIZACIÓN CLAVE PARA CELULAR (TARJETAS ANCHAS)
+       - Columnas anchas a 86vw (ocupan casi toda la pantalla móvil)
+       - Desplazamiento carrusel táctil suave (scroll-snap)
+    ========================================================== */
     @media (max-width: 767.98px) {
-        .kanban-col-dtl { width: 100% !important; min-height: auto; }
-        .flyout-card-panel, .flyout-insp-left { left: 5% !important; right: 5% !important; top: 40px !important; width: 90% !important; }
-        .flyout-card-panel::before, .flyout-insp-left::before { display: none; }
+        .container-fluid { padding-left: 6px !important; padding-right: 6px !important; }
+        .dtl-pipeline-wrapper { padding: 0.5rem 0.25rem !important; }
+        
+        .kanban-board-container {
+            scroll-snap-type: x mandatory !important;
+            gap: 0.75rem !important;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        /* Cada columna mide el 86% del ancho del celular */
+        .kanban-col-dtl { 
+            width: 86vw !important; 
+            min-width: 86vw !important;
+            max-width: 86vw !important;
+            scroll-snap-align: center !important; /* Centra la columna al deslizar */
+            padding: 0.75rem !important;
+        }
+
+        /* La tarjeta verde ocupa todo el ancho de la columna espaciosa */
+        .card-note-dtl {
+            padding: 0.70rem 0.75rem !important;
+            width: 100% !important;
+        }
+
+        /* Pastillas compactas y proporcionadas en celular */
+        .btn-pill-base {
+            font-size: 0.50rem !important;
+            padding: 0.10rem 0.35rem !important;
+            gap: 2.5px !important;
+        }
+        .btn-pill-base i {
+            font-size: 0.52rem !important;
+        }
+
+        .badge-codigo-obra {
+            font-size: 0.54rem !important;
+            padding: 0.10rem 0.32rem !important;
+        }
+
+        .card-task-title {
+            font-size: 0.82rem !important;
+            line-height: 1.3 !important;
+            margin-bottom: 0.30rem !important;
+        }
+
+        .card-task-client {
+            font-size: 0.70rem !important;
+            margin-bottom: 0.40rem !important;
+        }
+
+        .card-note-lines {
+            font-size: 0.68rem !important;
+            padding-top: 0.40rem !important;
+        }
+
+        .card-amount-pill {
+            font-size: 0.68rem !important;
+            padding: 0.14rem 0.45rem !important;
+        }
+
+        .flyout-card-panel, .flyout-insp-left {
+            left: 5% !important;
+            right: 5% !important;
+            width: 90% !important;
+            top: 35px !important;
+        }
+        .flyout-card-panel::before, .flyout-insp-left::before { display: none !important; }
+
         .floating-new-obra-card { right: 10px; left: 10px; width: auto; bottom: 75px; }
     }
 </style>
@@ -374,30 +470,26 @@
         @endif
 
         <!-- ENCABEZADO -->
-        <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
-            <div class="position-absolute top-0 start-0 w-100" style="height: 3.5px; background-color: var(--dtl-green);"></div>
+        <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+            <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: #059669;"></div>
             <div class="card-body p-2.5 p-md-3">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="p-1 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="width: 125px; height: 44px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER" style="max-height: 28px; max-width: 100%; object-fit: contain;">
-                    </div>
-                    <div class="border-start ps-3" style="border-color: #cbd5e1 !important;">
-                        <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                            <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
-                                💼 PIPELINE COMERCIAL
-                            </span>
-                            <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                                Flujo Dinámico Activo
-                            </span>
-                        </div>
-                        <h2 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem; letter-spacing: -0.2px;">Pipeline de Obras y Proyectos</h2>
-                    </div>
+                <div class="d-flex flex-wrap align-items-center gap-1.5 mb-1">
+                    <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase" style="font-size: 0.60rem; background-color: var(--dtl-navy); color: #ffffff;">
+                        <i class="fas fa-briefcase me-1" style="color: #10b981;"></i> PIPELINE COMERCIAL
+                    </span>
+                    <span class="badge rounded-pill fw-semibold px-2 py-0.5 d-inline-flex align-items-center gap-1" style="font-size: 0.60rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                        <span class="status-pulse-green"></span> Flujo Dinámico Activo
+                    </span>
                 </div>
+
+                <h3 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem; color: var(--dtl-navy); letter-spacing: -0.3px;">
+                    Pipeline de Obras y Proyectos
+                </h3>
             </div>
         </div>
 
-        <!-- TABLERO KANBAN LIBRE Y FLUIDO -->
-        <div class="d-flex kanban-board-container align-items-start justify-content-start justify-content-xl-center" id="kanban-main-board">
+        <!-- TABLERO KANBAN HORIZONTAL Y ANCHO -->
+        <div class="d-flex kanban-board-container align-items-start" id="kanban-main-board">
             @foreach($statuses as $status)
                 @php $totalSuma = $totalesPorColumna[$status] ?? 0; @endphp
 
@@ -417,17 +509,13 @@
                                     $esProspectoColumna = ($status === 'Prospecto');
                                     $esCierreColumna    = ($status === 'Cierre Comercial');
 
-                                    // LÓGICA DE AUDITORÍA 1:1:
-                                    // Solo se muestra '+ Siguiente Parte' si no estamos en Cierre y se completó el ciclo estricto
                                     $puedeVerSiguienteParte = !$esCierreColumna && $obra['puede_agendar_inspeccion'];
 
-                                    // Menú de 3 puntos: En Cierre Comercial no se permite agendar nada.
                                     $mostrarAgendarInspeccionMenu = false;
                                     if (!$esCierreColumna && ($obra['puede_agendar_inspeccion'] ?? false)) {
                                         $mostrarAgendarInspeccionMenu = true;
                                     }
 
-                                    // ENUMERACIONES PRECISAS CORRELATIVAS
                                     $enumInsp = '(' . $obra['insp_completadas_count'] . '/' . $obra['total_inspecciones'] . ')';
                                     $enumCot  = '(' . $obra['cotizaciones_ok_count'] . '/' . $obra['total_cotizaciones'] . ')';
                                 @endphp
@@ -435,16 +523,16 @@
                                 <div class="card-note-dtl" draggable="true" ondragstart="dragStart(event)" 
                                      id="obra-card-{{ $obra['id'] }}" data-id="{{ $obra['id'] }}" data-monto="{{ $obra['monto_raw'] }}">
                                     
-                                    <!-- FILA DE ESTADOS / PASTILLAS -->
+                                    <!-- FILA DE PASTILLAS -->
                                     <div class="d-flex align-items-center justify-content-between mb-1.5 position-relative">
-                                        <div class="d-flex align-items-center gap-1 flex-nowrap" style="overflow-x: hidden;">
+                                        <div class="card-header-pills">
                                             
                                             <!-- CÓDIGO OBRA -->
-                                            <span class="badge px-1 py-0.5 text-uppercase font-monospace flex-shrink-0" style="background-color: rgba(0, 0, 0, 0.22); color: #ffffff; font-size: 0.58rem; font-weight: 700;">
+                                            <span class="badge px-1 py-0.5 text-uppercase font-monospace flex-shrink-0 badge-codigo-obra" style="background-color: rgba(0, 0, 0, 0.22); color: #ffffff; font-size: 0.58rem; font-weight: 700;">
                                                 #{{ $obra['codigo'] }}
                                             </span>
 
-                                            <!-- PASTILLA 1: INSPECCIÓN (AMARILLA LIMPIA CON RELOJ) -->
+                                            <!-- PASTILLA 1: INSPECCIÓN -->
                                             @if($obra['tiene_inspeccion_pendiente'])
                                                 <button type="button" 
                                                         class="btn-pill-base pill-amarillo flex-shrink-0" 
@@ -462,7 +550,7 @@
                                                 </button>
                                             @endif
 
-                                            <!-- TARJETITA COMPACTA FLOTANTE AL LADO IZQUIERDO (INSPECCIÓN) -->
+                                            <!-- TARJETITA COMPACTA FLOTANTE (INSPECCIÓN) -->
                                             <div id="flyout-compact-insp-{{ $obra['id'] }}" class="flyout-card-panel flyout-insp-left d-none" onclick="event.stopPropagation();">
                                                 <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
                                                     <span class="text-dark fw-bold" style="font-size: 0.74rem;">
@@ -471,7 +559,6 @@
                                                     <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-compact-insp-{{ $obra['id'] }}')"></button>
                                                 </div>
 
-                                                <!-- SELECTOR RÁPIDO DE PARTES -->
                                                 @if($obra['total_inspecciones'] > 0)
                                                     <div class="nav-partes-mini">
                                                         @foreach($obra['historial_inspecciones'] as $k => $h)
@@ -481,7 +568,6 @@
                                                             </button>
                                                         @endforeach
                                                         
-                                                        {{-- LÓGICA ESTRICTA: Solo aparece si el ciclo de la cotización anterior está 100% cerrado --}}
                                                         @if($puedeVerSiguienteParte)
                                                             <button type="button" class="btn-tab-parte text-success border-success" 
                                                                     onclick="mostrarNuevaParteMini('{{ $obra['id'] }}')" title="Agendar siguiente etapa">
@@ -491,7 +577,6 @@
                                                     </div>
                                                 @endif
 
-                                                <!-- CAJAS DE INFORMACIÓN DE CADA PARTE -->
                                                 @foreach($obra['historial_inspecciones'] as $k => $h)
                                                     <div class="tab-parte-content-{{ $obra['id'] }} {{ $loop->last ? '' : 'd-none' }}" id="tab-box-{{ $obra['id'] }}-{{ $k }}">
                                                         @if($h['estado'] === 'Pendiente')
@@ -525,7 +610,6 @@
                                                                 <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.66rem;">Dictamen / Metrado de Campo *</label>
                                                                 <textarea id="dictamen-act-{{ $obra['id'] }}-{{ $h['id'] }}" rows="2" class="form-control form-control-sm mb-0.5" style="font-size: 0.70rem;" placeholder="Metrados y factibilidad técnica de esta etapa..." oninput="limpiarErrorValidacion(this, 'msg-error-dictamen-{{ $obra['id'] }}-{{ $h['id'] }}')"></textarea>
                                                                 
-                                                                <!-- LÍNEA DE ERROR PROFESIONAL EN EL RECUADRO -->
                                                                 <div id="msg-error-dictamen-{{ $obra['id'] }}-{{ $h['id'] }}" class="msg-error-dtl d-none mb-1">
                                                                     <i class="fas fa-circle-exclamation"></i> Ingrese el dictamen o metrado de campo.
                                                                 </div>
@@ -551,7 +635,6 @@
                                                     </div>
                                                 @endforeach
 
-                                                <!-- FORMULARIO AGENDAR NUEVA PARTE -->
                                                 @if($puedeVerSiguienteParte)
                                                     <div id="box-nueva-parte-{{ $obra['id'] }}" class="d-none p-1.5 rounded border bg-light">
                                                         <div class="fw-bold text-dark mb-1" style="font-size: 0.68rem;">
@@ -573,10 +656,9 @@
                                                 @endif
                                             </div>
 
-                                            <!-- PASTILLA 2: COTIZACIÓN (CON ENUMERACIÓN, REAJUSTE DE PRECIO Y AUDITORÍA) -->
+                                            <!-- PASTILLA 2: COTIZACIÓN -->
                                             @if($obra['tiene_cotizaciones'])
                                                 @if($obra['estado_cotizacion'] === 'Programada')
-                                                    <!-- 1. PROGRAMADA (AMARILLO) -->
                                                     <button type="button" class="btn-pill-base pill-amarillo flex-shrink-0" 
                                                             onclick="toggleFlyout(event, 'flyout-cot-{{ $obra['id'] }}')"
                                                             title="Cotización programada. Clic para gestionar.">
@@ -625,7 +707,6 @@
                                                     </div>
 
                                                 @elseif($obra['estado_cotizacion'] === 'Enviada')
-                                                    <!-- 2. ENVIADA (AZUL) -->
                                                     <button type="button" class="btn-pill-base pill-azul-enviada flex-shrink-0" 
                                                             onclick="toggleFlyout(event, 'flyout-responder-cot-{{ $obra['id'] }}')"
                                                             title="Cotización enviada. Clic para registrar respuesta.">
@@ -657,7 +738,6 @@
                                                     </div>
 
                                                 @elseif($obra['estado_cotizacion'] === 'Aceptada')
-                                                    <!-- 3. ACEPTADA (VERDE) -->
                                                     <button type="button" class="btn-pill-base pill-verde-ok flex-shrink-0" 
                                                             onclick="toggleFlyout(event, 'flyout-view-cot-{{ $obra['id'] }}')"
                                                             title="Clic para ver detalle de cotización">
@@ -665,7 +745,6 @@
                                                     </button>
 
                                                 @elseif($obra['estado_cotizacion'] === 'Rechazada')
-                                                    <!-- 4. RECHAZADA (ROJO) -->
                                                     <button type="button" class="btn-pill-base pill-rojo-rechazada flex-shrink-0" 
                                                             onclick="toggleFlyout(event, 'flyout-view-cot-{{ $obra['id'] }}')"
                                                             title="Clic para ver detalle de cotización">
@@ -673,7 +752,6 @@
                                                     </button>
                                                 @endif
 
-                                                {{-- POPOVER DE HISTORIAL AUDITABLE CON PESTAÑAS Y BOTÓN ESPECIAL 'AJUSTAR PRECIO' --}}
                                                 @if($obra['cotizacion_finalizada'])
                                                     <div id="flyout-view-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 295px;" onclick="event.stopPropagation();">
                                                         <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
@@ -712,13 +790,18 @@
                                                                             </div>
                                                                         </div>
 
-                                                                        {{-- BOTÓN ESPECIAL 'AJUSTAR PRECIO' PARA COTIZACIONES RECHAZADAS --}}
                                                                         @if($cotItem['estado'] === 'Rechazada' && !$esCierreColumna)
-                                                                            <div class="mt-2 pt-1 border-top">
+                                                                            <div class="mt-2 pt-1 border-top d-flex flex-column gap-1.5">
                                                                                 <button type="button" class="btn btn-sm btn-outline-warning w-100 fw-bold py-1 text-dark d-flex align-items-center justify-content-center gap-1"
                                                                                         style="font-size: 0.66rem; background-color: #fef3c7;"
                                                                                         onclick="abrirFormAjustarPrecio('{{ $obra['id'] }}', '{{ $cotItem['id'] }}')">
-                                                                                    <i class="fas fa-calculator text-warning"></i> Ajustar Precio de Cotización
+                                                                                    <i class="fas fa-calculator text-warning"></i> Actualizar precio
+                                                                                </button>
+
+                                                                                <button type="button" class="btn btn-sm btn-outline-danger w-100 fw-bold py-1 d-flex align-items-center justify-content-center gap-1"
+                                                                                        style="font-size: 0.66rem; background-color: #fef2f2; color: #dc2626; border-color: #fecaca;"
+                                                                                        onclick="abrirFormCerrarObra('{{ $obra['id'] }}', '{{ $cotItem['id'] }}')">
+                                                                                    <i class="fas fa-ban text-danger"></i> Cerrar Obra
                                                                                 </button>
                                                                             </div>
                                                                         @endif
@@ -727,7 +810,7 @@
                                                             @endforeach
                                                         @endif
 
-                                                        <!-- FORMULARIO COMPACTO PARA AJUSTAR PRECIO -->
+                                                        <!-- FORMULARIO AJUSTE PRECIO -->
                                                         <div id="box-ajustar-precio-{{ $obra['id'] }}" class="d-none p-2 rounded border bg-white mt-1">
                                                             <div class="d-flex justify-content-between align-items-center mb-1 pb-1 border-bottom">
                                                                 <span class="fw-bold text-dark" style="font-size: 0.68rem;"><i class="fas fa-edit text-warning me-1"></i> Reajuste Económico</span>
@@ -744,8 +827,8 @@
                                                             </div>
 
                                                             <div class="mb-1.5">
-                                                                <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Motivo del Reajuste / Alcance *</label>
-                                                                <textarea id="ajuste-motivo-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.68rem;" placeholder="Ej. Cambio de especificaciones técnicas por menor espesor..." oninput="limpiarErrorValidacion(this, 'msg-error-ajustemotivo-{{ $obra['id'] }}')"></textarea>
+                                                                <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Motivo del Reajuste *</label>
+                                                                <textarea id="ajuste-motivo-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.68rem;" placeholder="Ej. Cambio de especificaciones técnicas..." oninput="limpiarErrorValidacion(this, 'msg-error-ajustemotivo-{{ $obra['id'] }}')"></textarea>
                                                                 <div id="msg-error-ajustemotivo-{{ $obra['id'] }}" class="msg-error-dtl d-none">
                                                                     <i class="fas fa-circle-exclamation"></i> Indique el motivo del reajuste.
                                                                 </div>
@@ -753,6 +836,36 @@
 
                                                             <button type="button" class="btn btn-sm btn-success w-100 fw-bold py-1" style="font-size: 0.68rem;" onclick="guardarAjustePrecioAjax(this, '{{ $obra['id'] }}')">
                                                                 <i class="fas fa-check me-1"></i> Guardar y Reemitir
+                                                            </button>
+                                                        </div>
+
+                                                        <!-- FORMULARIO CERRAR OBRA -->
+                                                        <div id="box-cerrar-obra-{{ $obra['id'] }}" class="d-none p-2 rounded border bg-white mt-1" style="border-color: #fecaca !important;">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1 pb-1 border-bottom">
+                                                                <span class="fw-bold text-danger" style="font-size: 0.68rem;"><i class="fas fa-ban text-danger me-1"></i> Cerrar Obra (Perdida)</span>
+                                                                <button type="button" class="btn-close p-0" style="font-size: 0.45rem;" onclick="cerrarFormCerrarObra('{{ $obra['id'] }}')"></button>
+                                                            </div>
+                                                            <input type="hidden" id="cerrar-cot-id-{{ $obra['id'] }}">
+
+                                                            <div class="mb-1">
+                                                                <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Tipo de Contacto <span class="text-danger">*</span></label>
+                                                                <select id="cerrar-tipo-contacto-{{ $obra['id'] }}" class="form-select form-select-sm py-0.5" style="font-size: 0.70rem; height: 26px;">
+                                                                    <option value="Llamada Telefónica" selected>Llamada Telefónica</option>
+                                                                    <option value="Reunión Presencial">Reunión Presencial</option>
+                                                                    <option value="Correo Electrónico">Correo Electrónico / WhatsApp</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="mb-1.5">
+                                                                <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Motivo del Cierre <span class="text-danger">*</span></label>
+                                                                <textarea id="cerrar-motivo-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.68rem;" placeholder="Ej. Cliente desestimó la propuesta..." oninput="limpiarErrorValidacion(this, 'msg-error-cerrarmotivo-{{ $obra['id'] }}')"></textarea>
+                                                                <div id="msg-error-cerrarmotivo-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                    <i class="fas fa-circle-exclamation"></i> Ingrese el motivo de cierre.
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button" class="btn btn-sm btn-danger w-100 fw-bold py-1" style="font-size: 0.68rem;" onclick="guardarCerrarObraAjax(this, '{{ $obra['id'] }}')">
+                                                                <i class="fas fa-times-circle me-1"></i> Confirmar Cierre como Perdida
                                                             </button>
                                                         </div>
                                                     </div>
@@ -767,7 +880,7 @@
                                                     <i class="fas fa-flag-checkered text-warning"></i> Cierre
                                                 </button>
 
-                                                <div id="flyout-cierre-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 220px;" onclick="event.stopPropagation();">
+                                                <div id="flyout-cierre-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 260px;" onclick="event.stopPropagation();">
                                                     <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
                                                         <span class="text-dark fw-bold" style="font-size: 0.68rem;">
                                                             <i class="fas fa-handshake text-warning me-1"></i> RESOLUCIÓN
@@ -775,7 +888,7 @@
                                                         <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-cierre-{{ $obra['id'] }}')"></button>
                                                     </div>
                                                     
-                                                    <div class="d-flex flex-column gap-1.5">
+                                                    <div class="d-flex flex-column gap-1.5" id="cierre-opciones-{{ $obra['id'] }}">
                                                         <button type="button" class="btn-mini-action btn-mini-ganada" 
                                                                 onclick="ejecutarCierreDirecto(this, '{{ $obra['id'] }}', 'Aceptada')">
                                                             <span><i class="fas fa-trophy me-1 text-success"></i> Obra Ganada</span>
@@ -783,9 +896,37 @@
                                                         </button>
 
                                                         <button type="button" class="btn-mini-action btn-mini-cancelada" 
-                                                                onclick="ejecutarCierreDirecto(this, '{{ $obra['id'] }}', 'Cancelada')">
+                                                                onclick="mostrarFormCancelarCierre('{{ $obra['id'] }}')">
                                                             <span><i class="fas fa-ban me-1 text-danger"></i> Cancelar Obra</span>
                                                             <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    <div id="cierre-form-cancelar-{{ $obra['id'] }}" class="d-none p-1.5 rounded border bg-light mt-1" style="border-color: #fecaca !important;">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1 pb-1 border-bottom">
+                                                            <span class="fw-bold text-danger" style="font-size: 0.68rem;"><i class="fas fa-ban text-danger me-1"></i> Cancelar Obra</span>
+                                                            <button type="button" class="btn-close p-0" style="font-size: 0.45rem;" onclick="ocultarFormCancelarCierre('{{ $obra['id'] }}')"></button>
+                                                        </div>
+
+                                                        <div class="mb-1">
+                                                            <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Tipo de Contacto <span class="text-danger">*</span></label>
+                                                            <select id="cancelar-tipo-contacto-{{ $obra['id'] }}" class="form-select form-select-sm py-0.5" style="font-size: 0.70rem; height: 26px;">
+                                                                <option value="Llamada Telefónica" selected>Llamada Telefónica</option>
+                                                                <option value="Reunión Presencial">Reunión Presencial</option>
+                                                                <option value="Correo Electrónico">Correo Electrónico / WhatsApp</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="mb-1.5">
+                                                            <label class="form-label text-muted mb-0" style="font-size: 0.63rem;">Motivo de Cancelación <span class="text-danger">*</span></label>
+                                                            <textarea id="cancelar-motivo-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.68rem;" placeholder="Escriba el motivo..." oninput="limpiarErrorValidacion(this, 'msg-error-cancelarmotivo-{{ $obra['id'] }}')"></textarea>
+                                                            <div id="msg-error-cancelarmotivo-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                <i class="fas fa-circle-exclamation"></i> Ingrese el motivo de cancelación.
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-sm btn-danger w-100 fw-bold py-1" style="font-size: 0.68rem;" onclick="confirmarCancelarObraCierre(this, '{{ $obra['id'] }}')">
+                                                            <i class="fas fa-times-circle me-1"></i> Confirmar Cancelación
                                                         </button>
                                                     </div>
                                                 </div>
@@ -793,7 +934,7 @@
 
                                         </div>
 
-                                        <!-- MENÚ DE TRES PUNTOS CONTEXTUAL -->
+                                        <!-- MENÚ DE TRES PUNTOS -->
                                         <div class="dropdown flex-shrink-0 ms-1">
                                             <button class="btn btn-sm p-0 border-0 d-flex align-items-center justify-content-center text-white opacity-75" 
                                                     type="button" data-bs-toggle="dropdown" aria-expanded="false" 
@@ -804,7 +945,6 @@
                                                 <li><h6 class="dropdown-header text-uppercase fw-bold px-2 py-0.5 text-muted" style="font-size: 0.62rem;">Hitos Técnicos</h6></li>
                                                 
                                                 @if(!$esCierreColumna)
-                                                    {{-- AGENDAR INSPECCIÓN: Si la cotización culminó, permite iniciar nueva fase trasladando a Inspección --}}
                                                     @if($mostrarAgendarInspeccionMenu)
                                                         <li>
                                                             <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="toggleFlyoutInspLeft(event, 'flyout-compact-insp-{{ $obra['id'] }}', true)">
@@ -827,8 +967,7 @@
                                                         </li>
                                                     @endif
 
-                                                    {{-- BOTÓN IR A CIERRE COMERCIAL: Solo cuando el ciclo 1:1 esté cerrado --}}
-                                                    @if($obra['puede_ir_a_cierre'])
+                                                    @if($obra['puede_ir_a_cierre'] && !$obra['es_rechazada'])
                                                         <li>
                                                             <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-bold text-success" onclick="trasladarACierreDirecto(this, '{{ $obra['id'] }}')">
                                                                 <i class="fas fa-magnet text-success me-1.5"></i> Ir a Cierre Comercial
@@ -844,8 +983,11 @@
                                                 </li>
 
                                                 <li><hr class="dropdown-divider my-1"></li>
-                                                <li><h6 class="dropdown-header text-uppercase fw-bold px-2 py-0.5 text-muted" style="font-size: 0.62rem;">Libertad Manual (Solo Visual)</h6></li>
+                                                <li><h6 class="dropdown-header text-uppercase fw-bold px-2 py-0.5 text-muted" style="font-size: 0.62rem;">Libertad Manual</h6></li>
                                                 @foreach($statuses as $targetStatus)
+                                                    @if($obra['es_rechazada'] && $targetStatus === 'Cierre Comercial')
+                                                        @continue
+                                                    @endif
                                                     <li>
                                                         <button type="button" class="dropdown-item rounded-2 py-1 px-2 fw-medium" onclick="moverTarjetaPorMenu('{{ $obra['id'] }}', '{{ $targetStatus }}')">
                                                             <i class="fas fa-arrow-right text-muted me-1.5"></i> A {{ $targetStatus }}
@@ -911,12 +1053,12 @@
 
                                     </div>
 
-                                    <!-- CUERPO DE LA TARJETA VERDE -->
-                                    <div class="card-task-title text-truncate" title="{{ $obra['titulo'] }}">
+                                    <!-- CUERPO DE LA TARJETA VERDE: TÍTULO HASTA EN 2 LÍNEAS COMPLETAS -->
+                                    <div class="card-task-title" title="{{ $obra['titulo'] }}">
                                         {{ $obra['titulo'] }}
                                     </div>
 
-                                    <div class="card-task-client text-truncate" title="{{ $obra['cliente'] }}">
+                                    <div class="card-task-client" title="{{ $obra['cliente'] }}">
                                         <i class="fas fa-building me-1 opacity-75"></i>{{ $obra['cliente'] }}
                                     </div>
 
@@ -1029,7 +1171,6 @@
         });
     }
 
-    // LIMPIEZA DINÁMICA DE ERRORES AL ESCRIBIR
     function limpiarErrorValidacion(input, errorId) {
         input.classList.remove('input-error-dtl');
         const msg = document.getElementById(errorId);
@@ -1100,8 +1241,8 @@
         }
     }
 
-    // AJUSTAR PRECIO: Abre y Cierra el formulario compacto
     function abrirFormAjustarPrecio(obraId, cotId) {
+        cerrarFormCerrarObra(obraId);
         document.getElementById(`ajuste-cot-id-${obraId}`).value = cotId;
         const box = document.getElementById(`box-ajustar-precio-${obraId}`);
         if (box) box.classList.remove('d-none');
@@ -1110,6 +1251,63 @@
     function cerrarFormAjustarPrecio(obraId) {
         const box = document.getElementById(`box-ajustar-precio-${obraId}`);
         if (box) box.classList.add('d-none');
+    }
+
+    function abrirFormCerrarObra(obraId, cotId) {
+        cerrarFormAjustarPrecio(obraId);
+        document.getElementById(`cerrar-cot-id-${obraId}`).value = cotId;
+        const box = document.getElementById(`box-cerrar-obra-${obraId}`);
+        if (box) box.classList.remove('d-none');
+    }
+
+    function cerrarFormCerrarObra(obraId) {
+        const box = document.getElementById(`box-cerrar-obra-${obraId}`);
+        if (box) box.classList.add('d-none');
+    }
+
+    function guardarCerrarObraAjax(btn, obraId) {
+        const cotId = document.getElementById(`cerrar-cot-id-${obraId}`).value;
+        const motivoInput = document.getElementById(`cerrar-motivo-${obraId}`);
+        const tipoContactoSelect = document.getElementById(`cerrar-tipo-contacto-${obraId}`);
+        const tipoContacto = tipoContactoSelect ? tipoContactoSelect.value : 'Llamada Telefónica';
+
+        if (!motivoInput.value.trim()) {
+            motivoInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-cerrarmotivo-${obraId}`).classList.remove('d-none');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Cerrando...`;
+
+        fetch("{{ route('comercial.pipeline.cerrarObraPerdida') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                obra_id: obraId,
+                cotizacion_id: cotId,
+                tipo_contacto: tipoContacto,
+                motivo: motivoInput.value.trim()
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Error al cerrar la obra.');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-times-circle me-1"></i> Confirmar Cierre como Perdida`;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-times-circle me-1"></i> Confirmar Cierre como Perdida`;
+        });
     }
 
     function guardarAjustePrecioAjax(btn, obraId) {
@@ -1408,8 +1606,73 @@
             if (data.success) {
                 location.reload();
             } else {
+                alert(data.message || 'No se pudo trasladar la obra a Cierre Comercial.');
                 btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-magnet text-success me-1.5"></i> Ir a Cierre Comercial`;
             }
+        })
+        .catch(err => {
+            console.error(err);
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-magnet text-success me-1.5"></i> Ir a Cierre Comercial`;
+        });
+    }
+
+    function mostrarFormCancelarCierre(obraId) {
+        const opciones = document.getElementById(`cierre-opciones-${obraId}`);
+        const formCancelar = document.getElementById(`cierre-form-cancelar-${obraId}`);
+        if (opciones) opciones.classList.add('d-none');
+        if (formCancelar) formCancelar.classList.remove('d-none');
+    }
+
+    function ocultarFormCancelarCierre(obraId) {
+        const opciones = document.getElementById(`cierre-opciones-${obraId}`);
+        const formCancelar = document.getElementById(`cierre-form-cancelar-${obraId}`);
+        if (formCancelar) formCancelar.classList.add('d-none');
+        if (opciones) opciones.classList.remove('d-none');
+    }
+
+    function confirmarCancelarObraCierre(btn, obraId) {
+        const motivoInput = document.getElementById(`cancelar-motivo-${obraId}`);
+        const tipoContactoSelect = document.getElementById(`cancelar-tipo-contacto-${obraId}`);
+        const tipoContacto = tipoContactoSelect ? tipoContactoSelect.value : 'Llamada Telefónica';
+
+        if (!motivoInput.value.trim()) {
+            motivoInput.classList.add('input-error-dtl');
+            document.getElementById(`msg-error-cancelarmotivo-${obraId}`).classList.remove('d-none');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Cancelando...`;
+
+        fetch("{{ route('comercial.pipeline.updateStatus') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ 
+                obra_id: obraId, 
+                nuevo_estado: 'Cancelada',
+                motivo: motivoInput.value.trim(),
+                tipo_contacto: tipoContacto
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Error al cancelar la obra.');
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-times-circle me-1"></i> Confirmar Cancelación`;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-times-circle me-1"></i> Confirmar Cancelación`;
         });
     }
 
@@ -1554,7 +1817,6 @@
         });
     }
 
-    // DRAG AND DROP VISUAL
     let draggedCardId = null;
 
     function allowDrop(ev) { 

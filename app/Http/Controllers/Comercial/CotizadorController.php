@@ -14,8 +14,12 @@ class CotizadorController extends Controller
         // 1. Cargamos relaciones seguras (incluyendo comercial si existe)
         $cotizacion = Cotizacion::with(['obra.cliente', 'user'])->findOrFail($id);
 
+        // Monto acumulado de la obra: sumatoria de TODAS sus cotizaciones
+        // (una obra puede dividirse por áreas y cotizarse por separado).
+        $montoTotalObra = (float) Cotizacion::where('obra_id', $cotizacion->obra_id)->sum('monto_total');
+
         // 2. Cargamos la vista y activamos los permisos para imágenes locales
-        $pdf = Pdf::loadView('comercial.cotizador.pdf', compact('cotizacion'))
+        $pdf = Pdf::loadView('comercial.cotizador.pdf', compact('cotizacion', 'montoTotalObra'))
             ->setPaper('a4', 'portrait')
             ->setOptions([
                 'isHtml5ParserEnabled' => true,
@@ -39,19 +43,31 @@ class CotizadorController extends Controller
         // Consulta de auditoría y trazabilidad histórica
         $cotizaciones = Cotizacion::with(['obra.cliente', 'user'])
             ->when($search, function ($query, $search) {
-                return $query->where('codigo_cotizacion', 'like', '%' . $search . '%')
-                             ->orWhere('estado_cotizacion', 'like', '%' . $search . '%')
-                             ->orWhereHas('obra', function ($q) use ($search) {
-                                 $q->where('titulo', 'like', '%' . $search . '%')
-                                   ->orWhere('codigo', 'like', '%' . $search . '%')
-                                   ->orWhereHas('cliente', function ($c) use ($search) {
-                                       $c->where('razon_social', 'like', '%' . $search . '%');
-                                   });
-                             });
+                return $query->where(function ($q) use ($search) {
+                    $q->where('codigo_cotizacion', 'like', '%' . $search . '%')
+                      ->orWhere('estado_cotizacion', 'like', '%' . $search . '%')
+                      ->orWhereHas('obra', function ($sub) use ($search) {
+                          $sub->where('titulo', 'like', '%' . $search . '%')
+                              ->orWhere('codigo', 'like', '%' . $search . '%')
+                              ->orWhereHas('cliente', function ($c) use ($search) {
+                                  $c->where('razon_social', 'like', '%' . $search . '%');
+                              });
+                      });
+                });
             })
             ->latest()
             ->paginate(10);
 
-        return view('comercial.cotizador.index', compact('cotizaciones'));
+        // Identifica la última cotización (mayor id) de cada obra para
+        // mostrar únicamente su PDF, usando una única consulta agregada.
+        $ultimasCotizacionesPorObra = Cotizacion::selectRaw('MAX(id) as id')
+            ->whereIn('obra_id', $cotizaciones->pluck('obra_id')->filter()->unique()->all())
+            ->groupBy('obra_id')
+            ->pluck('id')
+            ->all();
+
+        $ultimasCotizacionesPorObra = array_flip($ultimasCotizacionesPorObra);
+
+        return view('comercial.cotizador.index', compact('cotizaciones', 'ultimasCotizacionesPorObra'));
     }
 }

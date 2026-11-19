@@ -13,6 +13,7 @@
     .text-dtl-navy { color: var(--dtl-navy) !important; }
     .border-dtl-green { border-top: 3.5px solid var(--dtl-green) !important; }
 
+    /* TARJETAS KPI EJECUTIVAS */
     .executive-kpi-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
@@ -43,10 +44,11 @@
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         font-size: 1.35rem;
+        flex-shrink: 0;
     }
 
     .filter-toolbar-card {
@@ -138,48 +140,43 @@
         color: #64748b;
     }
 
-    /* TABLA INSTITUCIONAL ESTANDARIZADA */
-    .dtl-table tbody tr:hover {
-        background-color: #f1f5f9 !important;
+    /* SCROLL HORIZONTAL TÁCTIL GARANTIZADO */
+    .dtl-table-scroll-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        display: block !important;
     }
 
-    .dtl-table thead th {
+    /* TABLA FIJA QUE NO SE DESARMA NI SE TRANSFORMA EN LISTA */
+    .dtl-pure-table {
+        min-width: 900px !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-bottom: 0 !important;
+    }
+
+    .dtl-pure-table thead th {
         background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
-        font-size: 0.68rem !important;
-        padding-top: 0.55rem !important;
-        padding-bottom: 0.55rem !important;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
         border: 1px solid #1e293b !important;
-        position: sticky;
-        top: 0;
-        z-index: 2;
-    }
-    .dtl-table tbody td {
-        font-size: 0.78rem !important;
-        padding: 0.6rem 0.75rem !important;
-        vertical-align: middle;
-        border: 1px solid #cbd5e1 !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0.8px;
+        padding: 0.65rem 0.75rem !important;
+        text-transform: uppercase;
+        white-space: nowrap !important;
     }
 
-    @media (max-width: 767.98px) {
-        .dtl-table thead th {
-            font-size: 0.52rem !important;
-            padding: 0.35rem 0.25rem !important;
-            letter-spacing: 0.2px !important;
-        }
-        .dtl-table tbody td {
-            font-size: 0.62rem !important;
-            padding: 0.35rem 0.35rem !important;
-        }
-        .dtl-table tbody td span, .dtl-table tbody td div {
-            font-size: 0.62rem !important;
-        }
-        .container-fluid {
-            padding-left: 4px !important;
-            padding-right: 4px !important;
-        }
+    .dtl-pure-table td {
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.78rem !important;
+        padding: 0.65rem 0.75rem !important;
+        vertical-align: middle !important;
+    }
+
+    .dtl-pure-table tbody tr:hover {
+        background-color: #f8fafc !important;
     }
 
     /* BOTONES DE ACCIÓN PROFESIONALES */
@@ -234,51 +231,40 @@
         box-shadow: 0 3px 8px rgba(15, 23, 42, 0.20);
     }
 
-    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
+    /* ==========================================================
+       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
+    ========================================================== */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
         align-items: center !important;
         width: 100% !important;
         margin-top: 15px !important;
-        margin-bottom: 20px !important;
-        padding-right: 4px !important;
+        margin-bottom: 25px !important;
+        padding-right: 6px !important;
     }
 
-    .dtl-pagination-wrapper nav {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:first-child,
-    .dtl-pagination-wrapper p.small.text-muted,
-    .dtl-pagination-wrapper .text-muted {
-        display: none !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:last-child,
-    .dtl-pagination-wrapper nav > div:nth-child(2) {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper .pagination {
-        margin-bottom: 0 !important;
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-end !important;
+    .dtl-pagination-wrapper ul.pagination {
+        display: inline-flex !important;
+        flex-direction: row !important;
         align-items: center !important;
-        gap: 4px !important;
+        gap: 8px !important;
         list-style: none !important;
         padding-left: 0 !important;
+        margin: 0 !important;
     }
 
-    .dtl-pagination-wrapper .pagination .page-item .page-link {
-        min-width: 32px !important;
-        height: 32px !important;
-        padding: 0 8px !important;
+    .dtl-pagination-wrapper .page-item {
+        display: inline-block !important;
+        margin: 0 !important;
+    }
+
+    /* Botón Circular Blanco */
+    .dtl-pagination-wrapper .page-link {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -287,22 +273,32 @@
         background-color: #ffffff !important;
         color: var(--dtl-navy) !important;
         font-weight: 700 !important;
-        font-size: 0.80rem !important;
+        font-size: 0.88rem !important;
         text-decoration: none !important;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+        transition: all 0.2s ease-in-out;
     }
 
-    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
+    .dtl-pagination-wrapper .page-link:hover {
+        background-color: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: var(--dtl-navy) !important;
+    }
+
+    /* Botón Circular VERDE Activo */
+    .dtl-pagination-wrapper .page-item.active .page-link {
         background-color: var(--dtl-green) !important;
         border-color: var(--dtl-green) !important;
         color: #ffffff !important;
+        box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
     }
 
-    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
+    .dtl-pagination-wrapper .page-item.disabled .page-link {
         background-color: #ffffff !important;
         border-color: #e2e8f0 !important;
         color: #cbd5e1 !important;
-        border-radius: 8px !important;
+        box-shadow: none !important;
+        cursor: not-allowed;
     }
 
     .status-pulse-green {
@@ -312,12 +308,26 @@
         border-radius: 50%;
         display: inline-block;
     }
+
+    @media (max-width: 767.98px) {
+        .executive-kpi-card {
+            padding: 0.85rem 1rem !important;
+        }
+        .executive-kpi-card h3 {
+            font-size: 1.45rem !important;
+        }
+        .kpi-icon-box {
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 1.1rem !important;
+        }
+    }
 </style>
 
-<div class="container-fluid px-2 px-md-4 py-3">
+<div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+    <!-- 1. ENCABEZADO -->
+    <div class="card border-0 shadow-sm rounded-4 mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
         
         <div class="card-body p-2.5 p-md-3">
@@ -338,7 +348,7 @@
     </div>
 
     <!-- 2. TARJETAS KPI -->
-    <div class="row g-3 mb-3">
+    <div class="row g-2.5 mb-3">
         <div class="col-12 col-sm-4">
             <div class="executive-kpi-card kpi-amber shadow-sm d-flex justify-content-between align-items-center">
                 <div>
@@ -393,7 +403,7 @@
         </div>
     @endif
 
-    <!-- 3. BARRA DE CONTROL Y PESTAÑAS (TODAS, ENVIADA, ACEPTADA, RECHAZADA) -->
+    <!-- 3. BARRA DE FILTROS Y ESTADOS -->
     <div class="card border-0 filter-toolbar-card mb-3">
         <div class="d-flex flex-column flex-xl-row align-items-xl-center justify-content-between gap-3">
             
@@ -427,7 +437,7 @@
                 <div class="row g-2 align-items-center justify-content-xl-end">
                     
                     <div class="col-12 col-md-6 col-xl-auto">
-                        <div class="input-group search-responsive-box">
+                        <div class="input-group">
                             <span class="input-group-text bg-white border-end-0 text-muted px-2.5" style="border-color: #cbd5e1; height: 36px; border-radius: 8px 0 0 8px;">
                                 <i class="fas fa-search" style="font-size: 0.75rem;"></i>
                             </span>
@@ -439,17 +449,13 @@
                     </div>
 
                     <div class="col-6 col-md-3 col-xl-auto">
-                        <div class="date-responsive-box">
-                            <input type="date" name="fecha_desde" value="{{ request('fecha_desde') }}" 
-                                   class="form-control input-dtl-control" title="Fecha Desde">
-                        </div>
+                        <input type="date" name="fecha_desde" value="{{ request('fecha_desde') }}" 
+                               class="form-control input-dtl-control" title="Fecha Desde">
                     </div>
 
                     <div class="col-6 col-md-3 col-xl-auto">
-                        <div class="date-responsive-box">
-                            <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}" 
-                                   class="form-control input-dtl-control" title="Fecha Hasta">
-                        </div>
+                        <input type="date" name="fecha_hasta" value="{{ request('fecha_hasta') }}" 
+                               class="form-control input-dtl-control" title="Fecha Hasta">
                     </div>
 
                     <div class="col-12 col-md-auto col-xl-auto d-flex align-items-center justify-content-end gap-2">
@@ -471,139 +477,159 @@
         </div>
     </div>
 
-    <!-- 4. TABLA DE COTIZACIONES -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
-        <div class="overflow-x-auto">
-            <table class="table table-bordered align-middle dtl-table w-100 mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-3" style="width: 14%;">CÓDIGO</th>
-                        <th style="width: 24%;">CLIENTE / PROYECTO</th>
-                        <th class="text-end" style="width: 14%;">MONTO OFERTADO</th>
-                        <th class="text-center" style="width: 10%;">DESCUENTO</th>
-                        <th style="width: 14%;">SOLICITADO POR</th>
-                        <th class="text-center" style="width: 10%;">ESTADO</th>
-                        <th class="text-center pe-3" style="width: 14%;">ACCIONES</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($cotizaciones as $cot)
-                        @php
-                            $desc = $cot->porcentaje_descuento ?? 0;
-                            $montoBaseObra = $cot->obra->monto ?? 0;
-                            $esDescAlto = ($desc > 5.00);
-                            $esEnviada = ($cot->estado_cotizacion === 'Enviada');
-                        @endphp
+    <!-- 4. TABLA CON SCROLL LATERAL (DERECHA / IZQUIERDA EN MÓVIL) -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
+        <div class="card-body p-0">
+            <div class="dtl-table-scroll-container">
+                <table class="table table-bordered table-hover align-middle dtl-pure-table">
+                    <thead>
                         <tr>
-                            <td class="ps-3 font-monospace fw-bold text-dtl-navy">
-                                {{ $cot->codigo_cotizacion }}
-                                <small class="text-muted d-block font-sans-serif" style="font-size: 0.68rem; font-family: sans-serif;">
-                                    {{ $cot->fecha_emision ? \Carbon\Carbon::parse($cot->fecha_emision)->format('d/m/Y') : '-' }}
-                                </small>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark d-block text-break" style="font-size: 0.80rem;">{{ $cot->obra->cliente->razon_social ?? 'Cliente General' }}</span>
-                                <small class="text-muted d-block text-break" style="font-size: 0.70rem;">
-                                    <i class="fas fa-building me-1"></i>{{ $cot->obra->titulo ?? 'Sin Obra' }}
-                                </small>
-                            </td>
-                            <td class="text-end">
-                                <span class="fw-bold font-monospace text-dark" style="font-size: 0.86rem;">S/ {{ number_format($cot->monto_total, 2) }}</span>
-                                @if($montoBaseObra > 0)
-                                    <small class="text-muted d-block font-monospace" style="font-size: 0.65rem;">Base: S/ {{ number_format($montoBaseObra, 2) }}</small>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                @if($esDescAlto)
-                                    <span class="badge rounded-pill fw-bold px-2 py-0.5" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca;">-{{ number_format($desc, 1) }}%</span>
-                                @else
-                                    <span class="badge rounded-pill fw-semibold px-2 py-0.5 bg-light text-dark border">{{ number_format($desc, 1) }}%</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center gap-1.5">
-                                    <i class="fas fa-user-circle text-muted"></i>
-                                    <span class="fw-semibold text-secondary" style="font-size: 0.74rem;">{{ $cot->comercial->name ?? 'Asesor Comercial' }}</span>
-                                </div>
-                            </td>
-                            <td class="text-center">
-                                @if($cot->estado_cotizacion === 'Enviada')
-                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
-                                        <i class="fas fa-paper-plane me-0.5"></i> Enviada
-                                    </span>
-                                @elseif($cot->estado_cotizacion === 'Aceptada')
-                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;">
-                                        <i class="fas fa-check-circle me-0.5"></i> Aceptada
-                                    </span>
-                                @elseif($cot->estado_cotizacion === 'Rechazada')
-                                    <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca;">
-                                        <i class="fas fa-times-circle me-0.5"></i> Rechazada
-                                    </span>
-                                @else
-                                    <span class="badge rounded-pill px-2.5 py-1 bg-light text-dark border">{{ $cot->estado_cotizacion }}</span>
-                                @endif
-                            </td>
-                            <td class="text-center pe-3">
-                                <div class="d-inline-flex align-items-center gap-1.5">
-                                    
-                                    {{-- DETECCIÓN AUTOMÁTICA: SI ESTÁ 'ENVIADA', SE ACTIVAN ACEPTAR Y RECHAZAR --}}
-                                    @if($esEnviada)
-                                        <!-- Botón Aceptar y Firmar Digitalmente -->
-                                        <form action="{{ route('gerencia.aprobaciones.aceptar', $cot->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" 
-                                                    onclick="return confirm('¿Confirmar la aceptación y firma digital de la cotización {{ $cot->codigo_cotizacion }}? Esta acción quedará registrada en auditoría.');" 
-                                                    class="btn btn-action-pro btn-action-aceptar" 
-                                                    title="Firmar digitalmente y aceptar propuesta">
-                                                <i class="fas fa-file-signature"></i> Aceptada
-                                            </button>
-                                        </form>
-
-                                        <!-- Botón Rechazar con Modal de Motivo -->
-                                        <button type="button" 
-                                                class="btn btn-action-pro btn-action-rechazar btn-abrir-rechazo" 
-                                                data-id="{{ $cot->id }}" 
-                                                data-codigo="{{ $cot->codigo_cotizacion }}" 
-                                                title="Rechazar Propuesta">
-                                            <i class="fas fa-times"></i> Rechazada
-                                        </button>
+                            <th class="ps-3" style="width: 14%;">CÓDIGO</th>
+                            <th style="width: 24%;">CLIENTE / PROYECTO</th>
+                            <th class="text-end" style="width: 14%;">MONTO OFERTADO</th>
+                            <th class="text-center" style="width: 10%;">DESCUENTO</th>
+                            <th style="width: 14%;">SOLICITADO POR</th>
+                            <th class="text-center" style="width: 10%;">ESTADO</th>
+                            <th class="text-center pe-3" style="width: 14%;">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($cotizaciones as $cot)
+                            @php
+                                $desc = $cot->porcentaje_descuento ?? 0;
+                                $montoBaseObra = $cot->obra->monto ?? 0;
+                                $esDescAlto = ($desc > 5.00);
+                                $esEnviada = ($cot->estado_cotizacion === 'Enviada');
+                            @endphp
+                            <tr>
+                                <td class="ps-3 font-monospace fw-bold text-dtl-navy text-nowrap">
+                                    {{ $cot->codigo_cotizacion }}
+                                    <small class="text-muted d-block" style="font-size: 0.68rem; font-family: sans-serif;">
+                                        {{ $cot->fecha_emision ? \Carbon\Carbon::parse($cot->fecha_emision)->format('d/m/Y') : '-' }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark d-block text-break" style="font-size: 0.80rem;">{{ $cot->obra->cliente->razon_social ?? 'Cliente General' }}</span>
+                                    <small class="text-muted d-block text-break" style="font-size: 0.70rem;">
+                                        <i class="fas fa-building me-1"></i>{{ $cot->obra->titulo ?? 'Sin Obra' }}
+                                    </small>
+                                </td>
+                                <td class="text-end font-monospace text-nowrap">
+                                    <span class="fw-bold text-dark" style="font-size: 0.86rem;">S/ {{ number_format($cot->monto_total, 2) }}</span>
+                                    @if($montoBaseObra > 0)
+                                        <small class="text-muted d-block font-monospace" style="font-size: 0.65rem;">Base: S/ {{ number_format($montoBaseObra, 2) }}</small>
                                     @endif
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    @if($esDescAlto)
+                                        <span class="badge rounded-pill fw-bold px-2 py-0.5" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca;">-{{ number_format($desc, 1) }}%</span>
+                                    @else
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 bg-light text-dark border">{{ number_format($desc, 1) }}%</span>
+                                    @endif
+                                </td>
+                                <td class="text-nowrap">
+                                    <div class="d-flex align-items-center gap-1.5">
+                                        <i class="fas fa-user-circle text-muted"></i>
+                                        <span class="fw-semibold text-secondary" style="font-size: 0.74rem;">{{ $cot->comercial->name ?? 'Asesor Comercial' }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    @if($cot->estado_cotizacion === 'Enviada')
+                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                                            <i class="fas fa-paper-plane me-0.5"></i> Enviada
+                                        </span>
+                                    @elseif($cot->estado_cotizacion === 'Aceptada')
+                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0;">
+                                            <i class="fas fa-check-circle me-0.5"></i> Aceptada
+                                        </span>
+                                    @elseif($cot->estado_cotizacion === 'Rechazada')
+                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">
+                                            <i class="fas fa-times-circle me-0.5"></i> Rechazada
+                                        </span>
+                                    @else
+                                        <span class="badge rounded-pill px-2.5 py-1 bg-light text-dark border">{{ $cot->estado_cotizacion }}</span>
+                                    @endif
+                                </td>
+                                <td class="text-center pe-3 text-nowrap">
+                                    <div class="d-inline-flex align-items-center gap-1.5">
+                                        @if($esEnviada)
+                                            <form action="{{ route('gerencia.aprobaciones.aceptar', $cot->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" 
+                                                        onclick="return confirm('¿Confirmar la aceptación y firma digital de la cotización {{ $cot->codigo_cotizacion }}?');" 
+                                                        class="btn btn-action-pro btn-action-aceptar" 
+                                                        title="Firmar digitalmente">
+                                                    <i class="fas fa-file-signature"></i> Aceptada
+                                                </button>
+                                            </form>
 
-                                    <!-- VISOR EMBEBIDO DE PDF -->
-                                    <button type="button" 
-                                            class="btn btn-action-pro btn-action-pdf btn-ver-pdf"
-                                            data-url="{{ route('comercial.cotizador.pdf', $cot->id) }}"
-                                            data-codigo="{{ $cot->codigo_cotizacion }}"
-                                            title="Visualizar Cotización PDF">
-                                        <i class="fas fa-file-pdf text-danger"></i> Detalle
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-muted small">
-                                <i class="fas fa-clipboard-check text-muted fs-4 d-block mb-1"></i>
-                                No se encontraron registros de cotización en esta sección.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                            <button type="button" 
+                                                    class="btn btn-action-pro btn-action-rechazar btn-abrir-rechazo" 
+                                                    data-id="{{ $cot->id }}" 
+                                                    data-codigo="{{ $cot->codigo_cotizacion }}" 
+                                                    title="Rechazar Propuesta">
+                                                <i class="fas fa-times"></i> Rechazada
+                                            </button>
+                                        @endif
+
+                                        <button type="button" 
+                                                class="btn btn-action-pro btn-action-pdf btn-ver-pdf"
+                                                data-url="{{ route('comercial.cotizador.pdf', $cot->id) }}"
+                                                data-codigo="{{ $cot->codigo_cotizacion }}"
+                                                title="Visualizar Cotización PDF">
+                                            <i class="fas fa-file-pdf text-danger"></i> Detalle
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted small">
+                                    <i class="fas fa-clipboard-check text-muted fs-4 d-block mb-1"></i>
+                                    No se encontraron registros de cotización en esta sección.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
 
-    <!-- 5. PAGINACIÓN NUMERADA ESTANDARIZADA AL LADO DERECHO -->
-    <div class="dtl-pagination-wrapper">
-        @if(isset($cotizaciones) && method_exists($cotizaciones, 'links'))
-            {{ $cotizaciones->withQueryString()->links('pagination::bootstrap-5') }}
-        @endif
-    </div>
-    </div>
+    <!-- 5. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    @if(isset($cotizaciones) && method_exists($cotizaciones, 'links') && $cotizaciones->hasPages())
+        <div class="dtl-pagination-wrapper">
+            <ul class="pagination">
+                {{-- Botón Anterior (<) --}}
+                @if ($cotizaciones->onFirstPage())
+                    <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                @else
+                    <li class="page-item"><a class="page-link" href="{{ $cotizaciones->previousPageUrl() }}">&lsaquo;</a></li>
+                @endif
+
+                {{-- Números de Página (1, 2, 3...) --}}
+                @foreach ($cotizaciones->getUrlRange(1, $cotizaciones->lastPage()) as $page => $url)
+                    @if ($page == $cotizaciones->currentPage())
+                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+
+                {{-- Botón Siguiente (>) --}}
+                @if ($cotizaciones->hasMorePages())
+                    <li class="page-item"><a class="page-link" href="{{ $cotizaciones->nextPageUrl() }}">&rsaquo;</a></li>
+                @else
+                    <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+                @endif
+            </ul>
+        </div>
+    @endif
 
 </div>
 
-<!-- MODAL VISOR DE PDF EN LA MISMA PANTALLA -->
+<!-- MODAL VISOR DE PDF -->
 <div class="modal fade" id="modalVisorPDF" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" style="height: 90vh;">
         <div class="modal-content h-100 rounded-4 border-0 shadow">
@@ -623,7 +649,7 @@
     </div>
 </div>
 
-<!-- MODAL DE RECHAZO CON MOTIVO OBLIGATORIO PARA AUDITORÍA -->
+<!-- MODAL DE RECHAZO GERENCIAL -->
 <div class="modal fade" id="modalRechazo" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">
@@ -655,25 +681,20 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Asignación de evento para rechazar
         document.querySelectorAll('.btn-abrir-rechazo').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 lanzarModalRechazo(this.dataset.id, this.dataset.codigo);
             });
         });
 
-        // Visor de PDF embebido
         var modalVisor = new bootstrap.Modal(document.getElementById('modalVisorPDF'));
         var iframePDF = document.getElementById('iframePDF');
         var pdfModalCodigo = document.getElementById('pdfModalCodigo');
 
         document.querySelectorAll('.btn-ver-pdf').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                var url = this.dataset.url;
-                var codigo = this.dataset.codigo;
-                
-                pdfModalCodigo.innerText = codigo;
-                iframePDF.src = url;
+                pdfModalCodigo.innerText = this.dataset.codigo;
+                iframePDF.src = this.dataset.url;
                 modalVisor.show();
             });
         });

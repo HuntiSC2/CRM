@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Obra extends Model
 {
@@ -28,6 +29,11 @@ class Obra extends Model
         'fecha' => 'date',
         'monto' => 'decimal:2',
     ];
+
+    /**
+     * Sumatoria de cotizaciones cuando se carga con withSum.
+     */
+    protected $appends = ['monto_total_cotizado'];
 
     // =========================================================================
     // RELACIONES ELOQUENT (MODELO ESTRELLA 100% CONECTADO)
@@ -66,6 +72,40 @@ class Obra extends Model
     }
 
     /**
+     * Última cotización registrada (mayor id) para la obra.
+     */
+    public function ultimaCotizacion(): HasOne
+    {
+        return $this->hasOne(Cotizacion::class, 'obra_id')->latestOfMany('id');
+    }
+
+    // =========================================================================
+    // ACCESSORS DE MONTOS
+    // =========================================================================
+
+    /**
+     * Monto total acumulado: sumatoria de todas las cotizaciones asociadas
+     * (la obra puede dividirse por áreas y cotizarse por separado).
+     * Se apoya en withSum('cotizaciones', 'monto_total') cuando está disponible.
+     */
+    public function getMontoTotalCotizadoAttribute(): float
+    {
+        if (array_key_exists('cotizaciones_sum_monto_total', $this->attributes)) {
+            return (float) ($this->attributes['cotizaciones_sum_monto_total'] ?? 0);
+        }
+
+        return (float) $this->cotizaciones()->sum('monto_total');
+    }
+
+    /**
+     * Alias de presentación formateada en soles.
+     */
+    public function getMontoTotalCotizadoFormateadoAttribute(): string
+    {
+        return 'S/ ' . number_format($this->monto_total_cotizado, 2);
+    }
+
+    /**
      * Bitácora de incidencias, reuniones y contactos
      */
     public function bitacoras(): HasMany
@@ -91,33 +131,28 @@ class Obra extends Model
      */
     public function getEstadoRealAttribute(): string
     {
-        // 1. Si ya fue cerrada definitivamente, se respeta
-        if (in_array($this->estado, ['Aceptada', 'Cancelada'])) {
+        // 1. Si ya fue cerrada definitivamente o trasladada explícitamente a Cierre Comercial, se respeta
+        if (in_array($this->estado, ['Aceptada', 'Cancelada', 'Perdida', 'Cierre Comercial'])) {
             return $this->estado;
         }
 
         $ultimaCotizacion = $this->cotizaciones->sortByDesc('id')->first();
         $ultimaInspeccion = $this->inspecciones->sortByDesc('id')->first();
 
-        // 2. Si tiene cotización enviada o aceptada -> Cierre Comercial
-        if ($ultimaCotizacion && in_array($ultimaCotizacion->estado_cotizacion, ['Enviada', 'Aceptada'])) {
-            return 'Cierre Comercial';
-        }
-
-        // 3. Si tiene cotización programada/rechazada O inspección completada -> Cotización
+        // 2. Si tiene cotizaciones y/o inspección completada -> Cotización
         if (
-            ($ultimaCotizacion && in_array($ultimaCotizacion->estado_cotizacion, ['Programada', 'Rechazada'])) ||
+            ($ultimaCotizacion && in_array($ultimaCotizacion->estado_cotizacion, ['Programada', 'Enviada', 'Aceptada', 'Rechazada'])) ||
             ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Completada')
         ) {
             return 'Cotización';
         }
 
-        // 4. Si tiene inspección pendiente -> Inspeccion
+        // 3. Si tiene inspección pendiente -> Inspeccion
         if ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Pendiente') {
             return 'Inspeccion';
         }
 
-        // 5. Si solo tiene el registro inicial -> Prospecto
+        // 4. Si solo tiene el registro inicial -> Prospecto
         return 'Prospecto';
     }
 
@@ -131,8 +166,8 @@ class Obra extends Model
      */
     public function getDiagnosticoSlaAttribute(): array
     {
-        // 1. REGLA CERO: Obra terminada o cancelada -> Semáforo apagado
-        if (in_array($this->estado, ['Aceptada', 'Cancelada'])) {
+        // 1. REGLA CERO: Obra terminada, cancelada o perdida -> Semáforo apagado
+        if (in_array($this->estado, ['Aceptada', 'Cancelada', 'Perdida'])) {
             return [
                 'color'   => 'GRIS',
                 'badge'   => 'secondary',
@@ -215,10 +250,10 @@ class Obra extends Model
     // =========================================================================
 
     /**
-     * Scope: Obras vivas en el pipeline comercial (excluye cerradas)
+     * Scope: Obras vivas en el pipeline comercial (excluye cerradas y perdidas)
      */
     public function scopeActivas($query)
     {
-        return $query->whereNotIn('estado', ['Aceptada', 'Cancelada']);
+        return $query->whereNotIn('estado', ['Aceptada', 'Cancelada', 'Perdida']);
     }
 }

@@ -53,6 +53,14 @@ class Cotizacion extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Detalle de partidas que componen la propuesta económica.
+     */
+    public function detalles(): HasMany
+    {
+        return $this->hasMany(CotizacionDetalle::class, 'cotizacion_id');
+    }
+
     public function cotizacionPadre(): BelongsTo
     {
         return $this->belongsTo(Cotizacion::class, 'cotizacion_padre_id');

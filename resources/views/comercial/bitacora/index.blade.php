@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Estilos Exclusivos Estandarizados DTL PREMIER -->
 <style>
     :root {
         --dtl-navy: #0f172a;
@@ -64,123 +63,43 @@
         font-size: 0.82rem;
     }
 
-    /* TABLA INSTITUCIONAL ESTANDARIZADA */
-    .dtl-table-hover tbody tr:hover {
-        background-color: #f1f5f9 !important;
+    /* SCROLL HORIZONTAL TÁCTIL (PERMITE MOVERSE A LA DERECHA E IZQUIERDA EN MÓVIL) */
+    .dtl-table-scroll-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        display: block !important;
     }
 
-    .dtl-table-hover thead th, .dtl-card-header-styled {
+    /* TABLA FIJA QUE NO SE DESARMA NI SE TRANSFORMA EN LISTA */
+    .dtl-pure-table {
+        min-width: 900px !important; /* Fuerza desplazamiento lateral suave */
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-bottom: 0 !important;
+    }
+
+    .dtl-pure-table thead th, .dtl-card-header-styled {
         background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
         border: 1px solid #1e293b !important;
         font-size: 0.68rem !important;
         letter-spacing: 0.8px;
-        padding-top: 0.55rem !important;
-        padding-bottom: 0.55rem !important;
+        padding: 0.65rem 0.75rem !important;
         text-transform: uppercase;
+        white-space: nowrap !important;
     }
 
-    .dtl-table-hover thead th {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-    }
-
-    .dtl-table-hover td {
+    .dtl-pure-table td {
         border: 1px solid #cbd5e1 !important;
         font-size: 0.78rem !important;
-        padding: 0.6rem 0.75rem !important;
-        vertical-align: middle;
+        padding: 0.65rem 0.75rem !important;
+        vertical-align: middle !important;
     }
 
-    @media (max-width: 767.98px) {
-        .dtl-table-hover thead th {
-            font-size: 0.52rem !important;
-            padding: 0.35rem 0.25rem !important;
-            letter-spacing: 0.2px !important;
-        }
-        .dtl-table-hover td {
-            font-size: 0.62rem !important;
-            padding: 0.35rem 0.35rem !important;
-        }
-        .dtl-table-hover td span, .dtl-table-hover td div {
-            font-size: 0.62rem !important;
-        }
-        .container-fluid {
-            padding-left: 4px !important;
-            padding-right: 4px !important;
-        }
-    }
-
-    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
-    .dtl-pagination-wrapper {
-        display: flex !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        width: 100% !important;
-        margin-top: 15px !important;
-        margin-bottom: 20px !important;
-        padding-right: 4px !important;
-    }
-
-    .dtl-pagination-wrapper nav {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:first-child,
-    .dtl-pagination-wrapper p.small.text-muted,
-    .dtl-pagination-wrapper .text-muted {
-        display: none !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:last-child,
-    .dtl-pagination-wrapper nav > div:nth-child(2) {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper .pagination {
-        margin-bottom: 0 !important;
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        gap: 4px !important;
-        list-style: none !important;
-        padding-left: 0 !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item .page-link {
-        min-width: 32px !important;
-        height: 32px !important;
-        padding: 0 8px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 50% !important;
-        border: 1px solid #cbd5e1 !important;
-        background-color: #ffffff !important;
-        color: var(--dtl-navy) !important;
-        font-weight: 700 !important;
-        font-size: 0.80rem !important;
-        text-decoration: none !important;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
-        background-color: var(--dtl-green) !important;
-        border-color: var(--dtl-green) !important;
-        color: #ffffff !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
-        background-color: #ffffff !important;
-        border-color: #e2e8f0 !important;
-        color: #cbd5e1 !important;
-        border-radius: 8px !important;
+    .dtl-pure-table tbody tr:hover {
+        background-color: #f8fafc !important;
     }
 
     .extra-small {
@@ -194,12 +113,83 @@
         border-radius: 50%;
         display: inline-block;
     }
+
+    /* ==========================================================
+       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
+    ========================================================== */
+    .dtl-pagination-wrapper {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-top: 15px !important;
+        margin-bottom: 25px !important;
+        padding-right: 6px !important;
+    }
+
+    .dtl-pagination-wrapper ul.pagination {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+        margin: 0 !important;
+    }
+
+    .dtl-pagination-wrapper .page-item {
+        display: inline-block !important;
+        margin: 0 !important;
+    }
+
+    /* Botón Circular Blanco (Inactivo y Flechas) */
+    .dtl-pagination-wrapper .page-link {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+        color: var(--dtl-navy) !important;
+        font-weight: 700 !important;
+        font-size: 0.88rem !important;
+        text-decoration: none !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .dtl-pagination-wrapper .page-link:hover {
+        background-color: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: var(--dtl-navy) !important;
+    }
+
+    /* Botón Circular VERDE (Página Activa como el '2' de la foto) */
+    .dtl-pagination-wrapper .page-item.active .page-link {
+        background-color: var(--dtl-green) !important;
+        border-color: var(--dtl-green) !important;
+        color: #ffffff !important;
+        box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
+    }
+
+    /* Flechas deshabilitadas */
+    .dtl-pagination-wrapper .page-item.disabled .page-link {
+        background-color: #ffffff !important;
+        border-color: #e2e8f0 !important;
+        color: #cbd5e1 !important;
+        box-shadow: none !important;
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+    <!-- 1. ENCABEZADO -->
+    <div class="card border-0 shadow-sm rounded-4 mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
         
         <div class="card-body p-2.5 p-md-3">
@@ -219,6 +209,7 @@
         </div>
     </div>
 
+    <!-- ALERTAS -->
     @if (session('success'))
         <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
             <i class="fas fa-circle-check me-2 fs-5 flex-shrink-0" style="color: #059669;"></i>
@@ -233,7 +224,7 @@
         </div>
     @endif
 
-    <!-- 2. BARRA DE BÚSQUEDA Y BOTÓN DE ACCIÓN (+) -->
+    <!-- 2. BÚSQUEDA Y ACCIÓN -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-3" style="border: 1px solid #e2e8f0 !important;">
         <div class="card-body p-2.5 p-md-3">
             <div class="d-flex align-items-center gap-2">
@@ -255,26 +246,25 @@
                     @endif
                 </form>
 
-                <button type="button" class="btn btn-dtl-action btn-dtl-primary btn-dtl-icon-only shadow-sm flex-shrink-0" data-bs-toggle="collapse" data-bs-target="#seccionFormularioBitacora" aria-expanded="false" aria-controls="seccionFormularioBitacora" title="Registrar Nota de Bitácora">
+                <button type="button" class="btn btn-dtl-action btn-dtl-primary btn-dtl-icon-only shadow-sm flex-shrink-0" data-bs-toggle="collapse" data-bs-target="#seccionFormularioBitacora" aria-expanded="false" title="Registrar Nota de Bitácora">
                     <i class="fas fa-plus fs-6"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 3. FORMULARIO DINÁMICO COMPACTO (COLAPSABLE) -->
+    <!-- 3. FORMULARIO REGISTRO (INICIA CERRADO) -->
     <div class="collapse mb-3" id="seccionFormularioBitacora">
-        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
             <div class="card-header dtl-card-header-styled px-3 d-flex align-items-center justify-content-between" style="border-bottom: 3px solid #059669;">
                 <h6 class="fw-bold mb-0 text-white text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.8px;">Registro de Nueva Anotación en Bitácora</h6>
-                <button type="button" class="btn-close btn-close-white opacity-75" data-bs-toggle="collapse" data-bs-target="#seccionFormularioBitacora" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white opacity-75" data-bs-toggle="collapse" data-bs-target="#seccionFormularioBitacora"></button>
             </div>
 
             <form action="{{ route('comercial.bitacora.store') }}" method="POST">
                 @csrf
                 <div class="card-body p-3" style="background-color: #f8fafc;">
                     <div class="row g-2.5">
-                        
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold extra-small mb-1 text-dark">Obra / Proyecto Relacionado <span class="text-danger">*</span></label>
                             <select name="obra_id" class="form-select form-select-sm py-1" style="font-size: 0.82rem; border-color: #cbd5e1;" required>
@@ -298,7 +288,6 @@
                             <label class="form-label fw-semibold extra-small mb-1 text-dark">Comentarios / Acuerdos Logrados <span class="text-danger">*</span></label>
                             <textarea name="comentario" class="form-control form-control-sm py-1" rows="2" placeholder="Escriba los detalles de la conversación, acuerdos..." style="font-size: 0.82rem; border-color: #cbd5e1;" required></textarea>
                         </div>
-
                     </div>
                 </div>
 
@@ -310,35 +299,35 @@
         </div>
     </div>
 
-    <!-- 4. TABLA DE BITÁCORAS -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
+    <!-- 4. TABLA CON SCROLL LATERAL PURO (DERECHA / IZQUIERDA EN MÓVIL) -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover w-100" style="min-width: 680px;">
+            <div class="dtl-table-scroll-container">
+                <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3 py-2.5 fw-bold" style="width: 16%;">FECHA / HORA</th>
-                            <th class="py-2.5 fw-bold" style="width: 22%;">OBRA / PROYECTO</th>
-                            <th class="py-2.5 fw-bold text-center" style="width: 14%;">TIPO CONTACTO</th>
-                            <th class="py-2.5 fw-bold" style="width: 32%;">COMENTARIO / ACUERDO</th>
-                            <th class="pe-3 py-2.5 fw-bold text-center" style="width: 16%;">REGISTRADO POR</th>
+                            <th class="ps-3" style="width: 16%;">FECHA / HORA</th>
+                            <th style="width: 26%;">OBRA / PROYECTO</th>
+                            <th class="text-center" style="width: 14%;">TIPO CONTACTO</th>
+                            <th style="width: 28%;">COMENTARIO / ACUERDO</th>
+                            <th class="pe-3 text-center" style="width: 16%;">REGISTRADO POR</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bitacoras ?? [] as $bitacora)
-                            <tr style="border-top: 1px solid #cbd5e1;">
-                                <td class="ps-3">
+                            <tr>
+                                <td class="ps-3 text-nowrap">
                                     <span class="fw-bold text-dark d-inline-flex align-items-center" style="font-size: 0.75rem;">
                                         <i class="far fa-clock me-1 text-success"></i>
                                         {{ \Carbon\Carbon::parse($bitacora->created_at ?? now())->format('d/m/Y h:i A') }}
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-dark text-uppercase text-break d-block" style="font-size: 0.78rem;">
+                                    <span class="fw-bold text-dark text-uppercase d-block" style="font-size: 0.78rem;">
                                         {{ $bitacora->obra->titulo ?? 'Seguimiento General' }}
                                     </span>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center text-nowrap">
                                     @php $tipo = $bitacora->tipo_contacto ?? 'Llamada Telefónica'; @endphp
                                     @if(str_contains(strtolower($tipo), 'reunión') || str_contains(strtolower($tipo), 'presencial'))
                                         <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
@@ -355,12 +344,12 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <span class="text-dark d-block text-break" style="font-size: 0.78rem; line-height: 1.45;">
+                                    <span class="text-dark d-block" style="font-size: 0.78rem; line-height: 1.45;">
                                         {{ $bitacora->comentario ?: 'Sin detalles anotados' }}
                                     </span>
                                 </td>
-                                <td class="pe-3 text-center">
-                                    <span class="text-muted" style="font-size: 0.78rem;">
+                                <td class="pe-3 text-center text-nowrap">
+                                    <span class="text-muted fw-semibold" style="font-size: 0.78rem;">
                                         {{ $bitacora->user->name ?? 'Asesor Comercial' }}
                                     </span>
                                 </td>
@@ -376,12 +365,35 @@
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN NUMERADA AL LADO DERECHO -->
-    <div class="dtl-pagination-wrapper">
-        @if(isset($bitacoras) && method_exists($bitacoras, 'links'))
-            {{ $bitacoras->withQueryString()->links('pagination::bootstrap-5') }}
-        @endif
-    </div>
+    <!-- 5. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    @if(isset($bitacoras) && $bitacoras->hasPages())
+        <div class="dtl-pagination-wrapper">
+            <ul class="pagination">
+                {{-- Botón Anterior (<) --}}
+                @if ($bitacoras->onFirstPage())
+                    <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                @else
+                    <li class="page-item"><a class="page-link" href="{{ $bitacoras->previousPageUrl() }}">&lsaquo;</a></li>
+                @endif
+
+                {{-- Números de Página (1, 2, 3...) --}}
+                @foreach ($bitacoras->getUrlRange(1, $bitacoras->lastPage()) as $page => $url)
+                    @if ($page == $bitacoras->currentPage())
+                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+
+                {{-- Botón Siguiente (>) --}}
+                @if ($bitacoras->hasMorePages())
+                    <li class="page-item"><a class="page-link" href="{{ $bitacoras->nextPageUrl() }}">&rsaquo;</a></li>
+                @else
+                    <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+                @endif
+            </ul>
+        </div>
+    @endif
 
 </div>
 @endsection

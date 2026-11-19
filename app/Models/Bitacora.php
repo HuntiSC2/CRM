@@ -16,6 +16,7 @@ class Bitacora extends Model
         'user_id',
         'tipo_contacto',
         'comentario',
+        'archivo_path',
     ];
 
     public function obra()

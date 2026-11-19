@@ -134,15 +134,8 @@
         <div class="card-body p-2.5 p-md-3">
             <div class="row align-items-center g-2 g-md-3">
                 
-                <!-- Logo -->
-                <div class="col-auto">
-                    <div class="p-1.5 p-md-2 rounded-3 bg-white d-flex align-items-center justify-content-center border" style="min-width: 125px; height: 48px; border-color: #cbd5e1 !important;">
-                        <img src="{{ asset('images/logo-dtl.png') }}" alt="DTL PREMIER S.A.C." style="max-height: 34px; width: auto; object-fit: contain;">
-                    </div>
-                </div>
-
                 <!-- Datos de Sesión -->
-                <div class="col border-start-md ps-md-3" style="border-color: #e2e8f0 !important;">
+                <div class="col ps-md-3" style="border-color: #e2e8f0 !important;">
                     <div class="d-flex flex-wrap align-items-center gap-1.5 mb-0.5">
                         <span class="badge rounded-pill fw-bold px-2 py-0.5 text-uppercase font-minor" style="background-color: var(--dtl-dark); color: #ffffff;">
                             <i class="fas fa-user-shield me-1" style="color: #10b981;"></i> ROL: {{ strtoupper($userRole ?: 'INVITADO') }}

@@ -67,7 +67,8 @@ return new class extends Migration
                 'Cotización',
                 'Cierre Comercial',
                 'Aceptada',
-                'Cancelada'
+                'Cancelada',
+                'Perdida'
             ])->default('Prospecto')->index();
             $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

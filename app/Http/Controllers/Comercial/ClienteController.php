@@ -36,7 +36,12 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        $cliente = Cliente::with(['user', 'obras.inspecciones', 'obras.cotizaciones'])->findOrFail($id);
+        $cliente = Cliente::with([
+            'user',
+            'obras' => fn ($q) => $q->withSum('cotizaciones', 'monto_total'),
+            'obras.inspecciones',
+            'obras.cotizaciones',
+        ])->findOrFail($id);
 
         return view('comercial.clientes.show', compact('cliente'));
     }

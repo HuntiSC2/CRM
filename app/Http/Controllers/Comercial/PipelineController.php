@@ -20,7 +20,7 @@ class PipelineController extends Controller
         $statuses = ['Prospecto', 'Inspeccion', 'Cotización', 'Cierre Comercial'];
 
         $obrasQuery = Obra::with(['cliente', 'inspecciones', 'cotizaciones'])
-            ->whereNotIn('estado', ['Aceptada', 'Cancelada'])
+            ->whereNotIn('estado', ['Aceptada', 'Cancelada', 'Perdida'])
             ->latest('id')
             ->get();
 
@@ -69,11 +69,12 @@ class PipelineController extends Controller
                 $hayInspeccionSinCotizar = ($inspCompletadasCount > $totalCotizaciones);
                 $puedeProgramarCotizacion = ($estadoCalculado !== 'Prospecto') && $hayInspeccionSinCotizar && ($estadoCotizacion !== 'Programada');
 
-                // CIERRE COMERCIAL: Requiere ciclo 100% cerrado en cotizaciones culminadas
+                // CIERRE COMERCIAL: Requiere ciclo 100% cerrado en cotizaciones culminadas y cotización Aceptada (NO Rechazada)
                 $puedeIrACierre = ($estadoCalculado === 'Cotización') 
                                 && ($inspCompletadasCount > 0)
                                 && ($inspCompletadasCount === $cotizacionesCulminadasCount)
-                                && is_null($inspeccionPendiente);
+                                && is_null($inspeccionPendiente)
+                                && ($estadoCotizacion === 'Aceptada');
 
                 $obras[$estadoCalculado][] = [
                     'id'                          => $obra->id,
@@ -412,34 +413,102 @@ class PipelineController extends Controller
             'obra_id' => 'required|exists:obras,id',
         ]);
 
-        $obra = Obra::findOrFail($request->obra_id);
+        $obra = Obra::with('cotizaciones')->findOrFail($request->obra_id);
+
+        $ultimaCot = $obra->cotizaciones()->latest('id')->first();
+        if (!$ultimaCot || $ultimaCot->estado_cotizacion !== 'Aceptada') {
+            return response()->json([
+                'success' => false, 
+                'message' => 'No se puede trasladar a Cierre Comercial si la cotización está rechazada o no ha sido aceptada.'
+            ], 422);
+        }
+
         $obra->update(['estado' => 'Cierre Comercial']);
         self::actualizarEstadoCliente($obra->cliente_id);
 
         return response()->json([
             'success' => true,
-            'message' => "Obra trasladada a Cierre Comercial."
+            'message' => "Obra trasladada magnéticamente a Cierre Comercial."
+        ]);
+    }
+
+    /**
+     * Cierra la obra con estado 'Perdida' cuando la cotización está rechazada.
+     * Guarda el motivo en la bitácora técnica con los datos del cliente y la obra,
+     * excluyéndola de la vista del Kanban.
+     */
+    public function cerrarObraPerdida(Request $request)
+    {
+        $request->validate([
+            'obra_id'       => 'required|exists:obras,id',
+            'motivo'        => 'required|string|min:4|max:1000',
+            'tipo_contacto' => 'nullable|string|max:100',
+            'cotizacion_id' => 'nullable|exists:cotizaciones,id',
+        ]);
+
+        $obra = Obra::with(['cliente', 'cotizaciones'])->findOrFail($request->obra_id);
+
+        DB::transaction(function () use ($obra, $request) {
+            // 1. Actualizar estado de la obra a 'Perdida'
+            $obra->update(['estado' => 'Perdida']);
+
+            // 2. Si se envió cotización, registrar o asegurar motivo de rechazo
+            if ($request->filled('cotizacion_id')) {
+                $cot = Cotizacion::find($request->cotizacion_id);
+                if ($cot) {
+                    $cot->update([
+                        'estado_cotizacion' => 'Rechazada',
+                        'motivo_rechazo'    => trim($request->motivo),
+                    ]);
+                }
+            }
+
+            // 3. Registrar en bitácora técnica exclusivamente el motivo/mensaje ingresado por el usuario
+            $tipoContacto = $request->filled('tipo_contacto') ? trim($request->tipo_contacto) : 'Llamada Telefónica';
+
+            Bitacora::create([
+                'obra_id'       => $obra->id,
+                'user_id'       => Auth::id() ?? $obra->user_id ?? 1,
+                'tipo_contacto' => $tipoContacto,
+                'comentario'    => trim($request->motivo),
+            ]);
+
+            // 4. Actualizar estado dinámico del cliente según reglas de negocio
+            if ($obra->cliente_id) {
+                self::actualizarEstadoCliente($obra->cliente_id);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Obra cerrada como Perdida y registrada en la bitácora técnica con éxito.'
         ]);
     }
 
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'obra_id'      => 'required|exists:obras,id',
-            'nuevo_estado' => 'required|string|in:Aceptada,Cancelada',
+            'obra_id'       => 'required|exists:obras,id',
+            'nuevo_estado'  => 'required|string|in:Aceptada,Cancelada,Perdida',
+            'motivo'        => 'nullable|string|max:1000',
+            'tipo_contacto' => 'nullable|string|max:100',
         ]);
 
         return $this->archivar(new Request([
-            'obra_id'      => $request->obra_id,
-            'estado_final' => $request->nuevo_estado
+            'obra_id'       => $request->obra_id,
+            'estado_final'  => $request->nuevo_estado,
+            'motivo'        => $request->motivo,
+            'tipo_contacto' => $request->tipo_contacto,
         ]));
     }
 
     public function archivar(Request $request)
     {
         $request->validate([
-            'obra_id'      => 'required|exists:obras,id',
-            'estado_final' => 'required|string|in:Aceptada,Cancelada',
+            'obra_id'       => 'required|exists:obras,id',
+            'estado_final'  => 'required|string|in:Aceptada,Cancelada,Perdida',
+            'motivo'        => 'nullable|string|max:1000',
+            'tipo_contacto' => 'nullable|string|max:100',
         ]);
 
         $obra = Obra::with('cliente')->findOrFail($request->obra_id);
@@ -453,9 +522,28 @@ class PipelineController extends Controller
             $obra->estado = $request->estado_final;
             $obra->save();
 
-            Cotizacion::where('obra_id', $obra->id)->update([
-                'estado_cotizacion' => ($request->estado_final === 'Aceptada') ? 'Aceptada' : 'Rechazada'
-            ]);
+            // Si se cancela o pierde, actualizar cotización si aplica
+            if ($request->estado_final === 'Aceptada') {
+                Cotizacion::where('obra_id', $obra->id)->update([
+                    'estado_cotizacion' => 'Aceptada'
+                ]);
+            } else {
+                Cotizacion::where('obra_id', $obra->id)->update([
+                    'estado_cotizacion' => 'Rechazada',
+                    'motivo_rechazo'    => $request->filled('motivo') ? trim($request->motivo) : 'Cancelada en Cierre Comercial.'
+                ]);
+            }
+
+            // Registrar en la tabla bitácoras si se proporcionó un motivo o si es cancelación
+            if ($request->filled('motivo')) {
+                $tipoContacto = $request->filled('tipo_contacto') ? trim($request->tipo_contacto) : 'Llamada Telefónica';
+                Bitacora::create([
+                    'obra_id'       => $obra->id,
+                    'user_id'       => Auth::id() ?? $obra->user_id ?? 1,
+                    'tipo_contacto' => $tipoContacto,
+                    'comentario'    => trim($request->motivo),
+                ]);
+            }
 
             if ($obra->cliente_id) {
                 self::actualizarEstadoCliente($obra->cliente_id);
@@ -529,7 +617,7 @@ class PipelineController extends Controller
     {
         $search = $request->input('search');
         $obrasHistorial = Obra::with(['cliente', 'user', 'inspecciones', 'cotizaciones'])
-            ->whereIn('estado', ['Aceptada', 'Cancelada'])
+            ->whereIn('estado', ['Aceptada', 'Cancelada', 'Perdida'])
             ->when($search, function ($query, $search) {
                 return $query->where('codigo', 'like', "%{$search}%")
                            ->orWhere('titulo', 'like', "%{$search}%")
@@ -547,7 +635,7 @@ class PipelineController extends Controller
         if (!$cliente) return;
 
         $tieneAceptadas = $cliente->obras->where('estado', 'Aceptada')->count() > 0;
-        $tieneActivas   = $cliente->obras->whereNotIn('estado', ['Aceptada', 'Cancelada'])->count() > 0;
+        $tieneActivas   = $cliente->obras->whereNotIn('estado', ['Aceptada', 'Cancelada', 'Perdida'])->count() > 0;
 
         $nuevoEstado = $tieneAceptadas ? 'ACTIVO' : ($tieneActivas ? 'EN_EVALUACION' : 'INACTIVO');
         $cliente->update(['estado' => $nuevoEstado]);

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<!-- Estilos Exclusivos Estandarizados DTL PREMIER -->
 <style>
     :root {
         --dtl-navy: #0f172a;
@@ -64,120 +63,43 @@
         font-size: 0.82rem;
     }
 
-    /* TABLA INSTITUCIONAL ESTANDARIZADA */
-    .dtl-table-hover tbody tr:hover {
-        background-color: #f1f5f9 !important;
+    /* SCROLL HORIZONTAL TÁCTIL (DERECHA E IZQUIERDA EN MÓVIL) */
+    .dtl-table-scroll-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        display: block !important;
     }
 
-    .dtl-table-hover thead th {
+    /* TABLA FIJA QUE NO SE DESARMA NI SE CONVIERTE EN LISTA */
+    .dtl-pure-table {
+        min-width: 900px !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-bottom: 0 !important;
+    }
+
+    .dtl-pure-table thead th {
         background-color: var(--dtl-navy) !important;
         color: #ffffff !important;
         border: 1px solid #1e293b !important;
         font-size: 0.68rem !important;
         letter-spacing: 0.8px;
-        padding-top: 0.55rem !important;
-        padding-bottom: 0.55rem !important;
-        position: sticky;
-        top: 0;
-        z-index: 2;
+        padding: 0.65rem 0.75rem !important;
         text-transform: uppercase;
+        white-space: nowrap !important;
     }
 
-    .dtl-table-hover td {
+    .dtl-pure-table td {
         border: 1px solid #cbd5e1 !important;
         font-size: 0.78rem !important;
-        padding: 0.6rem 0.75rem !important;
-        vertical-align: middle;
+        padding: 0.65rem 0.75rem !important;
+        vertical-align: middle !important;
     }
 
-    @media (max-width: 767.98px) {
-        .dtl-table-hover thead th {
-            font-size: 0.52rem !important;
-            padding: 0.35rem 0.25rem !important;
-            letter-spacing: 0.2px !important;
-        }
-        .dtl-table-hover td {
-            font-size: 0.62rem !important;
-            padding: 0.35rem 0.35rem !important;
-        }
-        .dtl-table-hover td span, .dtl-table-hover td div {
-            font-size: 0.62rem !important;
-        }
-        .container-fluid {
-            padding-left: 4px !important;
-            padding-right: 4px !important;
-        }
-    }
-
-    /* PAGINACIÓN ESTANDARIZADA DTL PREMIER */
-    .dtl-pagination-wrapper {
-        display: flex !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        width: 100% !important;
-        margin-top: 15px !important;
-        margin-bottom: 20px !important;
-        padding-right: 4px !important;
-    }
-
-    .dtl-pagination-wrapper nav {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:first-child,
-    .dtl-pagination-wrapper p.small.text-muted,
-    .dtl-pagination-wrapper .text-muted {
-        display: none !important;
-    }
-
-    .dtl-pagination-wrapper nav > div:last-child,
-    .dtl-pagination-wrapper nav > div:nth-child(2) {
-        display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
-    }
-
-    .dtl-pagination-wrapper .pagination {
-        margin-bottom: 0 !important;
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        gap: 4px !important;
-        list-style: none !important;
-        padding-left: 0 !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item .page-link {
-        min-width: 32px !important;
-        height: 32px !important;
-        padding: 0 8px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 50% !important;
-        border: 1px solid #cbd5e1 !important;
-        background-color: #ffffff !important;
-        color: var(--dtl-navy) !important;
-        font-weight: 700 !important;
-        font-size: 0.80rem !important;
-        text-decoration: none !important;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item.active .page-link {
-        background-color: var(--dtl-green) !important;
-        border-color: var(--dtl-green) !important;
-        color: #ffffff !important;
-    }
-
-    .dtl-pagination-wrapper .pagination .page-item.disabled .page-link {
-        background-color: #ffffff !important;
-        border-color: #e2e8f0 !important;
-        color: #cbd5e1 !important;
-        border-radius: 8px !important;
+    .dtl-pure-table tbody tr:hover {
+        background-color: #f8fafc !important;
     }
 
     .status-pulse-green {
@@ -187,12 +109,80 @@
         border-radius: 50%;
         display: inline-block;
     }
+
+    /* ==========================================================
+       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
+    ========================================================== */
+    .dtl-pagination-wrapper {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin-top: 15px !important;
+        margin-bottom: 25px !important;
+        padding-right: 6px !important;
+    }
+
+    .dtl-pagination-wrapper ul.pagination {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+        list-style: none !important;
+        padding-left: 0 !important;
+        margin: 0 !important;
+    }
+
+    .dtl-pagination-wrapper .page-item {
+        display: inline-block !important;
+        margin: 0 !important;
+    }
+
+    .dtl-pagination-wrapper .page-link {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #ffffff !important;
+        color: var(--dtl-navy) !important;
+        font-weight: 700 !important;
+        font-size: 0.88rem !important;
+        text-decoration: none !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .dtl-pagination-wrapper .page-link:hover {
+        background-color: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: var(--dtl-navy) !important;
+    }
+
+    .dtl-pagination-wrapper .page-item.active .page-link {
+        background-color: var(--dtl-green) !important;
+        border-color: var(--dtl-green) !important;
+        color: #ffffff !important;
+        box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
+    }
+
+    .dtl-pagination-wrapper .page-item.disabled .page-link {
+        background-color: #ffffff !important;
+        border-color: #e2e8f0 !important;
+        color: #cbd5e1 !important;
+        box-shadow: none !important;
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="container-fluid px-2 px-md-4 py-3" style="background-color: #f8fafc; min-height: 92vh;">
 
-    <!-- 1. ENCABEZADO INSTITUCIONAL ESTANDARIZADO (SIN LOGO) -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white mb-3 mb-md-4 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
+    <!-- 1. ENCABEZADO -->
+    <div class="card border-0 shadow-sm rounded-4 mb-3 position-relative overflow-hidden" style="border: 1px solid #e2e8f0 !important;">
         <div class="position-absolute top-0 start-0 w-100" style="height: 3px; background-color: var(--dtl-green);"></div>
         
         <div class="card-body p-2.5 p-md-3">
@@ -212,7 +202,7 @@
         </div>
     </div>
 
-    <!-- 2. MENSAJES DE ALERTA -->
+    <!-- ALERTAS -->
     @if (session('success'))
         <div class="alert border-0 rounded-4 shadow-sm mb-3 p-3 d-flex align-items-center" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0 !important;">
             <i class="fas fa-circle-check me-2 fs-5 flex-shrink-0" style="color: var(--dtl-green);"></i>
@@ -227,7 +217,7 @@
         </div>
     @endif
 
-    <!-- 3. BARRA DE BÚSQUEDA ANCHO COMPLETO ESTANDARIZADA -->
+    <!-- 2. BÚSQUEDA -->
     <div class="card border-0 shadow-sm rounded-4 bg-white mb-3" style="border: 1px solid #e2e8f0 !important;">
         <div class="card-body p-2.5 p-md-3">
             <div class="d-flex align-items-center gap-2">
@@ -252,38 +242,38 @@
         </div>
     </div>
 
-    <!-- 4. TABLA DE COTIZACIONES ESTANDARIZADA -->
-    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
+    <!-- 3. TABLA CON SCROLL LATERAL (DERECHA / IZQUIERDA EN CELULAR) -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0 dtl-table-hover w-100" style="min-width: 860px;">
+            <div class="dtl-table-scroll-container">
+                <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3 py-2.5 fw-bold" style="width: 12%;">CÓDIGO</th>
-                            <th class="py-2.5 fw-bold" style="width: 25%;">PROYECTO / CLIENTE</th>
-                            <th class="py-2.5 fw-bold text-end" style="width: 14%;">MONTO TOTAL</th>
-                            <th class="py-2.5 fw-bold text-center" style="width: 15%;">FECHA PROG. / FIN</th>
-                            <th class="py-2.5 fw-bold" style="width: 18%;">OBSERVACIONES</th>
-                            <th class="py-2.5 fw-bold text-center" style="width: 10%;">ESTADO</th>
-                            <th class="pe-3 py-2.5 fw-bold text-center" style="width: 6%;">PDF</th>
+                            <th class="ps-3" style="width: 12%;">CÓDIGO</th>
+                            <th style="width: 25%;">PROYECTO / CLIENTE</th>
+                            <th class="text-end" style="width: 14%;">MONTO TOTAL</th>
+                            <th class="text-center" style="width: 15%;">FECHA PROG. / FIN</th>
+                            <th style="width: 18%;">OBSERVACIONES</th>
+                            <th class="text-center" style="width: 10%;">ESTADO</th>
+                            <th class="pe-3 text-center" style="width: 6%;">PDF</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($cotizaciones ?? [] as $cotizacion)
-                            <tr style="border-top: 1px solid #cbd5e1;">
-                                <td class="ps-3 font-monospace fw-bold" style="color: var(--dtl-navy); font-size: 0.78rem;">
+                            <tr>
+                                <td class="ps-3 font-monospace fw-bold text-nowrap" style="color: var(--dtl-navy); font-size: 0.78rem;">
                                     {{ $cotizacion->codigo_cotizacion }}
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-dark d-block text-break" style="font-size: 0.78rem;">
+                                    <span class="fw-bold text-dark d-block" style="font-size: 0.78rem;">
                                         {{ $cotizacion->obra->titulo ?? 'Sin Obra' }}
                                     </span>
-                                    <small class="text-muted d-block text-break" style="font-size: 0.70rem;">
+                                    <small class="text-muted d-block" style="font-size: 0.70rem;">
                                         <i class="fas fa-building me-1"></i>{{ $cotizacion->obra->cliente->razon_social ?? 'Cliente General' }}
                                     </small>
                                 </td>
-                                <td class="text-end">
-                                    <span class="fw-bold font-monospace text-dark" style="font-size: 0.82rem;">
+                                <td class="text-end font-monospace text-nowrap">
+                                    <span class="fw-bold text-dark" style="font-size: 0.82rem;">
                                         @if($cotizacion->monto_total > 0)
                                             S/ {{ number_format($cotizacion->monto_total, 2) }}
                                         @else
@@ -291,7 +281,7 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center" style="font-size: 0.72rem;">
+                                <td class="text-center text-nowrap" style="font-size: 0.72rem;">
                                     <div class="fw-medium text-dark">
                                         <i class="far fa-calendar-check text-muted me-1"></i>{{ $cotizacion->fecha_emision ? \Carbon\Carbon::parse($cotizacion->fecha_emision)->format('d/m/Y') : '-' }}
                                     </div>
@@ -299,16 +289,16 @@
                                         @if($cotizacion->fecha_vencimiento)
                                             <i class="far fa-calendar-times text-danger me-1"></i>{{ \Carbon\Carbon::parse($cotizacion->fecha_vencimiento)->format('d/m/Y H:i') }}
                                         @else
-                                            <span class="text-muted fst-italic">Pendiente de envío</span>
+                                            <span class="text-muted fst-italic">Pendiente</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-secondary d-block text-break" style="font-size: 0.74rem; line-height: 1.45;" title="{{ $cotizacion->observaciones }}">
+                                    <span class="text-secondary d-block" style="font-size: 0.74rem; line-height: 1.45;" title="{{ $cotizacion->observaciones }}">
                                         {{ $cotizacion->observaciones ?: 'Sin observaciones' }}
                                     </span>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center text-nowrap">
                                     @php $est = strtoupper($cotizacion->estado_cotizacion ?? ''); @endphp
                                     @if($est === 'PROGRAMADA')
                                         <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; font-size: 0.65rem;">Programada</span>
@@ -322,14 +312,18 @@
                                         <span class="badge rounded-pill px-2.5 py-1 bg-light text-dark border" style="font-size: 0.65rem;">{{ $est }}</span>
                                     @endif
                                 </td>
-                                <td class="pe-3 text-center">
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-danger p-0 d-inline-flex align-items-center justify-content-center" 
-                                            style="width: 30px; height: 30px; border-radius: 8px;" 
-                                            onclick="abrirVisorPdf('{{ route('comercial.cotizador.pdf', $cotizacion->id) }}', '{{ $cotizacion->codigo_cotizacion }}')"
-                                            title="Ver Expediente PDF">
-                                        <i class="fas fa-file-pdf"></i>
-                                    </button>
+                                <td class="pe-3 text-center text-nowrap">
+                                    @if(empty($ultimasCotizacionesPorObra) || isset($ultimasCotizacionesPorObra[$cotizacion->id]))
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger p-0 d-inline-flex align-items-center justify-content-center" 
+                                                style="width: 30px; height: 30px; border-radius: 8px;" 
+                                                onclick="abrirVisorPdf('{{ route('comercial.cotizador.pdf', $cotizacion->id) }}', '{{ $cotizacion->codigo_cotizacion }}')"
+                                                title="Ver PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </button>
+                                    @else
+                                        <span class="text-muted" style="font-size: 0.75rem;">&mdash;</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -343,16 +337,39 @@
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN NUMERADA ESTANDARIZADA AL LADO DERECHO -->
-    <div class="dtl-pagination-wrapper">
-        @if(isset($cotizaciones) && method_exists($cotizaciones, 'links'))
-            {{ $cotizaciones->withQueryString()->links('pagination::bootstrap-5') }}
-        @endif
-    </div>
+    <!-- 4. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    @if(isset($cotizaciones) && $cotizaciones->hasPages())
+        <div class="dtl-pagination-wrapper">
+            <ul class="pagination">
+                {{-- Botón Anterior (<) --}}
+                @if ($cotizaciones->onFirstPage())
+                    <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                @else
+                    <li class="page-item"><a class="page-link" href="{{ $cotizaciones->previousPageUrl() }}">&lsaquo;</a></li>
+                @endif
+
+                {{-- Números de Página (1, 2, 3...) --}}
+                @foreach ($cotizaciones->getUrlRange(1, $cotizaciones->lastPage()) as $page => $url)
+                    @if ($page == $cotizaciones->currentPage())
+                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+
+                {{-- Botón Siguiente (>) --}}
+                @if ($cotizaciones->hasMorePages())
+                    <li class="page-item"><a class="page-link" href="{{ $cotizaciones->nextPageUrl() }}">&rsaquo;</a></li>
+                @else
+                    <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+                @endif
+            </ul>
+        </div>
+    @endif
 
 </div>
 
-<!-- MODAL FLOTANTE VISOR PDF -->
+<!-- MODAL VISOR PDF -->
 <div class="modal fade" id="modalVisorPdfCotizacion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" style="max-width: 88vw;">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">

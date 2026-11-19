@@ -66,6 +66,7 @@ Route::middleware(['auth', 'role:ejecutivo'])->prefix('comercial')->name('comerc
     Route::post('/pipeline/ajustar-precio', [PipelineController::class, 'ajustarPrecioCotizacion'])->name('pipeline.ajustarPrecio');
     Route::post('/pipeline/responder-cotizacion', [PipelineController::class, 'responderCotizacion'])->name('pipeline.responderCotizacion');
     Route::post('/pipeline/trasladar-cierre', [PipelineController::class, 'trasladarACierre'])->name('pipeline.trasladarCierre');
+    Route::post('/pipeline/cerrar-obra-perdida', [PipelineController::class, 'cerrarObraPerdida'])->name('pipeline.cerrarObraPerdida');
     Route::post('/pipeline/agregar-bitacora', [PipelineController::class, 'agregarBitacora'])->name('pipeline.agregarBitacora');
     
     // Módulos de Auditoría y Consulta Histórica

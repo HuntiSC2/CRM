@@ -43,9 +43,7 @@
         .text-end       { text-align: right; }
         .text-uppercase { text-transform: uppercase; }
 
-        /* ========================================================
-           CABECERA: LOGO Y CUADRO UNIFORME Y PROPORCIONADO
-        ======================================================== */
+        /* CABECERA: LOGO Y CUADRO RUC */
         .header-top-table {
             width: 100%;
             border-collapse: collapse;
@@ -63,13 +61,12 @@
             display: block;
         }
 
-        /* Recuadro RUC / COT con ancho ajustado y texto 100% uniforme */
         .box-right-cell {
             width: 40%;
             text-align: right;
         }
         .official-ruc-box {
-            width: 195px; /* Ancho aumentado un poco como solicitaste */
+            width: 195px;
             border: 1.2px solid #0f2438;
             border-collapse: collapse;
             border-radius: 4px;
@@ -80,7 +77,7 @@
             background-color: #0f2438;
             color: #ffffff;
             padding: 5px 6px;
-            font-size: 8.5pt; /* Tamaño uniforme */
+            font-size: 8.5pt;
             font-weight: 700;
             letter-spacing: 0.6px;
             text-align: center;
@@ -90,20 +87,18 @@
             background-color: #ffffff;
             color: #0f2438;
             padding: 5px 6px;
-            font-size: 8.5pt; /* Mismo tamaño uniforme */
+            font-size: 8.5pt;
             font-weight: 700;
             letter-spacing: 0.6px;
             text-align: center;
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* ========================================================
-           TÍTULO DEL DOCUMENTO: SIN SUBRAYADO Y CON MÁS ESPACIO
-        ======================================================== */
+        /* TÍTULO DEL DOCUMENTO */
         .doc-title-container {
             text-align: center;
-            margin-top: 40px;    /* Mayor espacio superior */
-            margin-bottom: 40px; /* Mayor espacio inferior */
+            margin-top: 35px;
+            margin-bottom: 35px;
         }
         .doc-title-text {
             font-size: 13.5pt;
@@ -112,12 +107,9 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             display: inline-block;
-            /* Subrayado eliminado */
         }
 
-        /* ========================================================
-           BARRAS DE SECCIÓN Y TABLAS
-        ======================================================== */
+        /* SECCIONES Y TABLAS */
         .section-bar {
             background-color: #f8fafc;
             color: #0f2438;
@@ -134,7 +126,6 @@
             margin-bottom: 4px;
         }
 
-        /* TABLAS DE METADATOS */
         .table-info {
             width: 100%;
             border-collapse: collapse;
@@ -157,7 +148,6 @@
             width: 34%;
         }
 
-        /* TABLA DE ACTIVIDADES */
         .table-items {
             width: 100%;
             border-collapse: collapse;
@@ -179,7 +169,7 @@
             vertical-align: middle;
         }
 
-        /* TABLA DE TOTALES */
+        /* TOTALES */
         .table-totals-container {
             width: 100%;
             border-collapse: collapse;
@@ -220,11 +210,11 @@
             font-size: 9.8pt;
         }
 
-        /* FIRMA (INFERIOR DERECHA) */
+        /* FIRMAS */
         .table-signatures {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 60px;
+            margin-top: 50px;
             page-break-inside: avoid;
         }
         .sig-empty-col {
@@ -268,10 +258,9 @@
             color: #475569;
         }
 
-        /* PIE DE PÁGINA (ELEVADO PARA NO CORTARSE) */
         .footer-fixed {
             position: fixed;
-            bottom: 0mm; /* Elevado para asegurar visibilidad total */
+            bottom: 0mm;
             left: 0;
             right: 0;
             border-top: 1px solid #cbd5e1;
@@ -299,7 +288,8 @@
     $subtotal   = $montoTotal / 1.18;
     $igv        = $montoTotal - $subtotal;
 
-    // Fechas
+    $montoTotalObra = $montoTotalObra ?? (float) \App\Models\Cotizacion::where('obra_id', $cotizacion->obra_id)->sum('monto_total');
+
     $fechaEmisionCarbon = !empty($cotizacion->fecha_emision) ? \Carbon\Carbon::parse($cotizacion->fecha_emision) : now();
     $diasValidez = (int) ($cotizacion->validez_dias ?? 15);
     $fechaVencimientoCalculada = !empty($cotizacion->fecha_vencimiento)
@@ -309,14 +299,13 @@
     $asesorNombre = $cotizacion->comercial->name ?? ($cotizacion->user->name ?? 'Carlos Mendoza (Comercial)');
 @endphp
 
-<!-- PIE DE PÁGINA -->
 <div class="footer-fixed">
     <strong>Dirección:</strong> PJ. Lima Nro. 115, Huánuco, Perú &nbsp;&bull;&nbsp; <strong>Central Telefónica:</strong> (062) 512345 &bull; contacto@dtlpremier.pe
 </div>
 
 <div class="page-container">
 
-    <!-- CABECERA: LOGO Y RECUADRO CON ANCHO Y TEXTO UNIFORME -->
+    <!-- CABECERA -->
     <table class="header-top-table">
         <tr>
             <td class="brand-left-cell">
@@ -329,26 +318,22 @@
             <td class="box-right-cell">
                 <table class="official-ruc-box" align="right">
                     <tr>
-                        <td class="ruc-header-line">
-                            R.U.C. N° 20529193719
-                        </td>
+                        <td class="ruc-header-line">R.U.C. N° 20529193719</td>
                     </tr>
                     <tr>
-                        <td class="ruc-code-line">
-                            {{ $cotizacion->codigo_cotizacion }}
-                        </td>
+                        <td class="ruc-code-line">{{ $cotizacion->codigo_cotizacion }}</td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
 
-    <!-- TÍTULO: PROPUESTA ECONÓMICA SIN SUBRAYADO Y CON ESPACIO AMPLIO -->
+    <!-- TÍTULO -->
     <div class="doc-title-container">
         <span class="doc-title-text">PROPUESTA ECONÓMICA</span>
     </div>
 
-    <!-- 1. I. DATOS DEL CLIENTE -->
+    <!-- I. DATOS DEL CLIENTE -->
     <div class="section-bar text-uppercase">I. INFORMACIÓN DE LA EMPRESA / CLIENTE</div>
     <table class="table-info">
         <tr>
@@ -375,7 +360,7 @@
         </tr>
     </table>
 
-    <!-- 2. II. CONDICIONES DEL PROYECTO -->
+    <!-- II. CONDICIONES GENERALES -->
     <div class="section-bar text-uppercase">II. CONDICIONES GENERALES Y PROYECTO</div>
     <table class="table-info">
         <tr>
@@ -404,7 +389,7 @@
         </tr>
     </table>
 
-    <!-- 3. III. ACTIVIDADES Y ALCANCE -->
+    <!-- III. ACTIVIDADES -->
     <div class="section-bar text-uppercase">III. DESCRIPCIÓN DE ACTIVIDADES Y ALCANCE</div>
     <table class="table-items">
         <thead>
@@ -434,7 +419,7 @@
         </tbody>
     </table>
 
-    <!-- 4. TOTALES -->
+    <!-- TOTALES -->
     <table class="table-totals-container">
         <tr>
             <td style="width: 55%;"></td>
@@ -452,12 +437,18 @@
                         <td class="text-end" style="padding-right: 8px;">TOTAL PROPUESTA:</td>
                         <td class="tot-val">S/ {{ number_format($montoTotal, 2) }}</td>
                     </tr>
+                    @if($montoTotalObra > 0)
+                        <tr>
+                            <td class="tot-lbl" style="padding-top: 5px;">TOTAL ACUMULADO OBRA:</td>
+                            <td class="tot-val text-green fw-bold" style="padding-top: 5px;">S/ {{ number_format($montoTotalObra, 2) }}</td>
+                        </tr>
+                    @endif
                 </table>
             </td>
         </tr>
     </table>
 
-    <!-- 5. FIRMA INFERIOR DERECHA -->
+    <!-- FIRMA -->
     <table class="table-signatures">
         <tr>
             <td class="sig-empty-col"></td>
@@ -474,7 +465,7 @@
                     @endif
                 </div>
                 <div class="sig-line">
-                    <strong class="text-navy" style="font-size: 8pt; display: block;">GERECIA GENERAL</strong>
+                    <strong class="text-navy" style="font-size: 8pt; display: block;">GERENCIA GENERAL</strong>
                     <span>GERENCIA GENERAL &bull; DTL PREMIER S.A.C.</span>
                 </div>
             </td>

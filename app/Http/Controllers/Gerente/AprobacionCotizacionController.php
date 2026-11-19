@@ -46,7 +46,7 @@ class AprobacionCotizacionController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('gerencia.hu-07.index', compact('cotizaciones', 'metricas', 'tab', 'search'));
+        return view('gerencia.aprobaciones.index', compact('cotizaciones', 'metricas', 'tab', 'search'));
     }
 
     /**
