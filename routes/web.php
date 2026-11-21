@@ -30,23 +30,27 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('l
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-// Hub Principal
+// Hub Principal (Dashboard de Selección de Módulos)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
-// PDF Cotización
+// PDF Cotización (Accesible por cualquier usuario autenticado)
 Route::middleware(['auth'])->prefix('comercial')->name('comercial.')->group(function () {
     Route::get('/cotizador/{id}/pdf', [CotizadorController::class, 'generarPdf'])->name('cotizador.pdf');
 });
 
-// Módulo Comercial
-Route::middleware(['auth', 'role:ejecutivo'])->prefix('comercial')->name('comercial.')->group(function () {
+// =========================================================================
+// 1. MÓDULO COMERCIAL (FRONT-OFFICE)
+// Permitido para: Asesor (ejecutivo), Gerente (directivo) y Administrador
+// =========================================================================
+Route::middleware(['auth', 'role:ejecutivo,directivo,administrador'])->prefix('comercial')->name('comercial.')->group(function () {
     Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
     Route::get('/clientes/crear', [ClienteController::class, 'create'])->name('clientes.create');
     Route::get('/clientes/check-ruc', [ClienteController::class, 'checkRuc'])->name('clientes.checkRuc');
     Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
     Route::get('/clientes/{id}', [ClienteController::class, 'show'])->name('clientes.show');
+    Route::patch('/clientes/{id}/toggle-estado', [ClienteController::class, 'toggleEstado'])->name('clientes.toggleEstado');
 
     // Pipeline Kanban y Motor Operativo Central
     Route::get('/pipeline', [PipelineController::class, 'index'])->name('pipeline.index');
@@ -77,10 +81,14 @@ Route::middleware(['auth', 'role:ejecutivo'])->prefix('comercial')->name('comerc
     Route::post('/bitacora', [BitacoraController::class, 'store'])->name('bitacora.store');
 
     Route::get('/cotizador', [CotizadorController::class, 'index'])->name('cotizador.index');
+    Route::get('/partidas-catalogo', [PipelineController::class, 'obtenerPartidasCatalogo'])->name('partidas.catalogo');
 });
 
-// Módulo Gerencia / Directorio
-Route::middleware(['auth', 'role:directivo'])->prefix('gerencia')->name('gerencia.')->group(function () {
+// =========================================================================
+// 2. MÓDULO GERENCIAL (GESTIÓN EJECUTIVA)
+// Permitido para: Gerente (directivo) y Administrador
+// =========================================================================
+Route::middleware(['auth', 'role:directivo,administrador'])->prefix('gerencia')->name('gerencia.')->group(function () {
     Route::get('/dashboard', [DashboardGerencialController::class, 'index'])->name('dashboard');
     Route::get('/aprobaciones', [AprobacionCotizacionController::class, 'index'])->name('aprobaciones.index');
     
@@ -100,10 +108,14 @@ Route::middleware(['auth', 'role:directivo'])->prefix('gerencia')->name('gerenci
     });
 });
 
-Route::middleware(['auth', 'role:directivo'])->get('/directorio', function () {
+Route::middleware(['auth', 'role:directivo,administrador'])->get('/directorio', function () {
     return redirect()->route('gerencia.dashboard');
 })->name('directorio.index');
 
+// =========================================================================
+// 3. MÓDULO DE SOPORTE Y AJUSTES (BACK-OFFICE)
+// Exclusivo para: Administrador
+// =========================================================================
 Route::middleware(['auth', 'role:administrador'])->prefix('soporte')->name('soporte.')->group(function () {
     // HU-09: Catálogo de Partidas e Historial
     Route::get('/partidas', [PartidaController::class, 'index'])->name('partidas.index');

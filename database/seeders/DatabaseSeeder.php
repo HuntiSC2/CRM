@@ -14,65 +14,84 @@ class DatabaseSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        // 1. USUARIOS (Con Hash::make para permitir login)
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@dtlpremier.pe'],
-            [
-                'name'              => 'Administrador Sistema',
-                'email_verified_at' => $now,
-                'password'          => Hash::make('admin123'),
-                'role'              => 'administrador',
-                'login_attempts'    => 0,
-                'is_active'         => true,
-            ]
-        );
+        // Limpieza controlada en orden inverso de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('sla_alertas_logs')->truncate();
+        DB::table('cotizacion_detalles')->truncate();
+        DB::table('historial_precios_partidas')->truncate();
+        DB::table('bitacoras')->truncate();
+        DB::table('cotizaciones')->truncate();
+        DB::table('inspecciones')->truncate();
+        DB::table('obras')->truncate();
+        DB::table('partidas')->truncate();
+        DB::table('clientes')->truncate();
+        DB::table('sla_politicas')->truncate();
+        DB::table('users')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        $gerente = User::firstOrCreate(
-            ['email' => 'gerencia@dtlpremier.pe'],
-            [
-                'name'              => 'Ing. Ricardo Paredes (Gerencia)',
-                'email_verified_at' => $now,
-                'password'          => Hash::make('gerencia123'),
-                'role'              => 'directivo',
-                'login_attempts'    => 0,
-                'is_active'         => true,
-            ]
-        );
+        // =========================================================================
+        // 1. USUARIOS CON CONTRASEÑAS ROBUSTAS Y ROLES EMPRESARIALES
+        // =========================================================================
+        $admin = User::create([
+            'name'              => 'Ing. Marcos Benavides (Admin TI)',
+            'email'             => 'admin.dtl@dtlpremier.pe',
+            'email_verified_at' => $now,
+            'password'          => Hash::make('DtlPremier2026#Admin'),
+            'role'              => 'administrador',
+            'login_attempts'    => 0,
+            'is_active'         => true,
+            'created_at'        => $now,
+            'updated_at'        => $now,
+        ]);
 
-        $asesor1 = User::firstOrCreate(
-            ['email' => 'cmendoza@dtlpremier.pe'],
-            [
-                'name'              => 'Carlos Mendoza (Comercial)',
-                'email_verified_at' => $now,
-                'password'          => Hash::make('comercial123'),
-                'role'              => 'ejecutivo',
-                'login_attempts'    => 0,
-                'is_active'         => true,
-            ]
-        );
+        $gerente = User::create([
+            'name'              => 'Ing. Ricardo Paredes (Gerente General)',
+            'email'             => 'gerencia.general@dtlpremier.pe',
+            'email_verified_at' => $now,
+            'password'          => Hash::make('DtlGerencia2026!Paredes'),
+            'role'              => 'directivo',
+            'login_attempts'    => 0,
+            'is_active'         => true,
+            'created_at'        => $now,
+            'updated_at'        => $now,
+        ]);
 
-        $asesor2 = User::firstOrCreate(
-            ['email' => 'lvargas@dtlpremier.pe'],
-            [
-                'name'              => 'Lucía Vargas (Comercial)',
-                'email_verified_at' => $now,
-                'password'          => Hash::make('comercial123'),
-                'role'              => 'ejecutivo',
-                'login_attempts'    => 0,
-                'is_active'         => true,
-            ]
-        );
+        $asesor1 = User::create([
+            'name'              => 'Carlos Mendoza (Asesor Senior)',
+            'email'             => 'carlos.mendoza@dtlpremier.pe',
+            'email_verified_at' => $now,
+            'password'          => Hash::make('Comercial2026*Mendoza'),
+            'role'              => 'ejecutivo',
+            'login_attempts'    => 0,
+            'is_active'         => true,
+            'created_at'        => $now,
+            'updated_at'        => $now,
+        ]);
+
+        $asesor2 = User::create([
+            'name'              => 'Lucía Vargas (Asesora Senior)',
+            'email'             => 'lucia.vargas@dtlpremier.pe',
+            'email_verified_at' => $now,
+            'password'          => Hash::make('Comercial2026*Vargas'),
+            'role'              => 'ejecutivo',
+            'login_attempts'    => 0,
+            'is_active'         => true,
+            'created_at'        => $now,
+            'updated_at'        => $now,
+        ]);
 
         $adminId  = $admin->id;
         $asesores = [$asesor1->id, $asesor2->id];
 
-        // 2. POLÍTICAS SLA
+        // =========================================================================
+        // 2. POLÍTICAS INSTITUCIONALES SLA
+        // =========================================================================
         $politicaVisitaId = DB::table('sla_politicas')->insertGetId([
             'user_id'             => $adminId,
             'etapa_evaluada'      => 'VISITA_INSPECCION',
             'tiempo_limite_horas' => 24,
             'nivel_severidad'     => 'AMARILLO',
-            'email_notificacion'  => 'soporte@dtlpremier.pe',
+            'email_notificacion'  => 'alertas.sla@dtlpremier.pe',
             'notificacion_activa' => true,
             'created_at'          => $now,
             'updated_at'          => $now,
@@ -83,708 +102,48 @@ class DatabaseSeeder extends Seeder
             'etapa_evaluada'      => 'COTIZACION_PROPUESTA',
             'tiempo_limite_horas' => 48,
             'nivel_severidad'     => 'ROJO',
-            'email_notificacion'  => 'soporte@dtlpremier.pe',
+            'email_notificacion'  => 'alertas.sla@dtlpremier.pe',
             'notificacion_activa' => true,
             'created_at'          => $now,
             'updated_at'          => $now,
         ]);
 
-        // 3. CLIENTES (20 Clientes Corporativos)
+        // =========================================================================
+        // 3. DIRECTORIO DE 30 CLIENTES CORPORATIVOS
+        // =========================================================================
         $clientesData = [
-            // [RUC, Razón Social, Dirección Fiscal, Contacto, Teléfono, Email, Obs, Sector]
-            [
-                '20100010724', 'COSAPI S.A.', 'Av. República de Colombia 791, San Isidro, Lima',
-                'Ing. Jorge Ramírez Silva', '987654321', 'jramirez@cosapi.com.pe',
-                'Contratista principal en megaobras de infraestructura y minería. Cartera prioritaria AAA.',
-            ],
-            [
-                '20508608889', 'AESA INFRAESTRUCTURA Y MINERIA S.A.', 'Av. Javier Prado Este 4403, Surco, Lima',
-                'Ing. Paola Quispe Ramos', '984112233', 'pquispe@aesa.com.pe',
-                'Especialistas en obras subterráneas y movimiento de tierras para proyectos mineros.',
-            ],
-            [
-                '20100041956', 'JJC CONTRATISTAS GENERALES S.A.', 'Av. República de Chile 388, Jesús María, Lima',
-                'Ing. Luis Castro Mendoza', '991223344', 'lcastro@jjc.com.pe',
-                'Constructora líder con más de 65 años en edificaciones industriales y viales.',
-            ],
-            [
-                '20100047211', 'FERREYROS S.A.', 'Jr. Cristóbal de Peralta Norte 820, Surco, Lima',
-                'Arq. Andrea Torres Benavides', '998776655', 'atorres@ferreyros.com.pe',
-                'Corporación de bienes de capital; requiere constante habilitación de talleres y losas pesadas.',
-            ],
-            [
-                '20100030164', 'MOTA-ENGIL PERU S.A.', 'Av. Nicolás Arriola 740, La Victoria, Lima',
-                'Ing. Marco Díaz Falconí', '995443322', 'mdiaz@mota-engil.pe',
-                'Consorcio internacional enfocado en puertos, autopistas y obras civiles de gran envergadura.',
-            ],
-            [
-                '20258930777', 'BESCO S.A.C.', 'Av. Paseo de la República 3832, San Isidro, Lima',
-                'Ing. Sofía León Barreto', '986554411', 'sleon@besco.com.pe',
-                'Constructora e inmobiliaria referente en grandes conjuntos multifamiliares y centros urbanos.',
-            ],
-            [
-                '20330604217', 'UNION DE CONCRETERAS S.A. (UNICON)', 'Panamericana Sur Km 11.4, San Juan de Miraflores, Lima',
-                'Ing. Raúl Herrera Prado', '982334455', 'rherrera@unicon.com.pe',
-                'Productora líder de concreto premezclado; requiere obras viales y cimentaciones de plantas.',
-            ],
-            [
-                '20100146383', 'AENZA S.A.A.', 'Av. Petit Thouars 4957, Miraflores, Lima',
-                'Ing. Valeria Salas Cárdenas', '981223399', 'vsalas@aenza.com.pe',
-                'Grupo regional de ingeniería y construcción, concesiones de infraestructura y servicios petroleros.',
-            ],
-            [
-                '20512345671', 'HV CONTRATISTAS S.A.', 'Av. El Derby 250, Of. 801, Surco, Lima',
-                'Ing. Diego Rojas Morales', '977889900', 'drojas@hvcontratistas.pe',
-                'Firma constructora especializada en plantas industriales y centros comerciales de alta exigencia.',
-            ],
-            [
-                '20456789123', 'INVERSIONES CENTENARIO S.A.A.', 'Av. Víctor Andrés Belaúnde 147, San Isidro, Lima',
-                'Arq. Camila Flores Navarro', '976554433', 'cflores@centenario.com.pe',
-                'Desarrollador inmobiliario e industrial con múltiples hubs logísticos en Lima y provincias.',
-            ],
-            [
-                '20534112233', 'CONSTRUCTORA MALAGA HNOS S.A.', 'Calle Las Begonias 475, San Isidro, Lima',
-                'Ing. Fernando Vega Delgado', '965443322', 'fvega@malagahnos.com.pe',
-                'Empresa con amplia trayectoria en puentes, túneles y estabilización de taludes carreteros.',
-            ],
-            [
-                '20498765432', 'CASA CONSTRUCCION Y ADMINISTRACION S.A.', 'Av. Javier Prado Oeste 2108, San Isidro, Lima',
-                'Ing. Martín Silva Rivas', '964332211', 'msilva@casa.com.pe',
-                'Especialistas en pavimentos asfálticos y conservación vial a nivel nacional.',
-            ],
-            [
-                '20511223344', 'INMOBILIARIA EDIFICA S.A.C.', 'Av. Benavides 1944, Miraflores, Lima',
-                'Arq. Claudia Núñez Vidal', '954321987', 'cnunez@edifica.com.pe',
-                'Desarrollador de proyectos urbanos residenciales y edificios inteligentes de uso mixto.',
-            ],
-            [
-                '20522334455', 'OHLA PERU S.A.C.', 'Av. Santo Toribio 143, San Isidro, Lima',
-                'Ing. Héctor Paredes Loyola', '955667788', 'hparedes@ohla.pe',
-                'Subsidiaria de grupo global; ejecuta obras hospitalarias, viales e hidráulicas en Perú.',
-            ],
-            [
-                '20533445566', 'CONCREMAX S.A.', 'Av. Materiales 2450, Cercado de Lima, Lima',
-                'Ing. Bruno Chávez Tello', '944556677', 'bchavez@concremax.com.pe',
-                'Proveedor de premezclados y prefabricados de concreto para proyectos industriales pesados.',
-            ],
-            [
-                '20544556677', 'LOS PORTALES S.A.', 'Jr. Mariscal La Mar 991, Magdalena del Mar, Lima',
-                'Arq. Daniela Cruz Solís', '943219876', 'dcruz@losportales.com.pe',
-                'Compañía diversificada en habilitaciones urbanas, estacionamientos y hotelería.',
-            ],
-            [
-                '20555667788', 'ALICORP S.A.A. - DIV. INFRAESTRUCTURA', 'Av. Argentina 4793, Callao',
-                'Ing. Oscar Medina Valdivia', '933445566', 'omedina@alicorp.com.pe',
-                'Líder de consumo masivo con expansión constante de almacenes, muelles y líneas de envasado.',
-            ],
-            [
-                '20566778899', 'APM TERMINALS CALLAO S.A.', 'Av. Contralmirante Raygada 111, Callao',
-                'Ing. Renato Paz Zegarra', '922334455', 'rpaz@apmterminals.com',
-                'Operador portuario del Terminal Norte; requiere reparación de muelles y patios de maniobras.',
-            ],
-            [
-                '20577889900', 'RANSA COMERCIAL S.A.', 'Av. Argentina 2833, Callao',
-                'Ing. Sergio Luna Montoya', '911223344', 'sluna@ransa.net',
-                'Operador logístico integral 3PL con centros de almacenamiento en frío y secos.',
-            ],
-            [
-                '20588990011', 'CEMENTOS PACASMAYO S.A.A.', 'Calle La Colonia 150, Surco, Lima',
-                'Ing. Patricia Soto Ugarte', '912345678', 'psoto@cpsaa.com.pe',
-                'Productora cementera con operaciones de ampliación en plantas industriales y terminales.',
-            ],
+            ['20100010724', 'COSAPI S.A.', 'Av. República de Colombia 791, San Isidro, Lima', 'Ing. Jorge Ramírez Silva', '987654321', 'jramirez@cosapi.com.pe', 'Contratista principal en megaobras de infraestructura y minería.'],
+            ['20508608889', 'AESA INFRAESTRUCTURA Y MINERIA S.A.', 'Av. Javier Prado Este 4403, Surco, Lima', 'Ing. Paola Quispe Ramos', '984112233', 'pquispe@aesa.com.pe', 'Especialistas en obras subterráneas y movimiento de tierras.'],
+            ['20100041956', 'JJC CONTRATISTAS GENERALES S.A.', 'Av. República de Chile 388, Jesús María, Lima', 'Ing. Luis Castro Mendoza', '991223344', 'lcastro@jjc.com.pe', 'Constructora líder en edificaciones industriales y viales.'],
+            ['20100047211', 'FERREYROS S.A.', 'Jr. Cristóbal de Peralta Norte 820, Surco, Lima', 'Arq. Andrea Torres Benavides', '998776655', 'atorres@ferreyros.com.pe', 'Habilitación de talleres mecánicos y losas pesadas.'],
+            ['20100030164', 'MOTA-ENGIL PERU S.A.', 'Av. Nicolás Arriola 740, La Victoria, Lima', 'Ing. Marco Díaz Falconí', '995443322', 'mdiaz@mota-engil.pe', 'Consorcio internacional enfocado en puertos y carreteras.'],
+            ['20258930777', 'BESCO S.A.C.', 'Av. Paseo de la República 3832, San Isidro, Lima', 'Ing. Sofía León Barreto', '986554411', 'sleon@besco.com.pe', 'Grandes conjuntos habitacionales y centros urbanos mixtos.'],
+            ['20330604217', 'UNION DE CONCRETERAS S.A. (UNICON)', 'Panamericana Sur Km 11.4, San Juan de Miraflores, Lima', 'Ing. Raúl Herrera Prado', '982334455', 'rherrera@unicon.com.pe', 'Pavimentación de plantas industriales y cimentaciones pesadas.'],
+            ['20100146383', 'AENZA S.A.A.', 'Av. Petit Thouars 4957, Miraflores, Lima', 'Ing. Valeria Salas Cárdenas', '981223399', 'vsalas@aenza.com.pe', 'Infraestructura vial, túneles y concesiones estratégicas.'],
+            ['20512345671', 'HV CONTRATISTAS S.A.', 'Av. El Derby 250, Of. 801, Surco, Lima', 'Ing. Diego Rojas Morales', '977889900', 'drojas@hvcontratistas.pe', 'Edificación de almacenes logísticos y naves industriales.'],
+            ['20456789123', 'INVERSIONES CENTENARIO S.A.A.', 'Av. Víctor Andrés Belaúnde 147, San Isidro, Lima', 'Arq. Camila Flores Navarro', '976554433', 'cflores@centenario.com.pe', 'Desarrollo de parques industriales y centros empresariales.'],
+            ['20534112233', 'CONSTRUCTORA MALAGA HNOS S.A.', 'Calle Las Begonias 475, San Isidro, Lima', 'Ing. Fernando Vega Delgado', '965443322', 'fvega@malagahnos.com.pe', 'Puentes vehiculares, canales y defensas ribereñas.'],
+            ['20498765432', 'CASA CONSTRUCCION Y ADMINISTRACION S.A.', 'Av. Javier Prado Oeste 2108, San Isidro, Lima', 'Ing. Martín Silva Rivas', '964332211', 'msilva@casa.com.pe', 'Conservación vial y pavimentaciones con asfalto en caliente.'],
+            ['20511223344', 'INMOBILIARIA EDIFICA S.A.C.', 'Av. Benavides 1944, Miraflores, Lima', 'Arq. Claudia Núñez Vidal', '954321987', 'cnunez@edifica.com.pe', 'Edificios residenciales de gran altura y muelles recreativos.'],
+            ['20522334455', 'OHLA PERU S.A.C.', 'Av. Santo Toribio 143, San Isidro, Lima', 'Ing. Héctor Paredes Loyola', '955667788', 'hparedes@ohla.pe', 'Obras de saneamiento, hospitales e ingeniería hidráulica.'],
+            ['20533445566', 'CONCREMAX S.A.', 'Av. Materiales 2450, Cercado de Lima, Lima', 'Ing. Bruno Chávez Tello', '944556677', 'bchavez@concremax.com.pe', 'Patios de maniobra para tolvas y naves de prefabricados.'],
+            ['20544556677', 'LOS PORTALES S.A.', 'Jr. Mariscal La Mar 991, Magdalena del Mar, Lima', 'Arq. Daniela Cruz Solís', '943219876', 'dcruz@losportales.com.pe', 'Estacionamientos subterráneos y redes de habilitación urbana.'],
+            ['20555667788', 'ALICORP S.A.A. - DIV. INFRAESTRUCTURA', 'Av. Argentina 4793, Callao', 'Ing. Oscar Medina Valdivia', '933445566', 'omedina@alicorp.com.pe', 'Líneas de envasado y losas con endurecedores químicos.'],
+            ['20566778899', 'APM TERMINALS CALLAO S.A.', 'Av. Contralmirante Raygada 111, Callao', 'Ing. Renato Paz Zegarra', '922334455', 'rpaz@apmterminals.com', 'Mantenimiento de atracaderos y juntas sometidas a salinidad.'],
+            ['20577889900', 'RANSA COMERCIAL S.A.', 'Av. Argentina 2833, Callao', 'Ing. Sergio Luna Montoya', '911223344', 'sluna@ransa.net', 'Almacenes frigoríficos y rampas niveladoras para trailers.'],
+            ['20588990011', 'CEMENTOS PACASMAYO S.A.A.', 'Calle La Colonia 150, Surco, Lima', 'Ing. Patricia Soto Ugarte', '912345678', 'psoto@cpsaa.com.pe', 'Cerramientos metálicos de tolvas y silos de almacenamiento.'],
+            ['20601234567', 'GYM EDIFICACIONES S.A.C.', 'Av. Paseo de la República 4667, Surquillo, Lima', 'Ing. Gonzalo Arana Ruiz', '934567890', 'garana@gym.com.pe', 'Proyectos inmobiliarios premium y centros comerciales.'],
+            ['20549812345', 'SACYR CONCESIONES PERU S.A.C.', 'Av. Canaval y Moreyra 452, San Isidro, Lima', 'Ing. Manuel Soriano Gil', '945678901', 'msoriano@sacyr.pe', 'Concesión y mantenimiento estructural de tramos viales.'],
+            ['20100153835', 'CORPORACION ACEROS AREQUIPA S.A.', 'Av. Antonio Miró Quesada 425, Magdalena del Mar, Lima', 'Ing. Fabricio Peña Alva', '956789012', 'fpena@acerosarequipa.pe', 'Parques de chatarra y losas para grúas electromagnéticas.'],
+            ['20519283746', 'UNACEM PERU S.A.', 'Av. Atocongo 2440, Villa María del Triunfo, Lima', 'Ing. Walter Benavides Castro', '967890123', 'wbenavides@unacem.com.pe', 'Mantenimiento de túneles de faja transportadora de clínker.'],
+            ['20485920391', 'STRACON S.A.', 'Av. Mariscal La Mar 1120, Miraflores, Lima', 'Ing. Esteban Prado Zúñiga', '978901234', 'eprado@stracon.com', 'Servicios de excavación y obras civiles para minería a tajo abierto.'],
+            ['20563829104', 'TDM ASFALTOS S.A.C.', 'Av. Separadora Industrial 2240, Ate, Lima', 'Ing. Rocío Cárdenas Mora', '989012345', 'rcardenas@tdm.com.pe', 'Suministro y colocación de geomembranas y mezclas asfálticas.'],
+            ['20602938475', 'ICCGSA INGENIEROS CIVILES S.A.', 'Calle Aramburú 166, San Isidro, Lima', 'Ing. Jaime Morales Ponce', '990123456', 'jmorales@iccgsa.pe', 'Pavimentos rígidos de concreto y defensas de riberas fluviales.'],
+            ['20510293847', 'TECHINT S.A.C.', 'Av. Del Pinar 180, Chacarilla, Surco, Lima', 'Ing. Roberto Fabbri Varsi', '912304958', 'rfabbri@techint.pe', 'Instalación de ductos de hidrocarburos y estaciones de bombeo.'],
+            ['20100070972', 'SOUTHERN PERU COPPER CORP.', 'Av. Caminos del Inca 171, Chacarilla, Surco, Lima', 'Ing. Andrés Beltrán Loyola', '923415069', 'abeltran@southernperu.com.pe', 'Ampliación de fundición y diques de relave en Moquegua.'],
+            ['20554433221', 'MINERA LAS BAMBAS S.A.', 'Av. El Derby 055, Torre 1, Surco, Lima', 'Ing. Javier Cárdenas Ugarte', '934526170', 'jcardenas@lasbambas.com', 'Construcción de bypasses, bermas de seguridad y campamentos.']
         ];
 
-        // Definición de las 20 Obras asociadas 1:1 a los 20 Clientes
-        // Estructura: [
-        //   0: titulo,
-        //   1: monto,
-        //   2: estado (obras.estado),
-        //   3: escenario_clave,
-        //   4: sub_horas_creacion,
-        //   5: inspecciones_array [ [ingeniero, sub_dias_o_horas, estado_insp, resultado], ... ],
-        //   6: cotizaciones_array  [ [sub_dias_o_horas, estado_cot, monto_cot, obs, motivo_rechazo, partida_indices], ... ],
-        //   7: bitacoras_array     [ [tipo_contacto, comentario], ... ],
-        //   8: sla_alertas_array   [ [politica_tipo, horas_retraso, estado_alerta, fecha_disparo_sub] ]
-        // ]
-        $obrasPlan = [
-            // -------------------------------------------------------------------------
-            // GRUPO 1: PROSPECTOS (3 obras vivas)
-            // -------------------------------------------------------------------------
-            // Obra 1 (Cliente 1: COSAPI S.A.) -> Prospecto recién creado (dentro de plazo 24h SLA)
-            0 => [
-                'titulo'    => 'Inspección Estructural Torre Corporativa San Isidro',
-                'monto'     => 48000.00,
-                'estado'    => 'Prospecto',
-                'escenario' => 'PROSPECTO_VERDE',
-                'creado_h'  => 8, // Hace 8 horas (dentro de 24h SLA => VERDE)
-                'inspecciones' => [],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Reunión de coordinación inicial con Ing. Jorge Ramírez para alcance de evaluación patológica.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 2 (Cliente 2: AESA) -> Prospecto demorado sin visita agendada (42h > 24h SLA => AMARILLO)
-            1 => [
-                'titulo'    => 'Mantenimiento de Túneles y Drenaje Vía de Evitamiento',
-                'monto'     => 185000.00,
-                'estado'    => 'Prospecto',
-                'escenario' => 'PROSPECTO_DEMORADO',
-                'creado_h'  => 42, // Hace 42 horas (> 24h SLA => AMARILLO)
-                'inspecciones' => [],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Llamada Telefónica', 'Cliente solicitó reprogramar la reunión inicial de campo por disponibilidad técnica.'],
-                ],
-                'sla_alertas' => [
-                    ['VISITA_INSPECCION', 42, 'VIGENTE', 18],
-                ],
-            ],
-            // Obra 3 (Cliente 3: JJC) -> Prospecto recién registrado (4h < 24h SLA => VERDE)
-            2 => [
-                'titulo'    => 'Evaluación de Losa Industrial y Cargas Almacén Norte',
-                'monto'     => 62000.00,
-                'estado'    => 'Prospecto',
-                'escenario' => 'PROSPECTO_NUEVO_VERDE',
-                'creado_h'  => 4, // Hace 4 horas (VERDE)
-                'inspecciones' => [],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Correo Electrónico', 'Recepción de planos estructurales del almacén para revisión previa a la visita.'],
-                ],
-                'sla_alertas' => [],
-            ],
-
-            // -------------------------------------------------------------------------
-            // GRUPO 2: INSPECCIÓN (4 obras vivas)
-            // -------------------------------------------------------------------------
-            // Obra 4 (Cliente 4: FERREYROS) -> Inspección Pendiente a tiempo (Agendada a futuro, creada hace 6h => VERDE)
-            3 => [
-                'titulo'    => 'Reforzamiento de Vigas Puente Grúa Taller Ferreyros',
-                'monto'     => 128000.00,
-                'estado'    => 'Inspeccion',
-                'escenario' => 'INSP_PENDIENTE_A_TIEMPO',
-                'creado_h'  => 28, // Obra creada hace 28h
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Luis Navarro',
-                        'fecha_rel' => 48, // Programada para dentro de 48 horas en el futuro
-                        'futuro'    => true,
-                        'estado'    => 'Pendiente',
-                        'resultado' => null,
-                        'creado_h'  => 6, // Creada hace 6 horas (< 24h => VERDE)
-                    ],
-                ],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Coordinación con gerencia técnica de Ferreyros para pases de ingreso a taller central.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 5 (Cliente 5: MOTA-ENGIL) -> Inspección Pendiente demorada (Creada hace 34h > 24h => AMARILLO)
-            4 => [
-                'titulo'    => 'Cimentación Profunda Subestación Eléctrica Sur',
-                'monto'     => 310000.00,
-                'estado'    => 'Inspeccion',
-                'escenario' => 'INSP_PENDIENTE_DEMORADA',
-                'creado_h'  => 56,
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Carmen Delgado',
-                        'fecha_rel' => 10, // Programada hace 10h (no completada a tiempo)
-                        'futuro'    => false,
-                        'estado'    => 'Pendiente',
-                        'resultado' => null,
-                        'creado_h'  => 34, // Creada hace 34h (> 24h SLA => AMARILLO)
-                    ],
-                ],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Llamada Telefónica', 'Pendiente confirmación de entrega de permisos de trabajo seguro (PETAR) por parte del contratista.'],
-                ],
-                'sla_alertas' => [
-                    ['VISITA_INSPECCION', 34, 'VIGENTE', 10],
-                ],
-            ],
-            // Obra 6 (Cliente 6: BESCO) -> Inspección Pendiente a tiempo (creada hace 12h => VERDE)
-            5 => [
-                'titulo'    => 'Impermeabilización y Prueba de Estanqueidad Cisterna Central',
-                'monto'     => 74500.00,
-                'estado'    => 'Inspeccion',
-                'escenario' => 'INSP_PENDIENTE_VERDE',
-                'creado_h'  => 20,
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Roberto Zúñiga',
-                        'fecha_rel' => 24, // En 24 horas a futuro
-                        'futuro'    => true,
-                        'estado'    => 'Pendiente',
-                        'resultado' => null,
-                        'creado_h'  => 12, // Hace 12h (< 24h => VERDE)
-                    ],
-                ],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Correo Electrónico', 'Se remite cronograma de visita de inspección preliminar a la residencia de obra.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 7 (Cliente 7: UNICON) -> Inspección Pendiente a tiempo (Creada hace 15h < 24h SLA => VERDE)
-            6 => [
-                'titulo'    => 'Pavimentación Rígida y Zanjas Centro Logístico Lurín',
-                'monto'     => 245000.00,
-                'estado'    => 'Inspeccion',
-                'escenario' => 'INSP_PENDIENTE_A_TIEMPO_UNICON',
-                'creado_h'  => 30,
-                'inspecciones' => [
-                    [
-                        'ingeniero'      => 'Ing. Patricia Paredes',
-                        'fecha_rel'      => 36, // Programada para dentro de 36h a futuro
-                        'futuro'         => true,
-                        'estado'         => 'Pendiente',
-                        'resultado'      => null,
-                        'creado_h'       => 15, // Creada hace 15h (< 24h SLA => VERDE)
-                    ],
-                ],
-                'cotizaciones' => [],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Coordinación con gerencia técnica de UNICON para acceso a balanzas y patio de maniobras.'],
-                ],
-                'sla_alertas' => [],
-            ],
-
-            // -------------------------------------------------------------------------
-            // GRUPO 3: COTIZACIÓN (4 obras vivas)
-            // -------------------------------------------------------------------------
-            // Obra 8 (Cliente 8: AENZA) -> Inspección completada hace 72h SIN cotización programada (> 48h SLA => ROJO)
-            7 => [
-                'titulo'    => 'Edificio Multifamiliar San Isidro Suites - Estructuras',
-                'monto'     => 420000.00,
-                'estado'    => 'Cotización',
-                'escenario' => 'INSP_COMPLETADA_SIN_COTIZ_ROJO',
-                'creado_h'  => 96,
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Luis Navarro',
-                        'fecha_rel' => 74,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Inspección técnica completada. Se validaron 1,200 m2 de losas aligeradas y muros pantalla.',
-                        'creado_h'  => 90,
-                    ],
-                ],
-                'cotizaciones' => [], // Sin cotización -> getEstadoRealAttribute() da 'Cotización', SLA da ROJO (> 48h)
-                'bitacoras' => [
-                    ['Llamada Telefónica', 'Cliente solicita con urgencia el presupuesto técnico para presentarlo a su comité de compras.'],
-                ],
-                'sla_alertas' => [
-                    ['COTIZACION_PROPUESTA', 74, 'VIGENTE', 26],
-                ],
-            ],
-            // Obra 9 (Cliente 9: HV CONTRATISTAS) -> Cotización Programada a tiempo (Inspección OK + Cotiz Programada hace 18h => VERDE)
-            8 => [
-                'titulo'    => 'Ampliación Planta Industrial Huachipa Etapa II',
-                'monto'     => 390000.00,
-                'estado'    => 'Cotización',
-                'escenario' => 'COTIZ_PROGRAMADA_A_TIEMPO',
-                'creado_h'  => 60,
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Roberto Zúñiga',
-                        'fecha_rel' => 36,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Levantamiento de naves existentes y verificación de capacidad portante de vigas metálicas.',
-                        'creado_h'  => 48,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 18, // Hace 18h (< 48h => VERDE)
-                        'estado'     => 'Programada',
-                        'monto'      => 0.00, // Programada tiene monto 0.00 hasta emisión
-                        'obs'        => '[Fase #1 ⇄ Inspección #1 - Ing. Roberto Zúñiga] En proceso de metrado por el área técnica.',
-                        'rechazo'    => null,
-                        'partidas'   => [],
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Correo Electrónico', 'Se reciben consultas de metrados por parte del ingeniero calculista para cerrar costos.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 10 (Cliente 10: CENTENARIO) -> Cotización Rechazada por precio (Rechazada hace 16h < 48h SLA => VERDE)
-            9 => [
-                'titulo'    => 'Construcción Muro de Contención y Talud Costa Verde',
-                'monto'     => 275000.00,
-                'estado'    => 'Cotización',
-                'escenario' => 'COTIZ_RECHAZADA_VERDE',
-                'creado_h'  => 72,
-                'inspecciones' => [
-                    [
-                        'ingeniero'      => 'Ing. Luis Navarro',
-                        'fecha_rel'      => 48,
-                        'futuro'         => false,
-                        'estado'         => 'Completada',
-                        'resultado'      => 'Suelo gravoso consolidado. Se requiere muro de contención en voladizo de h=4.50m.',
-                        'creado_h'       => 60,
-                        'actualizado_h'  => 55,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'          => 24,
-                        'actualizado_h'  => 16, // Rechazada hace 16h (< 48h SLA => VERDE)
-                        'estado'         => 'Rechazada',
-                        'monto'          => 275000.00,
-                        'obs'            => '[Fase #1 ⇄ Inspección #1 - Ing. Luis Navarro] Oferta formal emitida. Cliente solicita descuento por volumen.',
-                        'rechazo'        => 'Presupuesto ligeramente superior al estimado. Requiere ajuste comercial.',
-                        'partidas'       => [5, 7], // Concreto y Encofrado
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Presentación de la propuesta económica al equipo de proyectos de Inversiones Centenario.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 11 (Cliente 11: MALAGA HNOS) -> Cotización Rechazada por precio (Rechazada hace 56h > 48h SLA sin reajuste => ROJO)
-            10 => [
-                'titulo'    => 'Canal de Derivación y Drenaje Pluvial Lurín',
-                'monto'     => 185000.00,
-                'estado'    => 'Cotización',
-                'escenario' => 'COTIZ_RECHAZADA_ROJO',
-                'creado_h'  => 96,
-                'inspecciones' => [
-                    [
-                        'ingeniero'      => 'Ing. Carmen Delgado',
-                        'fecha_rel'      => 70,
-                        'futuro'         => false,
-                        'estado'         => 'Completada',
-                        'resultado'      => 'Topografía de cuenca verificada. Se valida canal trapezoidal de concreto armado de 450 ml.',
-                        'creado_h'       => 85,
-                        'actualizado_h'  => 80,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'          => 60,
-                        'actualizado_h'  => 56, // Rechazada hace 56h (> 48h SLA => ROJO)
-                        'estado'         => 'Rechazada',
-                        'monto'          => 185000.00,
-                        'obs'            => '[Fase #1 ⇄ Inspección #1 - Ing. Carmen Delgado] Oferta formal emitida por canal de derivación.',
-                        'rechazo'        => 'Presupuesto excede el techo financiero del cliente en un 12%. Solicitan optimización.',
-                        'partidas'       => [2, 5], // Excavación y Concreto
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Llamada Telefónica', 'Conversación con Ing. Fernando Vega: cliente solicita reajuste económico de precios unitarios.'],
-                ],
-                'sla_alertas' => [
-                    ['COTIZACION_PROPUESTA', 56, 'VIGENTE', 8],
-                ],
-            ],
-
-            // -------------------------------------------------------------------------
-            // GRUPO 4: CIERRE COMERCIAL (3 obras vivas)
-            // -------------------------------------------------------------------------
-            // Obra 12 (Cliente 12: CASA CONSTRUCCION) -> Cotización Aceptada lista para Cierre Comercial (En Cotización)
-            11 => [
-                'titulo'    => 'Rehabilitación Integral de Pavimentos Complejo Callao',
-                'monto'     => 315000.00,
-                'estado'    => 'Cotización',
-                'escenario' => 'COTIZ_ACEPTADA_LISTA_CIERRE',
-                'creado_h'  => 48,
-                'inspecciones' => [
-                    [
-                        'ingeniero'      => 'Ing. Mario Eloy',
-                        'fecha_rel'      => 30,
-                        'futuro'         => false,
-                        'estado'         => 'Completada',
-                        'resultado'      => 'Se verificó fisuración severa en 3,500 m2 de carpeta asfáltica. Se requiere fresado y recapeo.',
-                        'creado_h'       => 40,
-                        'actualizado_h'  => 38,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'          => 20,
-                        'actualizado_h'  => 14, // Aceptada hace 14h
-                        'estado'         => 'Aceptada',
-                        'monto'          => 315000.00,
-                        'obs'            => '[Fase #1 ⇄ Inspección #1 - Ing. Mario Eloy] Propuesta técnica aceptada por cliente. Lista para Cierre Comercial.',
-                        'rechazo'        => null,
-                        'partidas'       => [9, 10], // Carpeta asfáltica y Base granular
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Reunión de cierre comercial en oficinas de CASA. Borrador contractual en revisión legal.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 13 (Cliente 13: EDIFICA) -> Cierre Comercial con Cotización Aceptada (Aceptada hace 18h => VERDE)
-            12 => [
-                'titulo'    => 'Reparación Estructural y Reforzamiento Muelle Callao Zona 4',
-                'monto'     => 680000.00,
-                'estado'    => 'Cierre Comercial',
-                'escenario' => 'CIERRE_COTIZ_ACEPTADA_VERDE',
-                'creado_h'  => 65,
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Roberto Zúñiga',
-                        'fecha_rel' => 45,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Corrosión avanzada en pilotes marinos. Se requiere encamisado y fibra de carbono CFRP.',
-                        'creado_h'  => 55,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 18,
-                        'estado'     => 'Aceptada',
-                        'monto'      => 680000.00,
-                        'obs'        => '[Fase #1 ⇄ Inspección #1 - Ing. Roberto Zúñiga] Propuesta aprobada por directorio de cliente.',
-                        'rechazo'    => null,
-                        'partidas'   => [11, 12], // Fibra de carbono e Inyección epóxica
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Correo Electrónico', 'Carta de adjudicación preliminar recibida de Edifica. Pendiente emisión de orden de servicio.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 14 (Cliente 14: OHLA PERU) -> Cierre Comercial con Cotización Aceptada (Aceptada hace 10h => VERDE)
-            13 => [
-                'titulo'    => 'Instalación Línea Troncal Tubería HDPE Planta Sur',
-                'monto'     => 198000.00,
-                'estado'    => 'Cierre Comercial',
-                'escenario' => 'CIERRE_COTIZ_ACEPTADA_VERDE_2',
-                'creado_h'  => 52,
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Carmen Delgado',
-                        'fecha_rel' => 32,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Trazado y rasantes validadas para 850 ml de zanja en terreno conglomerado.',
-                        'creado_h'  => 44,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 10,
-                        'estado'     => 'Aceptada',
-                        'monto'      => 198000.00,
-                        'obs'        => '[Fase #1 ⇄ Inspección #1 - Ing. Carmen Delgado] Propuesta técnica económica acordada al 100%.',
-                        'rechazo'    => null,
-                        'partidas'   => [14, 2], // Tubería HDPE y Excavación
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Seguimiento', 'Validación de póliza CAR y cartas fianza requeridas para firma de acta de inicio.'],
-                ],
-                'sla_alertas' => [],
-            ],
-
-            // -------------------------------------------------------------------------
-            // GRUPO 5: HISTORIAL CERRADAS DEFINITIVAMENTE (6 obras)
-            // -------------------------------------------------------------------------
-            // Obra 15 (Cliente 15: CONCREMAX) -> Ganada/Aceptada (Mes anterior, cliente ACTIVO)
-            14 => [
-                'titulo'    => 'Construcción Almacén Central de Agregados Concremax',
-                'monto'     => 890000.00,
-                'estado'    => 'Aceptada',
-                'escenario' => 'GANADA_HISTORIAL_1',
-                'creado_h'  => 720, // 30 días atrás
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Luis Navarro',
-                        'fecha_rel' => 690,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Estudio de suelos y diseño estructural de naves con puente grúa completado.',
-                        'creado_h'  => 710,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 650,
-                        'estado'     => 'Aceptada',
-                        'monto'      => 890000.00,
-                        'obs'        => 'Oferta técnico-económica aceptada por gerencia de Concremax. Obra en ejecución.',
-                        'rechazo'    => null,
-                        'partidas'   => [5, 16], // Concreto y Estructura metálica
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Firma de contrato de obra y entrega de terreno con presencia notarial.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 16 (Cliente 16: LOS PORTALES) -> Ganada/Aceptada (Mes actual, cliente ACTIVO)
-            15 => [
-                'titulo'    => 'Rehabilitación Vial de Accesos y Pavimento Los Portales',
-                'monto'     => 740000.00,
-                'estado'    => 'Aceptada',
-                'escenario' => 'GANADA_HISTORIAL_2',
-                'creado_h'  => 480, // 20 días atrás
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Carmen Delgado',
-                        'fecha_rel' => 450,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Metrado vial de 5,200 m2 validado en campo con equipo topográfico georreferenciado.',
-                        'creado_h'  => 470,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 420,
-                        'estado'     => 'Aceptada',
-                        'monto'      => 740000.00,
-                        'obs'        => 'Adjudicación de obra confirmada. Carta fianza entregada al cliente.',
-                        'rechazo'    => null,
-                        'partidas'   => [8, 9], // Pavimento rígido y Carpeta asfáltica
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Inicio de trazo y replanteo con supervisión del cliente.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 17 (Cliente 17: ALICORP) -> Ganada/Aceptada (Mes actual, cliente ACTIVO)
-            16 => [
-                'titulo'    => 'Pisos Industriales con Endurecedor Planta Alicorp Callao',
-                'monto'     => 520000.00,
-                'estado'    => 'Aceptada',
-                'escenario' => 'GANADA_HISTORIAL_3',
-                'creado_h'  => 360, // 15 días atrás
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Roberto Zúñiga',
-                        'fecha_rel' => 330,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Ensayos de planicidad F-Number y verificación de juntas de dilatación.',
-                        'creado_h'  => 350,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 300,
-                        'estado'     => 'Aceptada',
-                        'monto'      => 520000.00,
-                        'obs'        => 'Contrato marco formalizado para losas de alta resistencia al impacto.',
-                        'rechazo'    => null,
-                        'partidas'   => [17, 13], // Piso industrial y Mortero
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Seguimiento', 'Vaciado de 첫er tramo de 1,200 m2 con presencia de control de calidad.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 18 (Cliente 18: APM TERMINALS) -> Ganada/Aceptada (Mes anterior, cliente ACTIVO)
-            17 => [
-                'titulo'    => 'Sellado de Juntas y Morteros Especiales Terminal Portuario',
-                'monto'     => 340000.00,
-                'estado'    => 'Aceptada',
-                'escenario' => 'GANADA_HISTORIAL_4',
-                'creado_h'  => 800, // 33 días atrás
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Mario Eloy',
-                        'fecha_rel' => 770,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Inspección de 2,400 ml de juntas sometidas a salinidad extrema en muelle norte.',
-                        'creado_h'  => 790,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 730,
-                        'estado'     => 'Aceptada',
-                        'monto'      => 340000.00,
-                        'obs'        => 'Propuesta aceptada con certificación de materiales grado marino.',
-                        'rechazo'    => null,
-                        'partidas'   => [15, 13], // Sellado juntas e Impermeabilización
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Correo Electrónico', 'Recepción de orden de compra formal N° OC-2026-APM-089.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 19 (Cliente 19: RANSA) -> Cancelada (Desestimada por cliente, cliente INACTIVO)
-            18 => [
-                'titulo'    => 'Cerco Perimétrico y Garitas de Control Almacén Sur',
-                'monto'     => 145000.00,
-                'estado'    => 'Cancelada',
-                'escenario' => 'CANCELADA_HISTORIAL_1',
-                'creado_h'  => 600, // 25 días atrás
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Luis Navarro',
-                        'fecha_rel' => 570,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Levantamiento de linderos completado. Terreno en litigio con colindante.',
-                        'creado_h'  => 590,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 540,
-                        'estado'     => 'Rechazada',
-                        'monto'      => 145000.00,
-                        'obs'        => 'Propuesta desestimada por cancelación presupuestal del cliente.',
-                        'rechazo'    => 'Proyecto suspendido indefinidamente por problemas legales en los linderos del predio.',
-                        'partidas'   => [6, 7], // Acero y Encofrado
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Llamada Telefónica', 'Notificación formal del departamento de compras de Ransa cancelando el proceso.'],
-                ],
-                'sla_alertas' => [],
-            ],
-            // Obra 20 (Cliente 20: PACASMAYO) -> Cancelada (Postergada para 2027, cliente INACTIVO)
-            19 => [
-                'titulo'    => 'Techado Metálico y Cerramientos Patio de Carga Norte',
-                'monto'     => 220000.00,
-                'estado'    => 'Cancelada',
-                'escenario' => 'CANCELADA_HISTORIAL_2',
-                'creado_h'  => 550, // 22 días atrás
-                'inspecciones' => [
-                    [
-                        'ingeniero' => 'Ing. Carmen Delgado',
-                        'fecha_rel' => 520,
-                        'futuro'    => false,
-                        'estado'    => 'Completada',
-                        'resultado' => 'Verificación de apoyos en columnas existentes y dimensionamiento de tijerales.',
-                        'creado_h'  => 540,
-                    ],
-                ],
-                'cotizaciones' => [
-                    [
-                        'sub_h'      => 490,
-                        'estado'     => 'Rechazada',
-                        'monto'      => 220000.00,
-                        'obs'        => 'Oferta técnica y económica no priorizada para el ejercicio en curso.',
-                        'rechazo'    => 'Reasignación de CAPEX corporativo. Proyecto postergado para el siguiente año.',
-                        'partidas'   => [16, 1], // Estructura metálica y Calicatas
-                    ],
-                ],
-                'bitacoras' => [
-                    ['Reunión Presencial', 'Reunión de cierre con jefa de mantenimiento. Se agradece la participación técnica.'],
-                ],
-                'sla_alertas' => [],
-            ],
-        ];
-
-        // Inserción de los 20 Clientes con estado derivado inicialmente
-        // (Se recalculará dinámicamente con actualizarEstadoCliente al final del seeder)
         $clienteIds = [];
         foreach ($clientesData as $i => $c) {
             $clienteIds[] = DB::table('clientes')->insertGetId([
@@ -794,15 +153,17 @@ class DatabaseSeeder extends Seeder
                 'nombre_contacto'   => $c[3],
                 'telefono_contacto' => $c[4],
                 'email_contacto'    => $c[5],
-                'estado'            => 'INACTIVO', // Se actualiza luego según la regla de negocio
+                'estado'            => 'INACTIVO',
                 'observaciones'     => $c[6],
                 'user_id'           => $asesores[$i % 2],
-                'created_at'        => $now->copy()->subDays(90 - $i),
-                'updated_at'        => $now->copy()->subDays(5),
+                'created_at'        => $now->copy()->subDays(100 - $i),
+                'updated_at'        => $now->copy()->subDays(2),
             ]);
         }
 
-        // 4. PARTIDAS
+        // =========================================================================
+        // 4. CATÁLOGO MAESTRO DE 30 PARTIDAS OFICIALES
+        // =========================================================================
         $partidasData = [
             ['PAR-001', 'Inspección Estructural con Esclerómetro y Ultrasonido', 'Evaluación Estructural', 'global', 3850.00],
             ['PAR-002', 'Estudio de Mecánica de Suelos con Calicatas (hasta 3m)', 'Geotecnia', 'global', 4500.00],
@@ -824,6 +185,16 @@ class DatabaseSeeder extends Seeder
             ['PAR-018', 'Piso Industrial de Concreto Pulido con Endurecedor de Cuarzo', 'Naves Industriales', 'm2', 128.00],
             ['PAR-019', 'Jornada Técnica de Supervisión y Ensayos de Laboratorio', 'Ingeniería y Control', 'jor', 950.00],
             ['PAR-020', 'Levantamiento Topográfico con Estación Total y Dron RTK', 'Topografía', 'global', 2900.00],
+            ['PAR-021', 'Demolición Controlada de Concreto Armado con Martillo Hidráulico', 'Demoliciones', 'm3', 115.00],
+            ['PAR-022', 'Pintura Epóxica de Alto Tráfico para Zonas de Maniobra', 'Acabados Industriales', 'm2', 45.00],
+            ['PAR-023', 'Perforación Diamantina en Losas de Concreto (d=4")', 'Ensayos de Control', 'und', 210.00],
+            ['PAR-024', 'Instalación de Geomembrana HDPE e=1.5mm Termosellada', 'Obras Hidráulicas', 'm2', 28.50],
+            ['PAR-025', 'Muro de Contención Gavionado con Malla Triple Torsión', 'Defensas Ribereñas', 'm3', 195.00],
+            ['PAR-026', 'Anclajes Pasivos y Activos en Taludes con Pernos Helicoidales', 'Geotecnia Avanzada', 'ml', 260.00],
+            ['PAR-027', 'Shotcrete Vía Húmeda f\'c=250 kg/cm2 con Fibra Metálica', 'Sostenimiento', 'm3', 520.00],
+            ['PAR-028', 'Suministro e Hincado de Tablestacas Metálicas Laminadas', 'Obras Portuarias', 'kg', 18.20],
+            ['PAR-029', 'Microcemento y Sellado Hidrófugo en Fachadas Comerciales', 'Arquitectura Técnica', 'm2', 85.00],
+            ['PAR-030', 'Ensayos de Integridad de Pilotes por Ultrasonido (Crosshole)', 'Control Geotécnico', 'und', 1250.00],
         ];
 
         $partidaIds = [];
@@ -836,56 +207,93 @@ class DatabaseSeeder extends Seeder
                 'unidad_medida'   => $p[3],
                 'precio_unitario' => $p[4],
                 'is_active'       => true,
-                'created_at'      => $now->copy()->subMonths(4),
-                'updated_at'      => $now->copy()->subDays(15),
+                'created_at'      => $now->copy()->subMonths(5),
+                'updated_at'      => $now->copy()->subDays(10),
             ]);
             $partidaIds[] = ['id' => $pid, 'precio' => $p[4]];
 
-            if ($idx < 10) {
+            // Historial de auditoría para las primeras 15 partidas
+            if ($idx < 15) {
                 DB::table('historial_precios_partidas')->insert([
                     'partida_id'      => $pid,
                     'user_id'         => $adminId,
-                    'precio_anterior' => round($p[4] * 0.92, 2),
+                    'precio_anterior' => round($p[4] * 0.90, 2),
                     'precio_nuevo'    => $p[4],
-                    'motivo_cambio'   => 'Actualización anual por índice de insumos de construcción.',
-                    'created_at'      => $now->copy()->subDays(20 - $idx),
-                    'updated_at'      => $now->copy()->subDays(20 - $idx),
+                    'motivo_cambio'   => 'Actualización anual según tarifario de la Cámara Peruana de la Construcción.',
+                    'created_at'      => $now->copy()->subDays(30 - $idx),
+                    'updated_at'      => $now->copy()->subDays(30 - $idx),
                 ]);
             }
         }
 
-        // 5. OBRAS Y ECOSISTEMA RELACIONAL (INSPECCIONES, COTIZACIONES, BITÁCORAS, SLA)
+        // =========================================================================
+        // 5. DISTRIBUCIÓN ESTRATÉGICA DE 30 OBRAS (PIPELINE, SEMÁFOROS Y HISTORIAL)
+        // =========================================================================
+        $obrasPlan = [
+            // PROSPECTOS (5 obras)
+            0 => ['titulo' => 'Inspección Estructural Torre Corporativa San Isidro', 'monto' => 48000.00, 'estado' => 'Prospecto', 'creado_h' => 6, 'insp' => [], 'cot' => [], 'bit' => [['Reunión Presencial', 'Reunión inicial de coordinación técnica.']], 'sla' => []],
+            1 => ['titulo' => 'Mantenimiento de Túneles y Drenaje Vía de Evitamiento', 'monto' => 185000.00, 'estado' => 'Prospecto', 'creado_h' => 44, 'insp' => [], 'cot' => [], 'bit' => [['Llamada Telefónica', 'Cliente solicita reprogramar visita por huelga de transportistas.']], 'sla' => [['VISITA_INSPECCION', 44, 'VIGENTE', 20]]],
+            2 => ['titulo' => 'Evaluación de Losa Industrial y Cargas Almacén Norte', 'monto' => 62000.00, 'estado' => 'Prospecto', 'creado_h' => 10, 'insp' => [], 'cot' => [], 'bit' => [['Correo Electrónico', 'Envío de términos de referencia técnicos para visita.']], 'sla' => []],
+            3 => ['titulo' => 'Inspección de Muros Diafragma Proyecto Miraflores', 'monto' => 78000.00, 'estado' => 'Prospecto', 'creado_h' => 14, 'insp' => [], 'cot' => [], 'bit' => [['Llamada Telefónica', 'Revisión de planos estructurales en Autocad.']], 'sla' => []],
+            4 => ['titulo' => 'Peritaje Técnico de Filtraciones en Estacionamiento Subterráneo', 'monto' => 54000.00, 'estado' => 'Prospecto', 'creado_h' => 8, 'insp' => [], 'cot' => [], 'bit' => [['Reunión Presencial', 'Coordinación con la junta de propietarios.']], 'sla' => []],
+
+            // INSPECCIÓN (6 obras)
+            5 => ['titulo' => 'Reforzamiento de Vigas Puente Grúa Taller Ferreyros', 'monto' => 128000.00, 'estado' => 'Inspeccion', 'creado_h' => 28, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 36, 'futuro' => true, 'est' => 'Pendiente', 'res' => null, 'cr_h' => 6]], 'cot' => [], 'bit' => [['Reunión Presencial', 'Pases de ingreso a taller central gestionados.']], 'sla' => []],
+            6 => ['titulo' => 'Cimentación Profunda Subestación Eléctrica Sur', 'monto' => 310000.00, 'estado' => 'Inspeccion', 'creado_h' => 58, 'insp' => [['ing' => 'Ing. Carmen Delgado', 'h' => 12, 'futuro' => false, 'est' => 'Pendiente', 'res' => null, 'cr_h' => 35]], 'cot' => [], 'bit' => [['Llamada Telefónica', 'Contratista aún no aprueba el plan de seguridad PETAR.']], 'sla' => [['VISITA_INSPECCION', 35, 'VIGENTE', 11]]],
+            7 => ['titulo' => 'Impermeabilización y Prueba de Estanqueidad Cisterna Central', 'monto' => 74500.00, 'estado' => 'Inspeccion', 'creado_h' => 22, 'insp' => [['ing' => 'Ing. Roberto Zúñiga', 'h' => 24, 'futuro' => true, 'est' => 'Pendiente', 'res' => null, 'cr_h' => 10]], 'cot' => [], 'bit' => [['Correo Electrónico', 'Cronograma de ingreso aprobado por la residencia.']], 'sla' => []],
+            8 => ['titulo' => 'Pavimentación Rígida y Zanjas Centro Logístico Lurín', 'monto' => 245000.00, 'estado' => 'Inspeccion', 'creado_h' => 30, 'insp' => [['ing' => 'Ing. Patricia Paredes', 'h' => 30, 'futuro' => true, 'est' => 'Pendiente', 'res' => null, 'cr_h' => 12]], 'cot' => [], 'bit' => [['Reunión Presencial', 'Inspección de rasantes en patio de maniobras.']], 'sla' => []],
+            9 => ['titulo' => 'Estabilización de Talud con Pernos de Anclaje Autopista Central', 'monto' => 195000.00, 'estado' => 'Inspeccion', 'creado_h' => 62, 'insp' => [['ing' => 'Ing. Mario Eloy', 'h' => 18, 'futuro' => false, 'est' => 'Pendiente', 'res' => null, 'cr_h' => 38]], 'cot' => [], 'bit' => [['Llamada Telefónica', 'Lluvias torrenciales impidieron el descenso técnico a talud.']], 'sla' => [['VISITA_INSPECCION', 38, 'VIGENTE', 14]]],
+            10 => ['titulo' => 'Evaluación de Pavimentos de Concreto Pista Aérea Pisco', 'monto' => 165000.00, 'estado' => 'Inspeccion', 'creado_h' => 18, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 24, 'futuro' => true, 'est' => 'Pendiente', 'res' => null, 'cr_h' => 8]], 'cot' => [], 'bit' => [['Correo Electrónico', 'Coordinación con CORPAC para permisos en pista.']], 'sla' => []],
+
+            // COTIZACIÓN (7 obras)
+            11 => ['titulo' => 'Edificio Multifamiliar San Isidro Suites - Estructuras', 'monto' => 420000.00, 'estado' => 'Cotización', 'creado_h' => 96, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 74, 'futuro' => false, 'est' => 'Completada', 'res' => '1,200 m2 de losas aligeradas y muros validados.', 'cr_h' => 90]], 'cot' => [], 'bit' => [['Llamada Telefónica', 'Cliente exige envío de propuesta formal hoy mismo.']], 'sla' => [['COTIZACION_PROPUESTA', 74, 'VIGENTE', 26]]],
+            12 => ['titulo' => 'Ampliación Planta Industrial Huachipa Etapa II', 'monto' => 390000.00, 'estado' => 'Cotización', 'creado_h' => 60, 'insp' => [['ing' => 'Ing. Roberto Zúñiga', 'h' => 36, 'futuro' => false, 'est' => 'Completada', 'res' => 'Verificación de capacidad portante de vigas metálicas.', 'cr_h' => 48]], 'cot' => [['sub_h' => 18, 'est' => 'Programada', 'monto' => 0.00, 'obs' => 'En proceso de metrado por el área técnica.', 'rech' => null, 'part' => []]], 'bit' => [['Correo Electrónico', 'Metrados recibidos del calculista para costeo.']], 'sla' => []],
+            13 => ['titulo' => 'Construcción Muro de Contención y Talud Costa Verde', 'monto' => 275000.00, 'estado' => 'Cotización', 'creado_h' => 72, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 48, 'futuro' => false, 'est' => 'Completada', 'res' => 'Muro de contención en voladizo de h=4.50m requerido.', 'cr_h' => 60]], 'cot' => [['sub_h' => 24, 'est' => 'Enviada', 'monto' => 275000.00, 'obs' => 'Propuesta económica entregada a la gerencia de proyectos.', 'rech' => null, 'part' => [5, 7]]], 'bit' => [['Reunión Presencial', 'Sustento técnico de partidas de concreto premezclado.']], 'sla' => []],
+            14 => ['titulo' => 'Canal de Derivación y Drenaje Pluvial Lurín', 'monto' => 185000.00, 'estado' => 'Cotización', 'creado_h' => 96, 'insp' => [['ing' => 'Ing. Carmen Delgado', 'h' => 70, 'futuro' => false, 'est' => 'Completada', 'res' => 'Canal trapezoidal de concreto armado validado (450 ml).', 'cr_h' => 85]], 'cot' => [['sub_h' => 60, 'est' => 'Rechazada', 'monto' => 185000.00, 'obs' => 'Oferta rechazada por exceder presupuesto base.', 'rech' => 'Presupuesto excede techo del cliente en 12%. Solicitan optimización.', 'part' => [2, 5]]], 'bit' => [['Llamada Telefónica', 'Cliente solicita reajuste económico de precios unitarios.']], 'sla' => [['COTIZACION_PROPUESTA', 58, 'VIGENTE', 10]]],
+            15 => ['titulo' => 'Rehabilitación Integral de Pavimentos Complejo Callao', 'monto' => 315000.00, 'estado' => 'Cotización', 'creado_h' => 50, 'insp' => [['ing' => 'Ing. Mario Eloy', 'h' => 32, 'futuro' => false, 'est' => 'Completada', 'res' => 'Fisuración severa en 3,500 m2. Se requiere recapeo.', 'cr_h' => 42]], 'cot' => [['sub_h' => 20, 'est' => 'Enviada', 'monto' => 315000.00, 'obs' => 'Oferta enviada por mesa de partes virtual.', 'rech' => null, 'part' => [9, 10]]], 'bit' => [['Seguimiento', 'En revisión por el comité evaluador de la empresa.']], 'sla' => []],
+            16 => ['titulo' => 'Reforzamiento de Muelle Portuario con Fibra de Carbono', 'monto' => 450000.00, 'estado' => 'Cotización', 'creado_h' => 40, 'insp' => [['ing' => 'Ing. Roberto Zúñiga', 'h' => 28, 'futuro' => false, 'est' => 'Completada', 'res' => 'Se requiere encamisado y aplicación de fibra CFRP.', 'cr_h' => 36]], 'cot' => [['sub_h' => 14, 'est' => 'Enviada', 'monto' => 450000.00, 'obs' => 'Presupuesto técnico enviado con certificación marina.', 'rech' => null, 'part' => [11, 12]]], 'bit' => [['Correo Electrónico', 'Cliente solicita desglose de costos indirectos.']], 'sla' => []],
+            17 => ['titulo' => 'Instalación de Geotextil y Gaviones en Ribera Mala', 'monto' => 210000.00, 'estado' => 'Cotización', 'creado_h' => 88, 'insp' => [['ing' => 'Ing. Carmen Delgado', 'h' => 64, 'futuro' => false, 'est' => 'Completada', 'res' => 'Se requieren 800 m3 de gaviones tipo caja para defensa.', 'cr_h' => 80]], 'cot' => [['sub_h' => 52, 'est' => 'Rechazada', 'monto' => 210000.00, 'obs' => 'Cliente postergó adjudicación por recorte financiero.', 'rech' => 'Postergado para el siguiente trimestre fiscal.', 'part' => [24, 2]]], 'bit' => [['Llamada Telefónica', 'Confirmación de espera para nueva convocatoria.']], 'sla' => [['COTIZACION_PROPUESTA', 52, 'VIGENTE', 4]]],
+
+            // CIERRE COMERCIAL (4 obras)
+            18 => ['titulo' => 'Reparación Estructural y Reforzamiento Muelle Callao Zona 4', 'monto' => 680000.00, 'estado' => 'Cierre Comercial', 'creado_h' => 65, 'insp' => [['ing' => 'Ing. Roberto Zúñiga', 'h' => 45, 'futuro' => false, 'est' => 'Completada', 'res' => 'Corrosión avanzada en pilotes. Requiere encamisado.', 'cr_h' => 55]], 'cot' => [['sub_h' => 18, 'est' => 'Aceptada', 'monto' => 680000.00, 'obs' => 'Propuesta aprobada por directorio de cliente.', 'rech' => null, 'part' => [11, 12]]], 'bit' => [['Correo Electrónico', 'Carta de adjudicación preliminar recibida de Edifica.']], 'sla' => []],
+            19 => ['titulo' => 'Instalación Línea Troncal Tubería HDPE Planta Sur', 'monto' => 198000.00, 'estado' => 'Cierre Comercial', 'creado_h' => 52, 'insp' => [['ing' => 'Ing. Carmen Delgado', 'h' => 32, 'futuro' => false, 'est' => 'Completada', 'res' => 'Trazado y rasantes validadas para 850 ml de zanja.', 'cr_h' => 44]], 'cot' => [['sub_h' => 10, 'est' => 'Aceptada', 'monto' => 198000.00, 'obs' => 'Propuesta técnica económica acordada al 100%.', 'rech' => null, 'part' => [14, 2]]], 'bit' => [['Seguimiento', 'Validación de cartas fianza y seguros CAR.']], 'sla' => []],
+            20 => ['titulo' => 'Construcción de Muro Gavionado y Diques Quebrada Verde', 'monto' => 260000.00, 'estado' => 'Cierre Comercial', 'creado_h' => 45, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 30, 'futuro' => false, 'est' => 'Completada', 'res' => 'Firmeza de roca confirmada para anclaje de mallas.', 'cr_h' => 38]], 'cot' => [['sub_h' => 12, 'est' => 'Aceptada', 'monto' => 260000.00, 'obs' => 'Acuerdo de pagos y cronograma valorizado cerrado.', 'rech' => null, 'part' => [24, 25]]], 'bit' => [['Reunión Presencial', 'Firma de borrador del contrato en sede gerencial.']], 'sla' => []],
+            21 => ['titulo' => 'Demolición y Vaciado de Pavimento Patios de Chatarra', 'monto' => 320000.00, 'estado' => 'Cierre Comercial', 'creado_h' => 48, 'insp' => [['ing' => 'Ing. Mario Eloy', 'h' => 26, 'futuro' => false, 'est' => 'Completada', 'res' => 'Demolición de 1,800 m2 con martillos de 30 toneladas.', 'cr_h' => 40]], 'cot' => [['sub_h' => 8, 'est' => 'Aceptada', 'monto' => 320000.00, 'obs' => 'Aprobación definitiva de orden de compra en curso.', 'rech' => null, 'part' => [20, 8]]], 'bit' => [['Llamada Telefónica', 'Envío de pólizas complementarias de trabajo de alto riesgo.']], 'sla' => []],
+
+            // HISTORIAL GENERAL (8 obras cerradas definitivamente)
+            22 => ['titulo' => 'Construcción Almacén Central de Agregados Concremax', 'monto' => 890000.00, 'estado' => 'Aceptada', 'creado_h' => 720, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 690, 'futuro' => false, 'est' => 'Completada', 'res' => 'Estudio de suelos y diseño estructural completado.', 'cr_h' => 710]], 'cot' => [['sub_h' => 650, 'est' => 'Aceptada', 'monto' => 890000.00, 'obs' => 'Oferta técnico-económica aceptada. Obra en ejecución.', 'rech' => null, 'part' => [5, 16]]], 'bit' => [['Reunión Presencial', 'Firma de contrato de obra y entrega formal del terreno.']], 'sla' => []],
+            23 => ['titulo' => 'Rehabilitación Vial de Accesos y Pavimento Los Portales', 'monto' => 740000.00, 'estado' => 'Aceptada', 'creado_h' => 480, 'insp' => [['ing' => 'Ing. Carmen Delgado', 'h' => 450, 'futuro' => false, 'est' => 'Completada', 'res' => 'Metrado vial de 5,200 m2 validado en campo.', 'cr_h' => 470]], 'cot' => [['sub_h' => 420, 'est' => 'Aceptada', 'monto' => 740000.00, 'obs' => 'Adjudicación de obra confirmada. Carta fianza entregada.', 'rech' => null, 'part' => [8, 9]]], 'bit' => [['Reunión Presencial', 'Inicio de trazo y replanteo con supervisión del cliente.']], 'sla' => []],
+            24 => ['titulo' => 'Pisos Industriales con Endurecedor Planta Alicorp Callao', 'monto' => 520000.00, 'estado' => 'Aceptada', 'creado_h' => 360, 'insp' => [['ing' => 'Ing. Roberto Zúñiga', 'h' => 330, 'futuro' => false, 'est' => 'Completada', 'res' => 'Ensayos de planicidad F-Number completados.', 'cr_h' => 350]], 'cot' => [['sub_h' => 300, 'est' => 'Aceptada', 'monto' => 520000.00, 'obs' => 'Contrato marco formalizado para losas de alta resistencia.', 'rech' => null, 'part' => [17, 13]]], 'bit' => [['Seguimiento', 'Vaciado de tramo 1 completado con éxito.']], 'sla' => []],
+            25 => ['titulo' => 'Sellado de Juntas y Morteros Especiales Terminal Portuario', 'monto' => 340000.00, 'estado' => 'Aceptada', 'creado_h' => 800, 'insp' => [['ing' => 'Ing. Mario Eloy', 'h' => 770, 'futuro' => false, 'est' => 'Completada', 'res' => 'Inspección de 2,400 ml de juntas marinas.', 'cr_h' => 790]], 'cot' => [['sub_h' => 730, 'est' => 'Aceptada', 'monto' => 340000.00, 'obs' => 'Propuesta aceptada con certificación de grado marino.', 'rech' => null, 'part' => [15, 13]]], 'bit' => [['Correo Electrónico', 'Orden de compra formal OC-2026-APM-089 recibida.']], 'sla' => []],
+            26 => ['titulo' => 'Cerco Perimétrico y Garitas de Control Almacén Sur', 'monto' => 145000.00, 'estado' => 'Cancelada', 'creado_h' => 600, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 570, 'futuro' => false, 'est' => 'Completada', 'res' => 'Terreno en litigio judicial con predio colindante.', 'cr_h' => 590]], 'cot' => [['sub_h' => 540, 'est' => 'Rechazada', 'monto' => 145000.00, 'obs' => 'Propuesta desestimada por cancelación presupuestal.', 'rech' => 'Proyecto suspendido indefinidamente por problemas legales.', 'part' => [6, 7]]], 'bit' => [['Llamada Telefónica', 'Notificación formal cancelando el proceso de compra.']], 'sla' => []],
+            27 => ['titulo' => 'Techado Metálico y Cerramientos Patio de Carga Norte', 'monto' => 220000.00, 'estado' => 'Cancelada', 'creado_h' => 550, 'insp' => [['ing' => 'Ing. Carmen Delgado', 'h' => 520, 'futuro' => false, 'est' => 'Completada', 'res' => 'Verificación de apoyos en columnas existentes.', 'cr_h' => 540]], 'cot' => [['sub_h' => 490, 'est' => 'Rechazada', 'monto' => 220000.00, 'obs' => 'Oferta no priorizada por el comité técnico de planta.', 'rech' => 'Reasignación de CAPEX corporativo al ejercicio 2027.', 'part' => [16, 1]]], 'bit' => [['Reunión Presencial', 'Reunión de cierre con jefa de mantenimiento.']], 'sla' => []],
+            28 => ['titulo' => 'Estabilización y Anclajes en Desfiladero Minero Cuajone', 'monto' => 380000.00, 'estado' => 'Perdida', 'creado_h' => 420, 'insp' => [['ing' => 'Ing. Roberto Zúñiga', 'h' => 390, 'futuro' => false, 'est' => 'Completada', 'res' => 'Fisuras por vibración de voladuras mineras en roca.', 'cr_h' => 410]], 'cot' => [['sub_h' => 360, 'est' => 'Rechazada', 'monto' => 380000.00, 'obs' => 'Adjudicación otorgada a consorcio local competidor.', 'rech' => 'Competencia presentó oferta con 18% menor valor.', 'part' => [25, 26]]], 'bit' => [['Correo Electrónico', 'Carta de agradecimiento recibida sin adjudicación.']], 'sla' => []],
+            29 => ['titulo' => 'Hincado de Tablestacas Muelle de Barcazas Ilo', 'monto' => 490000.00, 'estado' => 'Perdida', 'creado_h' => 460, 'insp' => [['ing' => 'Ing. Luis Navarro', 'h' => 430, 'futuro' => false, 'est' => 'Completada', 'res' => 'Bateo de olas supera resistencia estimada inicial.', 'cr_h' => 450]], 'cot' => [['sub_h' => 400, 'est' => 'Rechazada', 'monto' => 490000.00, 'obs' => 'Proceso desestimado por rediseño de calado del puerto.', 'rech' => 'Cambio sustancial en especificaciones de la autoridad portuaria.', 'part' => [27, 2]]], 'bit' => [['Seguimiento', 'Expediente cerrado sin costo para el cliente.']], 'sla' => []],
+        ];
+
         $cotCounter = 1;
 
         foreach ($obrasPlan as $idx => $cfg) {
             $num       = $idx + 1;
             $codigo    = 'OBR-' . str_pad($num, 3, '0', STR_PAD_LEFT);
-            $titulo    = $cfg['titulo'];
-            $monto     = $cfg['monto'];
-            $estado    = $cfg['estado'];
-            $creadoH   = $cfg['creado_h'];
-            $escenario = $cfg['escenario'];
-
             $clienteId = $clienteIds[$idx];
             $asesorId  = $asesores[$idx % 2];
-
-            // Fecha base de creación de la obra
-            $createdAt = $now->copy()->subHours($creadoH);
+            $createdAt = $now->copy()->subHours($cfg['creado_h']);
 
             $obraId = DB::table('obras')->insertGetId([
                 'codigo'     => $codigo,
-                'titulo'     => $titulo,
-                'monto'      => $monto,
+                'titulo'     => $cfg['titulo'],
+                'monto'      => $cfg['monto'],
                 'fecha'      => $createdAt->toDateString(),
-                'estado'     => $estado,
+                'estado'     => $cfg['estado'],
                 'cliente_id' => $clienteId,
                 'user_id'    => $asesorId,
                 'created_at' => $createdAt,
                 'updated_at' => $now,
             ]);
 
-            // Inserción de Bitácoras técnicas
-            foreach ($cfg['bitacoras'] as $b) {
+            // Bitácoras con tipos estándar
+            foreach ($cfg['bit'] as $b) {
                 DB::table('bitacoras')->insert([
                     'obra_id'       => $obraId,
                     'user_id'       => $asesorId,
@@ -897,46 +305,29 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            // Inserción de Inspecciones
-            $inspeccionIds = [];
-            foreach ($cfg['inspecciones'] as $insCfg) {
-                $inspCreatedAt = $now->copy()->subHours($insCfg['creado_h']);
-                
-                if (!empty($insCfg['futuro'])) {
-                    $fechaInsp = $now->copy()->addHours($insCfg['fecha_rel']);
-                } else {
-                    $fechaInsp = $now->copy()->subHours($insCfg['fecha_rel']);
-                }
+            // Inspecciones técnicas
+            foreach ($cfg['insp'] as $insCfg) {
+                $inspCreatedAt = $now->copy()->subHours($insCfg['cr_h']);
+                $fechaInsp     = $insCfg['futuro'] ? $now->copy()->addHours($insCfg['h']) : $now->copy()->subHours($insCfg['h']);
 
-                $inspUpdatedAt = ($insCfg['estado'] === 'Completada') 
-                    ? $now->copy()->subHours($insCfg['actualizado_h'] ?? ($insCfg['creado_h'] - 2))
-                    : $now;
-
-                $insId = DB::table('inspecciones')->insertGetId([
+                DB::table('inspecciones')->insert([
                     'obra_id'            => $obraId,
                     'user_id'            => $asesorId,
-                    'ingeniero_asignado' => $insCfg['ingeniero'],
+                    'ingeniero_asignado' => $insCfg['ing'],
                     'fecha_inspeccion'   => $fechaInsp,
-                    'resultado'          => $insCfg['resultado'],
-                    'estado_inspeccion'  => $insCfg['estado'],
+                    'resultado'          => $insCfg['res'],
+                    'estado_inspeccion'  => $insCfg['est'],
                     'created_at'         => $inspCreatedAt,
-                    'updated_at'         => $inspUpdatedAt,
+                    'updated_at'         => ($insCfg['est'] === 'Completada') ? $now->copy()->subHours(max(1, $insCfg['cr_h'] - 4)) : $now,
                 ]);
-                $inspeccionIds[] = $insId;
             }
 
-            // Inserción de Cotizaciones y Detalles
-            foreach ($cfg['cotizaciones'] as $cotCfg) {
-                $codCot = 'COT-2026-' . str_pad($cotCounter++, 4, '0', STR_PAD_LEFT);
+            // Cotizaciones y desglose exacto de partidas
+            foreach ($cfg['cot'] as $cotCfg) {
+                $codCot       = 'COT-2026-' . str_pad($cotCounter++, 4, '0', STR_PAD_LEFT);
                 $cotCreatedAt = $now->copy()->subHours($cotCfg['sub_h']);
                 $validezDias  = 15;
-                $fechaVenc    = ($cotCfg['estado'] === 'Programada') 
-                    ? null 
-                    : $cotCreatedAt->copy()->addDays($validezDias);
-
-                $cotUpdatedAt = ($cotCfg['estado'] === 'Programada') 
-                    ? $cotCreatedAt 
-                    : $now->copy()->subHours($cotCfg['actualizado_h'] ?? ($cotCfg['sub_h'] - 1));
+                $fechaVenc    = ($cotCfg['est'] === 'Programada') ? null : $cotCreatedAt->copy()->addDays($validezDias);
 
                 $cotId = DB::table('cotizaciones')->insertGetId([
                     'obra_id'           => $obraId,
@@ -946,88 +337,79 @@ class DatabaseSeeder extends Seeder
                     'fecha_emision'     => $cotCreatedAt->toDateString(),
                     'validez_dias'      => $validezDias,
                     'fecha_vencimiento' => $fechaVenc,
-                    'estado_cotizacion' => $cotCfg['estado'],
-                    'observaciones'     => $cotCfg['obs'],
-                    'motivo_rechazo'    => $cotCfg['rechazo'],
+                    'estado_cotizacion' => $cotCfg['est'],
+                    'observaciones'     => $cotCfg['obs'], // Texto limpio sin prefijos
+                    'motivo_rechazo'    => $cotCfg['rech'],
                     'created_at'        => $cotCreatedAt,
-                    'updated_at'        => $cotUpdatedAt,
+                    'updated_at'        => $now,
                 ]);
 
-                // Detalles de cotización si tiene monto > 0 y partidas especificadas
-                if ($cotCfg['monto'] > 0 && !empty($cotCfg['partidas'])) {
+                // Creación de detalles de cotización vinculados a partidas oficiales
+                if ($cotCfg['monto'] > 0 && !empty($cotCfg['part'])) {
                     $montoCot = $cotCfg['monto'];
-                    $numPartidas = count($cotCfg['partidas']);
-                    
-                    if ($numPartidas === 1) {
-                        $pIdx = $cotCfg['partidas'][0];
-                        $partidaRef = $partidaIds[$pIdx % count($partidaIds)];
+                    $partidasCount = count($cotCfg['part']);
+
+                    if ($partidasCount === 1) {
+                        $pRef = $partidaIds[$cotCfg['part'][0] % count($partidaIds)];
                         DB::table('cotizacion_detalles')->insert([
                             'cotizacion_id'   => $cotId,
-                            'partida_id'      => $partidaRef['id'],
-                            'cantidad'        => round($montoCot / $partidaRef['precio'], 2),
-                            'precio_unitario' => $partidaRef['precio'],
+                            'partida_id'      => $pRef['id'],
+                            'cantidad'        => round($montoCot / $pRef['precio'], 2),
+                            'precio_unitario' => $pRef['precio'],
                             'subtotal'        => $montoCot,
                             'created_at'      => $cotCreatedAt,
                             'updated_at'      => $cotCreatedAt,
                         ]);
                     } else {
-                        $pIdx1 = $cotCfg['partidas'][0];
-                        $pIdx2 = $cotCfg['partidas'][1];
-                        $partidaRef1 = $partidaIds[$pIdx1 % count($partidaIds)];
-                        $partidaRef2 = $partidaIds[$pIdx2 % count($partidaIds)];
-
-                        $sub1 = round($montoCot * 0.60, 2);
+                        $pRef1 = $partidaIds[$cotCfg['part'][0] % count($partidaIds)];
+                        $pRef2 = $partidaIds[$cotCfg['part'][1] % count($partidaIds)];
+                        $sub1 = round($montoCot * 0.55, 2);
                         $sub2 = round($montoCot - $sub1, 2);
 
                         DB::table('cotizacion_detalles')->insert([
                             [
                                 'cotizacion_id'   => $cotId,
-                                'partida_id'      => $partidaRef1['id'],
-                                'cantidad'        => round($sub1 / $partidaRef1['precio'], 2),
-                                'precio_unitario' => $partidaRef1['precio'],
+                                'partida_id'      => $pRef1['id'],
+                                'cantidad'        => round($sub1 / $pRef1['precio'], 2),
+                                'precio_unitario' => $pRef1['precio'],
                                 'subtotal'        => $sub1,
                                 'created_at'      => $cotCreatedAt,
                                 'updated_at'      => $cotCreatedAt,
                             ],
                             [
                                 'cotizacion_id'   => $cotId,
-                                'partida_id'      => $partidaRef2['id'],
-                                'cantidad'        => round($sub2 / $partidaRef2['precio'], 2),
-                                'precio_unitario' => $partidaRef2['precio'],
+                                'partida_id'      => $pRef2['id'],
+                                'cantidad'        => round($sub2 / $pRef2['precio'], 2),
+                                'precio_unitario' => $pRef2['precio'],
                                 'subtotal'        => $sub2,
                                 'created_at'      => $cotCreatedAt,
                                 'updated_at'      => $cotCreatedAt,
-                            ],
+                            ]
                         ]);
                     }
                 }
             }
 
-            // Inserción de Alertas SLA auditables
-            foreach ($cfg['sla_alertas'] as $slaCfg) {
+            // Alertas SLA para el semáforo gerencial
+            foreach ($cfg['sla'] as $slaCfg) {
                 $polId = ($slaCfg[0] === 'VISITA_INSPECCION') ? $politicaVisitaId : $politicaCotizId;
-                $horasRetraso = $slaCfg[1];
-                $estadoAlerta = $slaCfg[2];
-                $subHDisparo  = $slaCfg[3];
-
                 DB::table('sla_alertas_logs')->insert([
                     'obra_id'                  => $obraId,
                     'sla_politica_id'          => $polId,
                     'user_id'                  => $asesorId,
-                    'horas_retraso_detectadas' => $horasRetraso,
-                    'estado_alerta'            => $estadoAlerta,
-                    'fecha_disparo'            => $now->copy()->subHours($subHDisparo),
+                    'horas_retraso_detectadas' => $slaCfg[1],
+                    'estado_alerta'            => $slaCfg[2],
+                    'fecha_disparo'            => $now->copy()->subHours($slaCfg[3]),
                     'fecha_resolucion'         => null,
-                    'created_at'               => $now->copy()->subHours($subHDisparo),
+                    'created_at'               => $now->copy()->subHours($slaCfg[3]),
                     'updated_at'               => $now,
                 ]);
             }
         }
 
-        // 6. ACTUALIZACIÓN AUTOMÁTICA DEL ESTADO DE LOS CLIENTES SEGÚN REGLA DE NEGOCIO INSTITUCIONAL
-        // Si tiene obras Aceptadas -> ACTIVO
-        // Si no tiene Aceptadas pero tiene vivas -> EN_EVALUACION
-        // Si no tiene vivas ni ganadas (todas canceladas o sin obras) -> INACTIVO
+        // =========================================================================
+        // 6. SINCRONIZACIÓN DE ESTADOS DINÁMICOS DE LOS 30 CLIENTES
+        // =========================================================================
         foreach ($clienteIds as $cId) {
             \App\Http\Controllers\Comercial\PipelineController::actualizarEstadoCliente($cId);
         }

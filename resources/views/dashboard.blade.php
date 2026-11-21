@@ -9,12 +9,10 @@
         --dtl-dark: #0f172a;
     }
 
-    /* Tipografía Estricta */
     .font-title { font-size: 14px !important; line-height: 1.35 !important; }
     .font-subtitle { font-size: 12px !important; line-height: 1.4 !important; }
     .font-minor { font-size: 10px !important; line-height: 1.2 !important; }
 
-    /* Estados de Tarjetas */
     .dtl-card-transition { transition: all 0.25s ease; }
     
     .dtl-card-active {
@@ -44,7 +42,6 @@
         flex-shrink: 0;
     }
 
-    /* Botones */
     .btn-dtl-primary {
         background-color: var(--dtl-green) !important;
         border-color: var(--dtl-green) !important;
@@ -89,7 +86,7 @@
     $user = auth()->user();
     $userRole = strtolower(trim($user->role ?? ''));
 
-    // Configuración Centralizada de Módulos (Escalable y Limpia)
+    // MATRIZ DE ACCESO SEGÚN ROL EMPRESARIAL
     $modulos = [
         [
             'id'          => 'comercial',
@@ -97,7 +94,8 @@
             'etiqueta'    => 'Front-Office',
             'descripcion' => 'Registro, consulta y administración de fichas de clientes/contratistas con validación automática de RUC.',
             'icono'       => 'fas fa-handshake',
-            'permitido'   => ($userRole === 'ejecutivo'),
+            // HABILITADO PARA: Asesor (ejecutivo), Gerente (directivo) y Administrador
+            'permitido'   => in_array($userRole, ['ejecutivo', 'directivo', 'administrador']),
             'ruta'        => Route::has('comercial.clientes.index') 
                                 ? route('comercial.clientes.index') 
                                 : (Route::has('comercial.pipeline.index') ? route('comercial.pipeline.index') : '#'),
@@ -108,7 +106,8 @@
             'etiqueta'    => 'Gestión Ejecutiva',
             'descripcion' => 'Monitoreo de pipeline corporativo, revisión de expedientes, estados de avance y métricas comerciales.',
             'icono'       => 'fas fa-chart-line',
-            'permitido'   => ($userRole === 'directivo'),
+            // HABILITADO PARA: Gerente (directivo) y Administrador
+            'permitido'   => in_array($userRole, ['directivo', 'administrador']),
             'ruta'        => Route::has('directorio.index') 
                                 ? route('directorio.index') 
                                 : (Route::has('gerencia.dashboard') ? route('gerencia.dashboard') : '#'),
@@ -119,6 +118,7 @@
             'etiqueta'    => 'Back-Office',
             'descripcion' => 'Gestión centralizada del catálogo de partidas, tarifarios oficiales y auditoría de alertas semafóricas (SLA).',
             'icono'       => 'fas fa-user-cog',
+            // EXCLUSIVO PARA: Administrador
             'permitido'   => ($userRole === 'administrador'),
             'ruta'        => Route::has('soporte.partidas.index') ? route('soporte.partidas.index') : '#',
         ]

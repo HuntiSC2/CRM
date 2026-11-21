@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ClienteController extends Controller
 {
-    /**
-     * Muestra el directorio de clientes/contratistas con búsqueda y paginación.
-     */
     public function index(Request $request)
     {
         $search = $request->get('search');
@@ -31,14 +28,10 @@ class ClienteController extends Controller
         return view('comercial.clientes.index', compact('clientes', 'search'));
     }
 
-    /**
-     * Muestra la Bitácora y Historial 360° del Cliente (Obras, Inspecciones y Cotizaciones).
-     */
     public function show($id)
     {
         $cliente = Cliente::with([
             'user',
-            'obras' => fn ($q) => $q->withSum('cotizaciones', 'monto_total'),
             'obras.inspecciones',
             'obras.cotizaciones',
         ])->findOrFail($id);
@@ -46,17 +39,11 @@ class ClienteController extends Controller
         return view('comercial.clientes.show', compact('cliente'));
     }
 
-    /**
-     * Muestra el formulario para registrar una nueva ficha.
-     */
     public function create()
     {
         return view('comercial.clientes.create');
     }
 
-    /**
-     * Guarda la ficha comercial en MySQL utilizando validación mediante ClienteRequest.
-     */
     public function store(ClienteRequest $request)
     {
         $data = $request->validated();
@@ -86,8 +73,32 @@ class ClienteController extends Controller
     }
 
     /**
-     * Endpoint ultraligero AJAX para detección asíncrona de RUC duplicado.
+     * Da de baja a un cliente activo con validación estricta de obras/pipeline.
      */
+    public function toggleEstado($id)
+    {
+        $cliente = Cliente::with('obras')->findOrFail($id);
+        $estadoActual = $cliente->estado_dinamico;
+
+        // Si el cliente está en proceso (con obras en Prospecto, Inspección, Cotización o Cierre Comercial)
+        if ($estadoActual === 'EN_PROCESO') {
+            return back()->with('error', "No es posible darle de baja porque el cliente {$cliente->razon_social} está siendo evaluado en el pipeline comercial.");
+        }
+
+        // Si el cliente está Activo (obra Aceptada/culminada) -> pasa a INACTIVO
+        if ($estadoActual === 'ACTIVO') {
+            $cliente->update(['estado' => 'INACTIVO']);
+            return back()->with('success', "El cliente {$cliente->razon_social} ha sido dado de baja exitosamente (Estado: Inactivo).");
+        }
+
+        // Si ya está inactivo, se le informa que se reactiva automáticamente al registrarle una nueva obra en Prospecto
+        if ($estadoActual === 'INACTIVO') {
+            return back()->with('info', "El cliente {$cliente->razon_social} se encuentra Inactivo. Se reactivará automáticamente a 'En Proceso' cuando registre una nueva obra en Prospecto desde el Pipeline.");
+        }
+
+        return back();
+    }
+
     public function checkRuc(Request $request)
     {
         $exists = Cliente::where('ruc', $request->ruc)->exists();

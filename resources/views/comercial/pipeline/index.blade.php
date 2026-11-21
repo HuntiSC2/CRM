@@ -148,24 +148,29 @@
         letter-spacing: 0.3px;
     }
 
-    /* PASTILLAS */
+    /* PASTILLAS INTERACTIVAS CON EFECTO PROFESIONAL */
     .btn-pill-base {
         font-size: 0.55rem !important;
         font-weight: 800 !important;
-        padding: 0.12rem 0.40rem !important;
+        padding: 0.14rem 0.45rem !important;
         border-radius: 50rem !important;
         display: inline-flex;
         align-items: center;
-        gap: 3px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-        transition: all 0.15s ease-in-out;
+        gap: 3.5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
         line-height: 1.25;
         white-space: nowrap;
         border: 1px solid transparent !important;
         cursor: pointer;
+        position: relative;
     }
     .btn-pill-base:hover {
-        transform: translateY(-1px);
+        transform: translateY(-1.5px) scale(1.03);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18) !important;
+    }
+    .btn-pill-base:active {
+        transform: translateY(0) scale(0.98);
     }
 
     .pill-amarillo {
@@ -173,19 +178,29 @@
         color: #92400e !important;
         border-color: #fde68a !important;
     }
-    .pill-amarillo:hover { background-color: #fde68a !important; }
+    .pill-amarillo:hover { 
+        background-color: #fde68a !important; 
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.28) !important;
+    }
 
     .pill-azul-enviada {
         background-color: #e0f2fe !important;
         color: #0369a1 !important;
         border-color: #bae6fd !important;
     }
-    .pill-azul-enviada:hover { background-color: #bae6fd !important; }
+    .pill-azul-enviada:hover { 
+        background-color: #bae6fd !important; 
+        box-shadow: 0 4px 12px rgba(3, 105, 161, 0.25) !important;
+    }
 
     .pill-verde-ok {
         background-color: #ffffff !important;
         color: #047857 !important;
         border-color: #a7f3d0 !important;
+    }
+    .pill-verde-ok:hover {
+        background-color: #ecfdf5 !important;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25) !important;
     }
 
     .pill-rojo-rechazada {
@@ -193,36 +208,83 @@
         color: #dc2626 !important;
         border-color: #fecaca !important;
     }
-
-    .dropdown-menu-dtl {
-        z-index: 2050 !important;
-        box-shadow: 0 14px 28px rgba(12, 25, 44, 0.20), 0 10px 10px rgba(12, 25, 44, 0.08) !important;
-        border: 1px solid #cbd5e1 !important;
+    .pill-rojo-rechazada:hover {
+        background-color: #fef2f2 !important;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25) !important;
     }
 
-    /* FLYOUTS BASE */
+    /* MENÚ DE TRES PUNTOS CON EFECTO POPUP MODERNO */
+    .dropdown-menu-dtl {
+        z-index: 2050 !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 16px 38px -6px rgba(12, 25, 44, 0.25), 0 4px 12px rgba(12, 25, 44, 0.08) !important;
+        animation: dropdownSlidePop 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-origin: top right;
+        backdrop-filter: blur(8px);
+    }
+    @keyframes dropdownSlidePop {
+        from { opacity: 0; transform: translateY(-8px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .dropdown-menu-dtl .dropdown-item {
+        transition: all 0.14s ease;
+        border-radius: 8px;
+        padding: 0.35rem 0.65rem;
+    }
+    .dropdown-menu-dtl .dropdown-item:hover {
+        background-color: #f1f5f9;
+        transform: translateX(2.5px);
+        color: var(--dtl-navy);
+    }
+    .dropdown-menu-dtl .dropdown-item:active {
+        transform: scale(0.98);
+    }
+
+    /* BOTÓN 3 PUNTITOS DINÁMICO */
+    .btn-dots-pipeline {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        transition: all 0.18s ease;
+        opacity: 0.75;
+    }
+    .btn-dots-pipeline:hover,
+    .btn-dots-pipeline[aria-expanded="true"] {
+        opacity: 1 !important;
+        background-color: rgba(255, 255, 255, 0.22) !important;
+        transform: scale(1.12);
+    }
+
+    /* FLYOUTS BASE (TARJETAS COMPACTAS PROFESIONALES) */
     .flyout-card-panel {
         position: absolute;
         top: 2px;
-        left: calc(100% + 8px);
+        left: calc(100% + 10px);
         z-index: 2040;
-        width: 290px;
+        width: 330px;
         background: #ffffff;
         border: 1px solid #cbd5e1;
         border-radius: 12px;
-        padding: 0.75rem 0.85rem;
-        box-shadow: 0 14px 30px rgba(12, 25, 44, 0.22);
+        padding: 0.85rem 0.95rem;
+        box-shadow: 0 20px 42px -6px rgba(12, 25, 44, 0.25), 0 4px 14px rgba(12, 25, 44, 0.08);
         color: #1e293b;
-        animation: flyoutSlide 0.12s ease-out;
+        animation: flyoutSlide 0.20s cubic-bezier(0.16, 1, 0.3, 1);
+        backdrop-filter: blur(8px);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .flyout-card-panel:hover {
+        box-shadow: 0 24px 48px -6px rgba(12, 25, 44, 0.30), 0 6px 18px rgba(12, 25, 44, 0.10);
     }
     @keyframes flyoutSlide {
-        from { opacity: 0; transform: translateX(-6px); }
-        to { opacity: 1; transform: translateX(0); }
+        from { opacity: 0; transform: translateX(-10px) scale(0.96); }
+        to { opacity: 1; transform: translateX(0) scale(1); }
     }
     .flyout-card-panel::before {
         content: '';
         position: absolute;
-        top: 11px;
+        top: 12px;
         left: -6px;
         width: 11px;
         height: 11px;
@@ -235,17 +297,22 @@
     .flyout-insp-left {
         left: auto !important;
         right: calc(100% + 10px) !important;
-        width: 295px !important;
+        width: 300px !important;
         z-index: 2040 !important;
-        animation: flyoutSlideLeft 0.12s ease-out !important;
+        animation: flyoutSlideLeft 0.20s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     @keyframes flyoutSlideLeft {
-        from { opacity: 0; transform: translateX(6px); }
-        to { opacity: 1; transform: translateX(0); }
+        from { opacity: 0; transform: translateX(10px) scale(0.96); }
+        to { opacity: 1; transform: translateX(0) scale(1); }
     }
     .flyout-insp-left::before {
         left: auto !important;
         right: -6px !important;
+        border-left: none !important;
+        border-bottom: none !important;
+        border-right: 1px solid #cbd5e1 !important;
+        border-top: 1px solid #cbd5e1 !important;
+    }
         border-left: none !important;
         border-bottom: none !important;
         border-right: 1px solid #cbd5e1 !important;
@@ -380,11 +447,6 @@
         transform: rotate(45deg);
     }
 
-    /* ==========================================================
-       OPTIMIZACIÓN CLAVE PARA CELULAR (TARJETAS ANCHAS)
-       - Columnas anchas a 86vw (ocupan casi toda la pantalla móvil)
-       - Desplazamiento carrusel táctil suave (scroll-snap)
-    ========================================================== */
     @media (max-width: 767.98px) {
         .container-fluid { padding-left: 6px !important; padding-right: 6px !important; }
         .dtl-pipeline-wrapper { padding: 0.5rem 0.25rem !important; }
@@ -396,30 +458,25 @@
             padding-right: 4px;
         }
 
-        /* Cada columna mide el 86% del ancho del celular */
         .kanban-col-dtl { 
             width: 86vw !important; 
             min-width: 86vw !important;
             max-width: 86vw !important;
-            scroll-snap-align: center !important; /* Centra la columna al deslizar */
+            scroll-snap-align: center !important;
             padding: 0.75rem !important;
         }
 
-        /* La tarjeta verde ocupa todo el ancho de la columna espaciosa */
         .card-note-dtl {
             padding: 0.70rem 0.75rem !important;
             width: 100% !important;
         }
 
-        /* Pastillas compactas y proporcionadas en celular */
         .btn-pill-base {
             font-size: 0.50rem !important;
             padding: 0.10rem 0.35rem !important;
             gap: 2.5px !important;
         }
-        .btn-pill-base i {
-            font-size: 0.52rem !important;
-        }
+        .btn-pill-base i { font-size: 0.52rem !important; }
 
         .badge-codigo-obra {
             font-size: 0.54rem !important;
@@ -661,48 +718,86 @@
                                                 @if($obra['estado_cotizacion'] === 'Programada')
                                                     <button type="button" class="btn-pill-base pill-amarillo flex-shrink-0" 
                                                             onclick="toggleFlyout(event, 'flyout-cot-{{ $obra['id'] }}')"
-                                                            title="Cotización programada. Clic para gestionar.">
+                                                            title="Cotización programada. Clic para vincular partidas y emitir.">
                                                         <i class="fas fa-clock"></i> Cotiz. Pend. {{ $enumCot }}
                                                     </button>
 
-                                                    <div id="flyout-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 290px;" onclick="event.stopPropagation();">
+                                                    <!-- FLYOUT INTEGRADO: DESGLOSE DE PARTIDAS -->
+                                                    <div id="flyout-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 340px;" onclick="event.stopPropagation();">
                                                         <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
                                                             <span class="text-dark fw-bold" style="font-size: 0.72rem;">
-                                                                <i class="fas fa-paper-plane text-primary me-1"></i> Gestión de Cotización
+                                                                <i class="fas fa-layer-group text-primary me-1"></i> Desglose de Partidas Oficiales
                                                             </span>
                                                             <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-cot-{{ $obra['id'] }}')"></button>
                                                         </div>
 
+                                                        <!-- Retraso en Fecha -->
                                                         <div class="p-1.5 rounded border bg-light mb-2">
-                                                            <label class="form-label text-muted mb-0.5" style="font-size: 0.63rem;">Fecha de Emisión Programada:</label>
-                                                            <input type="date" id="reprog-cot-fecha-{{ $obra['id'] }}" value="{{ $obra['cotizacion_fecha_emision'] }}" class="form-control form-control-sm py-0.5 mb-1" style="font-size: 0.70rem; height: 26px;">
-                                                            
-                                                            <button type="button" class="btn btn-sm btn-outline-secondary w-100 py-0.5 fw-bold" 
-                                                                    style="font-size: 0.64rem;" onclick="reprogramarCotizacionFecha(this, '{{ $obra['cotizacion_id'] }}', '{{ $obra['id'] }}')">
-                                                                <i class="fas fa-clock-rotate-left me-1"></i> Actualizar Fecha por Retraso
+                                                            <label class="form-label text-muted mb-0.5" style="font-size: 0.62rem;">Fecha de Emisión Programada:</label>
+                                                            <div class="d-flex gap-1">
+                                                                <input type="date" id="reprog-cot-fecha-{{ $obra['id'] }}" value="{{ $obra['cotizacion_fecha_emision'] }}" class="form-control form-control-sm py-0.5" style="font-size: 0.68rem; height: 26px;">
+                                                                <button type="button" class="btn btn-sm btn-outline-secondary px-2 py-0 fw-bold text-nowrap" 
+                                                                        style="font-size: 0.62rem;" onclick="reprogramarCotizacionFecha(this, '{{ $obra['cotizacion_id'] }}', '{{ $obra['id'] }}')">
+                                                                    <i class="fas fa-clock-rotate-left"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Selector de Partida -->
+                                                        <div class="p-1.5 rounded border bg-light mb-2">
+                                                            <label class="form-label text-dark mb-0.5 fw-bold" style="font-size: 0.64rem;">Seleccionar Partida del Catálogo:</label>
+                                                            <select id="sel-partida-{{ $obra['id'] }}" class="form-select form-select-sm py-0.5 mb-1" style="font-size: 0.70rem; height: 26px;" onchange="partidaSeleccionadaChanged('{{ $obra['id'] }}')">
+                                                                <option value="" disabled selected>-- Elija una partida --</option>
+                                                                @foreach($partidas ?? [] as $p)
+                                                                    <option value="{{ $p->id }}" 
+                                                                            data-codigo="{{ $p->codigo }}" 
+                                                                            data-precio="{{ $p->precio_unitario }}" 
+                                                                            data-unidad="{{ $p->unidad_medida }}" 
+                                                                            data-desc="{{ $p->descripcion }}">
+                                                                        [{{ $p->codigo }}] {{ Str::limit($p->descripcion, 24) }} (S/ {{ number_format($p->precio_unitario, 2) }}/{{ $p->unidad_medida }})
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+
+                                                            <div class="row g-1 mb-1">
+                                                                <div class="col-6">
+                                                                    <label class="form-label text-muted mb-0" style="font-size: 0.60rem;">Cantidad / Metrado:</label>
+                                                                    <input type="number" step="0.01" min="0.01" id="cant-partida-{{ $obra['id'] }}" class="form-control form-control-sm py-0.5 font-monospace fw-bold" value="1.00" style="font-size: 0.70rem; height: 25px;">
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label class="form-label text-muted mb-0" style="font-size: 0.60rem;">Precio Unit. (S/):</label>
+                                                                    <input type="number" step="0.01" min="0" id="precio-partida-{{ $obra['id'] }}" class="form-control form-control-sm py-0.5 font-monospace text-success fw-bold bg-light" style="font-size: 0.70rem; height: 25px; cursor: not-allowed;" readonly title="Precio oficial de catálogo establecido por soporte">
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="button" class="btn btn-sm btn-outline-primary w-100 py-0.5 fw-bold" style="font-size: 0.65rem;" onclick="agregarPartidaACotizacion('{{ $obra['id'] }}')">
+                                                                <i class="fas fa-plus-circle me-1"></i> Vincular a Cotización
                                                             </button>
                                                         </div>
 
-                                                        <div class="mb-1.5">
-                                                            <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Monto Cotizado (S/) *</label>
-                                                            <div class="input-group input-group-sm">
-                                                                <span class="input-group-text bg-light fw-bold" style="font-size: 0.68rem;">S/</span>
-                                                                <input type="number" step="0.01" min="1" id="cot-monto-{{ $obra['id'] }}" class="form-control form-control-sm font-monospace fw-bold" placeholder="0.00" oninput="limpiarErrorValidacion(this, 'msg-error-cotmonto-{{ $obra['id'] }}')">
+                                                        <!-- Canasta de Partidas -->
+                                                        <div class="mb-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-0.5">
+                                                                <span class="fw-bold text-dark" style="font-size: 0.65rem;">Partidas Vinculadas:</span>
+                                                                <span class="badge bg-success font-monospace" id="total-badge-{{ $obra['id'] }}" style="font-size: 0.62rem;">Total: S/ 0.00</span>
                                                             </div>
-                                                            <div id="msg-error-cotmonto-{{ $obra['id'] }}" class="msg-error-dtl d-none">
-                                                                <i class="fas fa-circle-exclamation"></i> Ingrese un monto válido mayor a 0.
+                                                            <div id="lista-partidas-{{ $obra['id'] }}" class="border rounded bg-white p-1" style="max-height: 120px; overflow-y: auto; font-size: 0.67rem;">
+                                                                <p class="text-muted text-center my-2 fst-italic" style="font-size: 0.63rem;">No se han vinculado partidas aún.</p>
+                                                            </div>
+                                                            <div id="msg-error-partidas-{{ $obra['id'] }}" class="msg-error-dtl d-none">
+                                                                <i class="fas fa-circle-exclamation"></i> Vincule al menos una partida antes de emitir.
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-2">
-                                                            <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Condiciones / Observaciones</label>
-                                                            <textarea id="cot-obs-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.72rem;" placeholder="Validez de oferta, condiciones de pago..."></textarea>
+                                                            <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.65rem;">Condiciones / Observaciones</label>
+                                                            <textarea id="cot-obs-{{ $obra['id'] }}" rows="2" class="form-control form-control-sm" style="font-size: 0.68rem;" placeholder="Validez de oferta, condiciones de pago..."></textarea>
                                                         </div>
 
-                                                        <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
+                                                        <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1 shadow-sm"
                                                                 style="background-color: var(--dtl-green); font-size: 0.72rem;"
-                                                                onclick="enviarCotDirecto(this, '{{ $obra['id'] }}', '{{ $obra['cotizacion_id'] }}')">
-                                                            <i class="fas fa-paper-plane"></i> Emitir Cotización
+                                                                onclick="enviarCotConPartidas(this, '{{ $obra['id'] }}', '{{ $obra['cotizacion_id'] }}')">
+                                                            <i class="fas fa-paper-plane"></i> Emitir Cotización Oficial
                                                         </button>
                                                     </div>
 
@@ -753,7 +848,7 @@
                                                 @endif
 
                                                 @if($obra['cotizacion_finalizada'])
-                                                    <div id="flyout-view-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 295px;" onclick="event.stopPropagation();">
+                                                    <div id="flyout-view-cot-{{ $obra['id'] }}" class="flyout-card-panel d-none" style="width: 320px;" onclick="event.stopPropagation();">
                                                         <div class="d-flex align-items-center justify-content-between mb-1.5 pb-1 border-bottom">
                                                             <span class="text-dark fw-bold" style="font-size: 0.74rem;">
                                                                 <i class="fas fa-file-invoice text-success me-1"></i> Cotizaciones Emitidas
@@ -781,6 +876,18 @@
                                                                         <div class="mb-1 text-dark"><strong>Monto:</strong> <span class="font-monospace fw-bold">{{ $cotItem['monto'] }}</span></div>
                                                                         <div class="mb-1 text-muted"><strong>Fecha:</strong> {{ $cotItem['fecha'] }}</div>
                                                                         
+                                                                        @if(!empty($cotItem['detalles']) && count($cotItem['detalles']) > 0)
+                                                                            <div class="border rounded bg-white p-1 my-1" style="max-height: 90px; overflow-y: auto;">
+                                                                                <div class="fw-bold text-dark pb-0.5 mb-0.5 border-bottom" style="font-size: 0.60rem;">Desglose de Partidas:</div>
+                                                                                @foreach($cotItem['detalles'] as $dItem)
+                                                                                    <div class="d-flex justify-content-between text-muted py-0.5" style="font-size: 0.59rem;">
+                                                                                        <span>[{{ $dItem['codigo'] }}] {{ Str::limit($dItem['descripcion'], 20) }} &times; {{ $dItem['cantidad'] }}</span>
+                                                                                        <span class="font-monospace fw-bold">S/ {{ number_format($dItem['subtotal'], 2) }}</span>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
+
                                                                         <div class="p-1 rounded bg-white border mt-1" style="font-size: 0.64rem;">
                                                                             <div class="text-success fw-bold mb-0.5">
                                                                                 <i class="fas fa-link me-1"></i> Vinculada a Inspección #{{ $cotItem['insp_numero'] }} ({{ $cotItem['insp_ingeniero'] }})
@@ -936,9 +1043,9 @@
 
                                         <!-- MENÚ DE TRES PUNTOS -->
                                         <div class="dropdown flex-shrink-0 ms-1">
-                                            <button class="btn btn-sm p-0 border-0 d-flex align-items-center justify-content-center text-white opacity-75" 
+                                            <button class="btn btn-sm p-0 border-0 d-flex align-items-center justify-content-center text-white btn-dots-pipeline" 
                                                     type="button" data-bs-toggle="dropdown" aria-expanded="false" 
-                                                    style="width: 20px; height: 20px;">
+                                                    title="Opciones de Obra">
                                                 <i class="fas fa-ellipsis-h" style="font-size: 0.82rem;"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2 dropdown-menu-dtl" style="font-size: 0.76rem; min-width: 215px;">
@@ -1028,23 +1135,33 @@
                                         @endif
 
                                         <!-- POPOVER: NOTA DE BITÁCORA -->
-                                        <div id="flyout-bitacora-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();">
+                                        <div id="flyout-bitacora-{{ $obra['id'] }}" class="flyout-card-panel d-none" onclick="event.stopPropagation();" style="width: 290px;">
                                             <div class="d-flex align-items-center justify-content-between mb-2 pb-1 border-bottom">
                                                 <span class="text-dark fw-bold" style="font-size: 0.72rem;">
-                                                    <i class="fas fa-clipboard-list text-warning me-1"></i> Bitácora Técnica
+                                                    <i class="fas fa-clipboard-list text-warning me-1"></i> Nota de Bitácora
                                                 </span>
                                                 <button type="button" class="btn-close p-0" style="font-size: 0.50rem;" onclick="cerrarFlyout('flyout-bitacora-{{ $obra['id'] }}')"></button>
                                             </div>
 
+                                            <!-- SELECCIÓN DE TIPO DE CONTACTO -->
                                             <div class="mb-2">
-                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Nota / Suceso de Seguimiento *</label>
-                                                <textarea id="bitacora-desc-{{ $obra['id'] }}" rows="3" class="form-control form-control-sm" style="font-size: 0.74rem;" placeholder="Acuerdos con cliente, especificaciones..." oninput="limpiarErrorValidacion(this, 'msg-error-bitacora-{{ $obra['id'] }}')"></textarea>
+                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.65rem;">Tipo de Contacto <span class="text-danger">*</span></label>
+                                                <select id="bitacora-tipo-contacto-{{ $obra['id'] }}" class="form-select form-select-sm py-0.5" style="font-size: 0.72rem; height: 28px;">
+                                                    <option value="Llamada Telefónica">Llamada Telefónica</option>
+                                                    <option value="Reunión Presencial" selected>Reunión Presencial</option>
+                                                    <option value="Correo Electrónico">Correo Electrónico / WhatsApp</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.65rem;">Comentario / Acuerdo Logrado <span class="text-danger">*</span></label>
+                                                <textarea id="bitacora-desc-{{ $obra['id'] }}" rows="3" class="form-control form-control-sm" style="font-size: 0.72rem;" placeholder="Escriba los detalles de la conversación, acuerdos..." oninput="limpiarErrorValidacion(this, 'msg-error-bitacora-{{ $obra['id'] }}')"></textarea>
                                                 <div id="msg-error-bitacora-{{ $obra['id'] }}" class="msg-error-dtl d-none">
-                                                    <i class="fas fa-circle-exclamation"></i> Ingrese la nota de seguimiento.
+                                                    <i class="fas fa-circle-exclamation"></i> Ingrese la nota o comentario de seguimiento.
                                                 </div>
                                             </div>
 
-                                            <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1"
+                                            <button type="button" class="btn btn-sm w-100 fw-bold text-white d-flex align-items-center justify-content-center gap-1 shadow-sm"
                                                     style="background-color: #f59e0b; font-size: 0.72rem;"
                                                     onclick="enviarBitacoraDirecto(this, '{{ $obra['id'] }}')">
                                                 <i class="fas fa-save me-1"></i> Guardar en Bitácora
@@ -1053,7 +1170,7 @@
 
                                     </div>
 
-                                    <!-- CUERPO DE LA TARJETA VERDE: TÍTULO HASTA EN 2 LÍNEAS COMPLETAS -->
+                                    <!-- CUERPO DE LA TARJETA VERDE: TÍTULO -->
                                     <div class="card-task-title" title="{{ $obra['titulo'] }}">
                                         {{ $obra['titulo'] }}
                                     </div>
@@ -1096,9 +1213,9 @@
             <button class="btn shadow-lg rounded-circle p-0 d-flex align-items-center justify-content-center text-white" 
                     id="btnTriggerNuevaObra"
                     onclick="toggleTarjetaNuevaObra(event)" 
-                    style="width: 48px; height: 48px; background-color: var(--dtl-green); border: none;" 
+                    style="width: 48px; height: 48px; background-color: var(--dtl-green); border: none; transition: all 0.25s ease;" 
                     title="Registrar Nueva Obra">
-                <i class="fas fa-plus fs-4"></i>
+                <i class="fas fa-plus fs-4" id="iconTriggerNuevaObra"></i>
             </button>
         </div>
 
@@ -1115,10 +1232,14 @@
                 @csrf
                 <div>
                     <label class="form-label fw-bold text-dark mb-0.5" style="font-size: 0.68rem;">Cliente Empresarial *</label>
-                    <select name="cliente_id" id="new-cliente-id" class="form-select form-select-sm" style="font-size: 0.74rem;" required>
+                    <select name="cliente_id" id="new-cliente-id" class="form-select form-select-sm" style="font-size: 0.74rem;" onchange="notificarCambioEstadoClienteProspecto(this)" required>
                         <option value="" selected disabled>-- Seleccione un Cliente --</option>
                         @foreach($clientes as $cliente)
-                            <option value="{{ $cliente->id }}">{{ $cliente->razon_social }}</option>
+                            <option value="{{ $cliente->id }}" 
+                                    data-estado="{{ $cliente->estado_dinamico }}" 
+                                    data-nombre="{{ $cliente->razon_social }}">
+                                {{ $cliente->razon_social }} ({{ $cliente->estado_dinamico === 'EN_PROCESO' ? 'En Proceso' : ($cliente->estado_dinamico === 'ACTIVO' ? 'Activo' : 'Inactivo') }})
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -1148,10 +1269,286 @@
             </form>
         </div>
 
+        <!-- TARJETA NOTIFICADORA COMPACTA FLOTANTE (ESTADO CLIENTE -> EN PROCESO) -->
+        <div id="toastCompactoProspecto" class="d-none" style="position: fixed; bottom: 85px; right: 25px; width: 330px; background: #ffffff; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 12px 14px; box-shadow: 0 14px 30px -4px rgba(15, 23, 42, 0.22); z-index: 1095; animation: popCardCompactPipeline 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div class="d-flex align-items-start gap-2">
+                <span class="badge rounded-circle p-1.5 d-inline-flex align-items-center justify-content-center flex-shrink-0" style="background-color: #fef3c7; color: #b45309; width: 28px; height: 28px;">
+                    <i class="fas fa-user-clock" style="font-size: 0.82rem;"></i>
+                </span>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center justify-content-between mb-0.5">
+                        <span class="fw-bold text-dark text-uppercase" style="font-size: 0.70rem; letter-spacing: 0.4px;">
+                            Estado de Cliente
+                        </span>
+                        <span class="badge rounded-pill fw-bold px-1.5 py-0.2" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.58rem;">
+                            En Proceso
+                        </span>
+                    </div>
+                    <div id="textoToastCompactoProspecto" class="text-secondary extra-small" style="font-size: 0.72rem; line-height: 1.35;">
+                        <!-- Inyectado por JS -->
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm p-0 text-muted opacity-75 border-0 bg-transparent flex-shrink-0" onclick="cerrarToastCompactoProspecto()" style="font-size: 0.80rem; line-height: 1;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <style>
+            @keyframes popCardCompactPipeline {
+                from { opacity: 0; transform: translateY(10px) scale(0.96); }
+                to { opacity: 1; transform: translateY(0) scale(1); }
+            }
+        </style>
+
     </div>
 </div>
 
 <script>
+    // Almacén reactivo de partidas en memoria por obra (canasta de cotización)
+    const partidasCotizacionStore = {};
+
+    function partidaSeleccionadaChanged(obraId) {
+        const sel = document.getElementById(`sel-partida-${obraId}`);
+        const selectedOption = sel.options[sel.selectedIndex];
+        if (!selectedOption || !selectedOption.value) return;
+
+        const precio = selectedOption.getAttribute('data-precio') || 0;
+        const precioInput = document.getElementById(`precio-partida-${obraId}`);
+        if (precioInput) {
+            precioInput.value = parseFloat(precio).toFixed(2);
+        }
+    }
+
+/**
+ * Crea e inyecta dinámicamente una tarjeta compacta flotante
+ * @param {'success'|'warning'|'danger'} tipo 
+ * @param {string} titulo 
+ * @param {string} mensaje 
+ * @param {number} duracion (en ms)
+ */
+function mostrarToastNotificacion(tipo = 'success', titulo, mensaje, duracion = 3500) {
+    // Elimina toasts previos si existen
+    const toastsPrevios = document.querySelectorAll('.toast-flotante-pipeline');
+    toastsPrevios.forEach(t => t.remove());
+
+    const iconos = {
+        success: 'fa-check-circle',
+        warning: 'fa-triangle-exclamation',
+        danger: 'fa-circle-xmark'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast-flotante-pipeline toast-${tipo}`;
+    toast.innerHTML = `
+        <div class="toast-icono-badge">
+            <i class="fas ${iconos[tipo] || 'fa-info-circle'}"></i>
+        </div>
+        <div class="flex-grow-1">
+            <div class="toast-texto-titulo">${titulo}</div>
+            <p class="toast-texto-desc">${mensaje}</p>
+        </div>
+        <button type="button" class="btn-close p-0" style="font-size: 0.55rem; opacity: 0.6;" onclick="this.parentElement.remove()"></button>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Animación de entrada
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Auto-cierre
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 250);
+    }, duracion);
+}
+
+    // 1. MEJORA EN VALIDACIÓN DE PARTIDA AL AGREGAR A LA CANASTA
+function agregarPartidaACotizacion(obraId) {
+    const sel = document.getElementById(`sel-partida-${obraId}`);
+    const cantInput = document.getElementById(`cant-partida-${obraId}`);
+    const precioInput = document.getElementById(`precio-partida-${obraId}`);
+
+    // Reemplazo del alert nativo por la tarjeta compacta
+    if (!sel.value) {
+        sel.classList.add('input-error-dtl');
+        mostrarToastNotificacion(
+            'warning',
+            'Partida requerida',
+            'Por favor seleccione una partida válida del catálogo oficial antes de continuar.'
+        );
+        sel.focus();
+        return;
+    }
+    sel.classList.remove('input-error-dtl');
+
+    const cantidad = parseFloat(cantInput.value) || 0;
+    const precio = parseFloat(precioInput.value) || 0;
+
+    if (cantidad <= 0) {
+        cantInput.classList.add('input-error-dtl');
+        mostrarToastNotificacion(
+            'warning',
+            'Metrado / Cantidad inválida',
+            'Ingrese una cantidad o metrado numérico mayor a cero (0).'
+        );
+        cantInput.focus();
+        return;
+    }
+    cantInput.classList.remove('input-error-dtl');
+
+    if (!partidasCotizacionStore[obraId]) {
+        partidasCotizacionStore[obraId] = [];
+    }
+
+    const opt = sel.options[sel.selectedIndex];
+    const partidaId = parseInt(sel.value);
+    const codigo = opt.getAttribute('data-codigo');
+    const descripcion = opt.getAttribute('data-desc');
+    const unidad = opt.getAttribute('data-unidad');
+    const subtotal = cantidad * precio;
+
+    const existente = partidasCotizacionStore[obraId].find(p => p.id === partidaId);
+    if (existente) {
+        existente.cantidad += cantidad;
+        existente.subtotal = existente.cantidad * existente.precio;
+    } else {
+        partidasCotizacionStore[obraId].push({
+            id: partidaId,
+            codigo: codigo,
+            descripcion: descripcion,
+            unidad: unidad,
+            cantidad: cantidad,
+            precio: precio,
+            subtotal: subtotal
+        });
+    }
+
+        renderizarPartidasCotizacion(obraId);
+
+           // Feedback intuitivo al vincular
+        mostrarToastNotificacion(
+        'success',
+        'Partida vinculada',
+        `Se vinculó [${codigo}] correctamente a la cotización preliminar.`
+    );
+
+        // Resetear inputs
+        sel.selectedIndex = 0;
+        cantInput.value = '1.00';
+        precioInput.value = '';
+        const msgErr = document.getElementById(`msg-error-partidas-${obraId}`);
+        if (msgErr) msgErr.classList.add('d-none');
+    }
+
+    function eliminarPartidaCotizacion(obraId, index) {
+        if (partidasCotizacionStore[obraId]) {
+            partidasCotizacionStore[obraId].splice(index, 1);
+            renderizarPartidasCotizacion(obraId);
+        }
+    }
+
+    function renderizarPartidasCotizacion(obraId) {
+        const cont = document.getElementById(`lista-partidas-${obraId}`);
+        const totalBadge = document.getElementById(`total-badge-${obraId}`);
+        const items = partidasCotizacionStore[obraId] || [];
+
+        if (items.length === 0) {
+            cont.innerHTML = `<p class="text-muted text-center my-2 fst-italic" style="font-size: 0.63rem;">No se han vinculado partidas aún.</p>`;
+            totalBadge.innerText = 'Total: S/ 0.00';
+            return;
+        }
+
+        let html = '';
+        let totalGeneral = 0;
+
+        items.forEach((item, idx) => {
+            totalGeneral += item.subtotal;
+            html += `
+                <div class="d-flex align-items-center justify-content-between p-1 mb-1 border-bottom">
+                    <div style="max-width: 82%;">
+                        <strong class="text-dark">[${item.codigo}]</strong> ${item.descripcion.substring(0, 24)}...
+                        <div class="text-muted font-monospace" style="font-size: 0.60rem;">
+                            ${item.cantidad.toFixed(2)} ${item.unidad} &times; S/ ${item.precio.toFixed(2)} = <strong>S/ ${item.subtotal.toFixed(2)}</strong>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-link text-danger p-0 border-0" onclick="eliminarPartidaCotizacion('${obraId}', ${idx})" title="Quitar">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+        });
+
+        cont.innerHTML = html;
+        totalBadge.innerText = `Total: S/ ${totalGeneral.toFixed(2)}`;
+    }
+
+// 2. EMISIÓN Y VALIDACIÓN FORMAL DE COTIZACIÓN
+function enviarCotConPartidas(btn, obraId, cotId) {
+    const items = partidasCotizacionStore[obraId] || [];
+    const obs = document.getElementById(`cot-obs-${obraId}`).value;
+
+    if (items.length === 0) {
+        const msgErr = document.getElementById(`msg-error-partidas-${obraId}`);
+        if (msgErr) msgErr.classList.remove('d-none');
+        mostrarToastNotificacion(
+            'danger',
+            'Cotización sin partidas',
+            'Debe vincular al menos una partida técnica para validar y emitir la cotización.'
+        );
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Validando y emitiendo...`;
+
+    fetch("{{ route('comercial.pipeline.enviarCotizacion') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+            cotizacion_id: cotId,
+            observaciones: obs,
+            partidas: items.map(p => ({
+                id: p.id,
+                cantidad: p.cantidad,
+                precio: p.precio
+            }))
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // TARJETA COMPACTA PROFESIONAL DE ÉXITO
+            mostrarToastNotificacion(
+                'success',
+                'Cotización validada con éxito',
+                'Se validaron las partidas y se emitió la cotización formalmente al cliente.',
+                2000
+            );
+
+            // Breve espera para que el usuario aprecie el estado validado antes de refrescar
+            setTimeout(() => {
+                location.reload();
+            }, 1200);
+        } else {
+            mostrarToastNotificacion('danger', 'Error al procesar', data.message || 'No se pudo emitir la cotización.');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-paper-plane"></i> Emitir Cotización Oficial`;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        mostrarToastNotificacion('danger', 'Error en el servidor', 'Ocurrió un problema de comunicación al validar la cotización.');
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-paper-plane"></i> Emitir Cotización Oficial`;
+        });
+    }
+
     document.addEventListener('show.bs.dropdown', function (event) {
         const card = event.target.closest('.card-note-dtl');
         if (card) card.classList.add('has-menu-open');
@@ -1529,41 +1926,6 @@
         });
     }
 
-    function enviarCotDirecto(btn, obraId, cotId) {
-        const montoInput = document.getElementById('cot-monto-' + obraId);
-        const obs = document.getElementById('cot-obs-' + obraId).value;
-
-        if (!montoInput.value || parseFloat(montoInput.value) <= 0) {
-            montoInput.classList.add('input-error-dtl');
-            document.getElementById(`msg-error-cotmonto-${obraId}`).classList.remove('d-none');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
-
-        fetch("{{ route('comercial.pipeline.enviarCotizacion') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-                cotizacion_id: cotId,
-                monto_total: montoInput.value,
-                observaciones: obs
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                btn.disabled = false;
-            }
-        });
-    }
-
     function ejecutarRespuestaCotizacion(btn, cotId, estadoCotizacion) {
         btn.disabled = true;
         btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
@@ -1705,11 +2067,56 @@
         ev.stopPropagation();
         document.querySelectorAll('.flyout-card-panel').forEach(el => el.classList.add('d-none'));
         const card = document.getElementById('cardNuevaObraFlotante');
+        const btn = document.getElementById('btnTriggerNuevaObra');
+        
         card.classList.toggle('d-none');
+
+        // Efecto visual dinámico al abrir/cerrar la tarjeta de creación
+        if (!card.classList.contains('d-none')) {
+            btn.style.backgroundColor = '#d97706'; // Amarillo / Ámbar característico de Prospecto/En Proceso
+            btn.title = "Creando expediente en Prospecto";
+        } else {
+            btn.style.backgroundColor = 'var(--dtl-green)';
+            btn.title = "Registrar Nueva Obra";
+        }
     }
 
     function cerrarTarjetaNuevaObra() {
-        document.getElementById('cardNuevaObraFlotante').classList.add('d-none');
+        const card = document.getElementById('cardNuevaObraFlotante');
+        if (card) card.classList.add('d-none');
+        const btn = document.getElementById('btnTriggerNuevaObra');
+        if (btn) {
+            btn.style.backgroundColor = 'var(--dtl-green)';
+            btn.title = "Registrar Nueva Obra";
+        }
+    }
+
+    function notificarCambioEstadoClienteProspecto(selectEl) {
+        const opt = selectEl.options[selectEl.selectedIndex];
+        if (!opt || !opt.value) return;
+
+        const nombre = opt.getAttribute('data-nombre');
+        const estadoAnt = opt.getAttribute('data-estado');
+        const toast = document.getElementById('toastCompactoProspecto');
+        const texto = document.getElementById('textoToastCompactoProspecto');
+        const btn = document.getElementById('btnTriggerNuevaObra');
+
+        // Cambiar el botón flotante a amarillo característico de proceso
+        if (btn) btn.style.backgroundColor = '#d97706';
+
+        let descEstado = (estadoAnt === 'INACTIVO') ? 'Inactivo' : (estadoAnt === 'ACTIVO' ? 'Activo' : 'En Proceso');
+
+        texto.innerHTML = `Al crear esta obra en <strong>Prospecto</strong>, el cliente <strong>${nombre}</strong> pasará automáticamente de <em>${descEstado}</em> a estado <strong>"En Proceso"</strong> en el CRM.`;
+        
+        toast.classList.remove('d-none');
+        setTimeout(() => {
+            cerrarToastCompactoProspecto();
+        }, 6000);
+    }
+
+    function cerrarToastCompactoProspecto() {
+        const toast = document.getElementById('toastCompactoProspecto');
+        if (toast) toast.classList.add('d-none');
     }
 
     function enviarNuevaObraAjax(e) {
@@ -1783,37 +2190,59 @@
         document.querySelectorAll('.card-note-dtl').forEach(c => c.classList.remove('has-menu-open'));
     });
 
-    function enviarBitacoraDirecto(btn, obraId) {
-        const descInput = document.getElementById('bitacora-desc-' + obraId);
-        if (!descInput.value.trim()) {
-            descInput.classList.add('input-error-dtl');
-            document.getElementById(`msg-error-bitacora-${obraId}`).classList.remove('d-none');
-            return;
-        }
+ function enviarBitacoraDirecto(btn, obraId) {
+    const descInput = document.getElementById('bitacora-desc-' + obraId);
+    const tipoContactoSelect = document.getElementById('bitacora-tipo-contacto-' + obraId);
+    const tipoContacto = tipoContactoSelect ? tipoContactoSelect.value : 'Reunión Presencial';
 
-        btn.disabled = true;
-        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+    if (!descInput.value.trim()) {
+        descInput.classList.add('input-error-dtl');
+        const msgErr = document.getElementById(`msg-error-bitacora-${obraId}`);
+        if (msgErr) msgErr.classList.remove('d-none');
+        descInput.focus();
+        return;
+    }
 
-        fetch("{{ route('comercial.pipeline.agregarBitacora') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-                obra_id: obraId,
-                descripcion: descInput.value.trim()
-            })
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Guardando...`;
+
+    fetch("{{ route('comercial.pipeline.agregarBitacora') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+            obra_id: obraId,
+            tipo_contacto: tipoContacto,
+            descripcion: descInput.value.trim()
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                cerrarFlyout('flyout-bitacora-' + obraId);
-                btn.disabled = false;
-                descInput.value = '';
-            } else {
-                btn.disabled = false;
-            }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            cerrarFlyout('flyout-bitacora-' + obraId);
+            descInput.value = '';
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-save me-1"></i> Guardar en Bitácora`;
+
+            // Notificación compacta intuitiva
+            mostrarToastNotificacion(
+                'success',
+                'Bitácora actualizada',
+                `Anotación de [${tipoContacto}] registrada exitosamente.`
+            );
+        } else {
+            mostrarToastNotificacion('danger', 'Error al guardar', data.message || 'No se pudo guardar la nota.');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fas fa-save me-1"></i> Guardar en Bitácora`;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        mostrarToastNotificacion('danger', 'Error de conexión', 'Ocurrió un error al intentar registrar la bitácora.');
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-save me-1"></i> Guardar en Bitácora`;
         });
     }
 

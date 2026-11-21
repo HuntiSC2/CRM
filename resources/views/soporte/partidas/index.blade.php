@@ -58,7 +58,7 @@
         background-color: #ffffff !important;
     }
 
-    /* SCROLL HORIZONTAL TÁCTIL GARANTIZADO */
+    /* SCROLL HORIZONTAL TÁCTIL */
     .dtl-table-scroll-container {
         width: 100% !important;
         max-width: 100% !important;
@@ -67,9 +67,9 @@
         display: block !important;
     }
 
-    /* TABLA FIJA QUE NO SE DESARMA NI SE TRANSFORMA EN LISTA */
+    /* TABLA FIJA EN ESCRITORIO */
     .dtl-pure-table {
-        min-width: 860px !important;
+        min-width: 950px !important;
         width: 100% !important;
         border-collapse: collapse !important;
         margin-bottom: 0 !important;
@@ -109,9 +109,7 @@
         display: inline-block;
     }
 
-    /* ==========================================================
-       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
-    ========================================================== */
+    /* PAGINACIÓN CIRCULAR */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -137,7 +135,6 @@
         margin: 0 !important;
     }
 
-    /* Botón Circular Blanco (Inactivo y Flechas) */
     .dtl-pagination-wrapper .page-link {
         width: 36px !important;
         height: 36px !important;
@@ -163,7 +160,6 @@
         color: var(--dtl-navy) !important;
     }
 
-    /* Botón Circular VERDE (Página Activa) */
     .dtl-pagination-wrapper .page-item.active .page-link {
         background-color: var(--dtl-green) !important;
         border-color: var(--dtl-green) !important;
@@ -171,13 +167,53 @@
         box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
     }
 
-    /* Flechas deshabilitadas */
     .dtl-pagination-wrapper .page-item.disabled .page-link {
         background-color: #ffffff !important;
         border-color: #e2e8f0 !important;
         color: #cbd5e1 !important;
         box-shadow: none !important;
         cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       OPTIMIZACIÓN EXCLUSIVA PARA RESOLUCIÓN DE CELULAR
+    ========================================================== */
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
+        /* 1. Ancho total ampliado para no quebrar la descripción técnica */
+        .dtl-pure-table {
+            min-width: 1250px !important;
+        }
+
+        /* 2. Reducción vertical drástica de altura de celdas */
+        .dtl-pure-table thead th {
+            padding: 0.38rem 0.65rem !important;
+            font-size: 0.62rem !important;
+        }
+
+        .dtl-pure-table td {
+            padding: 0.32rem 0.65rem !important;
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+        }
+
+        /* 3. Anchos generosos por columna */
+        .col-mob-cod      { min-width: 125px !important; width: 125px !important; }
+        .col-mob-desc     { min-width: 400px !important; width: 400px !important; }
+        .col-mob-cat      { min-width: 180px !important; width: 180px !important; }
+        .col-mob-und      { min-width: 110px !important; width: 110px !important; }
+        .col-mob-precio   { min-width: 140px !important; width: 140px !important; }
+        .col-mob-acciones { min-width: 95px !important; width: 95px !important; }
+
+        .btn-mob-action {
+            width: 25px !important;
+            height: 25px !important;
+            font-size: 0.70rem !important;
+        }
     }
 </style>
 
@@ -248,7 +284,7 @@
         </div>
     </div>
 
-    <!-- 3. FORMULARIO REGISTRO (COLAPSADO POR DEFECTO) -->
+    <!-- 3. FORMULARIO REGISTRO -->
     <div class="collapse mb-3" id="seccionFormularioRegistro">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
             <div class="card-header px-3 d-flex align-items-center justify-content-between" style="background-color: var(--dtl-navy); border-bottom: 3px solid #059669;">
@@ -302,75 +338,86 @@
         </div>
     </div>
 
-    <!-- 4. TABLA CON SCROLL LATERAL (DERECHA / IZQUIERDA EN MÓVIL) -->
+    <!-- 4. TABLA CON SCROLL LATERAL Y ALTO MÍNIMO -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="dtl-table-scroll-container">
                 <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3" style="width: 14%;">CÓDIGO</th>
-                            <th style="width: 36%;">DESCRIPCIÓN DEL TRABAJO</th>
-                            <th style="width: 18%;">CATEGORÍA</th>
-                            <th class="text-center" style="width: 10%;">UNIDAD</th>
-                            <th class="text-end" style="width: 12%;">PRECIO BASE</th>
-                            <th class="pe-3 text-center" style="width: 10%;">ACCIONES</th>
+                            <th class="ps-3 col-mob-cod" style="width: 12%;">CÓDIGO</th>
+                            <th class="col-mob-desc" style="width: 36%;">DESCRIPCIÓN DEL TRABAJO</th>
+                            <th class="col-mob-cat" style="width: 18%;">CATEGORÍA</th>
+                            <th class="text-center col-mob-und" style="width: 10%;">UNIDAD</th>
+                            <th class="text-end col-mob-precio" style="width: 14%;">PRECIO BASE</th>
+                            <th class="pe-3 text-center col-mob-acciones" style="width: 10%;">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($partidas as $partida)
                             <tr>
-                                <td class="ps-3 font-monospace fw-bold text-nowrap">
-                                    <span class="badge px-2 py-1" style="background-color: var(--dtl-navy); color: #34d399; font-size: 0.72rem;">
+                                <!-- CÓDIGO -->
+                                <td class="ps-3 font-monospace fw-bold text-nowrap col-mob-cod">
+                                    <span class="badge px-2 py-0.5" style="background-color: var(--dtl-navy); color: #34d399; font-size: 0.70rem;">
                                         {{ $partida->codigo }}
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="fw-bold text-dark d-block" style="font-size: 0.80rem;">{{ $partida->descripcion }}</span>
+
+                                <!-- DESCRIPCIÓN (COMPLETA) -->
+                                <td class="col-mob-desc">
+                                    <span class="fw-bold text-dark d-block" style="font-size: 0.76rem; line-height: 1.3;">{{ $partida->descripcion }}</span>
                                 </td>
-                                <td>
-                                    <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.68rem; background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;">
+
+                                <!-- CATEGORÍA -->
+                                <td class="col-mob-cat">
+                                    <span class="badge rounded-pill fw-semibold px-2 py-0.5 text-nowrap" style="font-size: 0.64rem; background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;">
                                         {{ $partida->categoria }}
                                     </span>
                                 </td>
-                                <td class="text-center font-monospace fw-semibold text-secondary text-nowrap" style="font-size: 0.78rem;">
+
+                                <!-- UNIDAD -->
+                                <td class="text-center font-monospace fw-semibold text-secondary text-nowrap col-mob-und" style="font-size: 0.74rem;">
                                     {{ $partida->unidad_medida }}
                                 </td>
-                                <td class="text-end font-monospace fw-bold text-nowrap" style="color: var(--dtl-green); font-size: 0.84rem;">
+
+                                <!-- PRECIO BASE -->
+                                <td class="text-end font-monospace fw-bold text-nowrap col-mob-precio" style="color: var(--dtl-green); font-size: 0.78rem;">
                                     S/ {{ number_format($partida->precio_unitario, 2) }}
                                 </td>
-                                <td class="pe-3 text-center text-nowrap">
+
+                                <!-- ACCIONES -->
+                                <td class="pe-3 text-center text-nowrap col-mob-acciones">
                                     <div class="d-inline-flex gap-1">
-                                        <button type="button" class="btn btn-sm p-1 rounded-3 border-0" 
-                                                style="background-color: #eff6ff; color: #2563eb; width: 28px; height: 28px;" 
+                                        <button type="button" class="btn btn-sm p-0 rounded-2 border-0 d-inline-flex align-items-center justify-content-center btn-mob-action" 
+                                                style="background-color: #eff6ff; color: #2563eb; width: 26px; height: 26px;" 
                                                 title="Ajustar Tarifa"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseEditarPartida{{ $partida->id }}" 
                                                 aria-expanded="false">
-                                            <i class="fas fa-edit" style="font-size: 0.75rem;"></i>
+                                            <i class="fas fa-edit" style="font-size: 0.70rem;"></i>
                                         </button>
 
-                                        <button type="button" class="btn btn-sm p-1 rounded-3 border-0" 
-                                                style="background-color: #f1f5f9; color: #475569; width: 28px; height: 28px;" 
+                                        <button type="button" class="btn btn-sm p-0 rounded-2 border-0 d-inline-flex align-items-center justify-content-center btn-mob-action" 
+                                                style="background-color: #f1f5f9; color: #475569; width: 26px; height: 26px;" 
                                                 title="Historial de Auditoría"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseHistorial{{ $partida->id }}" 
                                                 aria-expanded="false">
-                                            <i class="fas fa-clock-rotate-left" style="font-size: 0.75rem;"></i>
+                                            <i class="fas fa-clock-rotate-left" style="font-size: 0.70rem;"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
 
-                            <!-- FORMULARIO EDITAR EN LÍNEA: ULTRA COMPACTO A LO ANCHO -->
+                            <!-- FORMULARIO EDITAR EN LÍNEA -->
                             <tr class="collapse" id="collapseEditarPartida{{ $partida->id }}">
                                 <td colspan="6" class="p-0 border-0 bg-white">
-                                    <div class="p-2.5 p-md-3 my-2 mx-2 bg-white rounded-3 shadow-sm" style="border: 1px solid #cbd5e1; border-left: 4px solid #2563eb !important;">
+                                    <div class="p-2.5 p-md-3 my-1.5 mx-2 bg-white rounded-3 shadow-sm" style="border: 1px solid #cbd5e1; border-left: 4px solid #2563eb !important;">
                                         
-                                        <div class="d-flex align-items-center justify-content-between pb-1.5 mb-2 border-bottom">
-                                            <span class="fw-bold text-dark text-uppercase extra-small">
+                                        <div class="d-flex align-items-center justify-content-between pb-1 mb-2 border-bottom">
+                                            <span class="fw-bold text-dark text-uppercase extra-small" style="font-size: 0.68rem;">
                                                 <i class="fas fa-pen-to-square text-primary me-1"></i> Modificar Tarifa: 
                                                 <span class="text-primary font-monospace">{{ $partida->codigo }}</span>
                                             </span>
-                                            <button type="button" class="btn-close btn-sm" data-bs-toggle="collapse" data-bs-target="#collapseEditarPartida{{ $partida->id }}" style="font-size: 0.65rem;"></button>
+                                            <button type="button" class="btn-close btn-sm p-0" data-bs-toggle="collapse" data-bs-target="#collapseEditarPartida{{ $partida->id }}" style="font-size: 0.55rem;"></button>
                                         </div>
 
                                         <form action="{{ route('soporte.partidas.update', $partida->id) }}" method="POST">
@@ -379,35 +426,35 @@
                                             
                                             <div class="row g-2 align-items-center">
                                                 <div class="col-7 col-md-8">
-                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.68rem;">Descripción *</label>
-                                                    <input type="text" name="descripcion" class="form-control form-control-sm py-1" value="{{ $partida->descripcion }}" style="font-size: 0.78rem;" required>
+                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.65rem;">Descripción *</label>
+                                                    <input type="text" name="descripcion" class="form-control form-control-sm py-0.5" value="{{ $partida->descripcion }}" style="font-size: 0.74rem;" required>
                                                 </div>
 
                                                 <div class="col-5 col-md-4">
-                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.68rem;">Categoría *</label>
-                                                    <input type="text" name="categoria" class="form-control form-control-sm py-1" value="{{ $partida->categoria }}" style="font-size: 0.78rem;" required>
+                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.65rem;">Categoría *</label>
+                                                    <input type="text" name="categoria" class="form-control form-control-sm py-0.5" value="{{ $partida->categoria }}" style="font-size: 0.74rem;" required>
                                                 </div>
 
                                                 <div class="col-3 col-md-2">
-                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.68rem;">Unidad *</label>
-                                                    <input type="text" name="unidad_medida" class="form-control form-control-sm py-1 text-center font-monospace" value="{{ $partida->unidad_medida }}" style="font-size: 0.78rem;" required>
+                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.65rem;">Unidad *</label>
+                                                    <input type="text" name="unidad_medida" class="form-control form-control-sm py-0.5 text-center font-monospace" value="{{ $partida->unidad_medida }}" style="font-size: 0.74rem;" required>
                                                 </div>
 
                                                 <div class="col-4 col-md-3">
-                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.68rem;">Tarifa (S/) *</label>
-                                                    <input type="number" step="0.01" name="precio_unitario" class="form-control form-control-sm py-1 font-monospace fw-bold text-success" value="{{ $partida->precio_unitario }}" style="font-size: 0.80rem;" required>
+                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.65rem;">Tarifa (S/) *</label>
+                                                    <input type="number" step="0.01" name="precio_unitario" class="form-control form-control-sm py-0.5 font-monospace fw-bold text-success" value="{{ $partida->precio_unitario }}" style="font-size: 0.76rem;" required>
                                                 </div>
 
                                                 <div class="col-5 col-md-7">
-                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.68rem;">Motivo del Cambio *</label>
-                                                    <input type="text" name="motivo_cambio" class="form-control form-control-sm py-1" placeholder="Ej: Actualización de costos..." style="font-size: 0.78rem;" required>
+                                                    <label class="form-label mb-0 fw-semibold text-dark" style="font-size: 0.65rem;">Motivo del Cambio *</label>
+                                                    <input type="text" name="motivo_cambio" class="form-control form-control-sm py-0.5" placeholder="Ej: Actualización de costos..." style="font-size: 0.74rem;" required>
                                                 </div>
 
-                                                <div class="col-12 d-flex justify-content-end gap-2 mt-2 pt-1 border-top" style="border-color: #f1f5f9 !important;">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary px-3 py-1 fw-bold rounded-2" data-bs-toggle="collapse" data-bs-target="#collapseEditarPartida{{ $partida->id }}" style="font-size: 0.74rem;">
+                                                <div class="col-12 d-flex justify-content-end gap-1.5 mt-1 pt-1 border-top" style="border-color: #f1f5f9 !important;">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary px-2.5 py-0.5 fw-bold rounded-2" data-bs-toggle="collapse" data-bs-target="#collapseEditarPartida{{ $partida->id }}" style="font-size: 0.70rem;">
                                                         Cancelar
                                                     </button>
-                                                    <button type="submit" class="btn btn-sm btn-dtl-primary px-3 py-1 fw-bold rounded-2" style="font-size: 0.74rem;">
+                                                    <button type="submit" class="btn btn-sm btn-dtl-primary px-3 py-0.5 fw-bold rounded-2" style="font-size: 0.70rem;">
                                                         <i class="fas fa-check me-1"></i> Guardar Cambios
                                                     </button>
                                                 </div>
@@ -420,12 +467,12 @@
                             <!-- AUDITORÍA EN LÍNEA -->
                             <tr class="collapse" id="collapseHistorial{{ $partida->id }}">
                                 <td colspan="6" class="p-0 border-0 bg-white">
-                                    <div class="p-3 my-2 mx-2 bg-white rounded-3 shadow-sm" style="border: 1px solid #cbd5e1; border-left: 4px solid #059669 !important;">
-                                        <div class="d-flex align-items-center justify-content-between pb-2 mb-2 border-bottom">
-                                            <span class="fw-bold text-dark text-uppercase extra-small">
+                                    <div class="p-2.5 my-1.5 mx-2 bg-white rounded-3 shadow-sm" style="border: 1px solid #cbd5e1; border-left: 4px solid #059669 !important;">
+                                        <div class="d-flex align-items-center justify-content-between pb-1.5 mb-1.5 border-bottom">
+                                            <span class="fw-bold text-dark text-uppercase extra-small" style="font-size: 0.68rem;">
                                                 <i class="fas fa-clock-rotate-left text-success me-1"></i> Auditoría: <span class="text-success font-monospace">{{ $partida->codigo }}</span>
                                             </span>
-                                            <button type="button" class="btn-close btn-sm" data-bs-toggle="collapse" data-bs-target="#collapseHistorial{{ $partida->id }}"></button>
+                                            <button type="button" class="btn-close btn-sm p-0" data-bs-toggle="collapse" data-bs-target="#collapseHistorial{{ $partida->id }}" style="font-size: 0.55rem;"></button>
                                         </div>
 
                                         <div class="table-responsive">
@@ -459,7 +506,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted small">
+                                <td colspan="6" class="text-center py-4 text-muted small">
                                     No se encontraron partidas registradas.
                                 </td>
                             </tr>
@@ -470,18 +517,16 @@
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    <!-- 5. PAGINACIÓN CIRCULAR -->
     @if(isset($partidas) && $partidas->hasPages())
         <div class="dtl-pagination-wrapper">
             <ul class="pagination">
-                {{-- Botón Anterior (<) --}}
                 @if ($partidas->onFirstPage())
                     <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
                 @else
                     <li class="page-item"><a class="page-link" href="{{ $partidas->previousPageUrl() }}">&lsaquo;</a></li>
                 @endif
 
-                {{-- Números de Página (1, 2, 3...) --}}
                 @foreach ($partidas->getUrlRange(1, $partidas->lastPage()) as $page => $url)
                     @if ($page == $partidas->currentPage())
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -490,7 +535,6 @@
                     @endif
                 @endforeach
 
-                {{-- Botón Siguiente (>) --}}
                 @if ($partidas->hasMorePages())
                     <li class="page-item"><a class="page-link" href="{{ $partidas->nextPageUrl() }}">&rsaquo;</a></li>
                 @else

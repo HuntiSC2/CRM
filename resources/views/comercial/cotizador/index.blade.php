@@ -63,7 +63,7 @@
         font-size: 0.82rem;
     }
 
-    /* SCROLL HORIZONTAL TÁCTIL (DERECHA E IZQUIERDA EN MÓVIL) */
+    /* SCROLL HORIZONTAL TÁCTIL */
     .dtl-table-scroll-container {
         width: 100% !important;
         max-width: 100% !important;
@@ -72,9 +72,9 @@
         display: block !important;
     }
 
-    /* TABLA FIJA QUE NO SE DESARMA NI SE CONVIERTE EN LISTA */
+    /* TABLA FIJA EN ESCRITORIO */
     .dtl-pure-table {
-        min-width: 900px !important;
+        min-width: 950px !important;
         width: 100% !important;
         border-collapse: collapse !important;
         margin-bottom: 0 !important;
@@ -110,9 +110,7 @@
         display: inline-block;
     }
 
-    /* ==========================================================
-       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
-    ========================================================== */
+    /* PAGINACIÓN CIRCULAR */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -176,6 +174,48 @@
         color: #cbd5e1 !important;
         box-shadow: none !important;
         cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       OPTIMIZACIÓN EXCLUSIVA PARA RESOLUCIÓN DE CELULAR
+    ========================================================== */
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
+        /* 1. Ancho total ampliado para no quebrar las observaciones */
+        .dtl-pure-table {
+            min-width: 1450px !important;
+        }
+
+        /* 2. Reducción vertical drástica de altura de celdas */
+        .dtl-pure-table thead th {
+            padding: 0.38rem 0.65rem !important;
+            font-size: 0.62rem !important;
+        }
+
+        .dtl-pure-table td {
+            padding: 0.32rem 0.65rem !important;
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+        }
+
+        /* 3. Anchos generosos por columna */
+        .col-mob-cod      { min-width: 135px !important; width: 135px !important; }
+        .col-mob-proyecto { min-width: 380px !important; width: 380px !important; }
+        .col-mob-monto    { min-width: 145px !important; width: 145px !important; }
+        .col-mob-fechas   { min-width: 180px !important; width: 180px !important; }
+        .col-mob-obs      { min-width: 380px !important; width: 380px !important; }
+        .col-mob-estado   { min-width: 130px !important; width: 130px !important; }
+        .col-mob-pdf      { min-width: 75px !important; width: 75px !important; }
+
+        .btn-pdf-mob {
+            width: 26px !important;
+            height: 26px !important;
+            font-size: 0.70rem !important;
+        }
     }
 </style>
 
@@ -242,38 +282,47 @@
         </div>
     </div>
 
-    <!-- 3. TABLA CON SCROLL LATERAL (DERECHA / IZQUIERDA EN CELULAR) -->
+    <!-- 3. TABLA DE COTIZACIONES -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="dtl-table-scroll-container">
                 <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3" style="width: 12%;">CÓDIGO</th>
-                            <th style="width: 25%;">PROYECTO / CLIENTE</th>
-                            <th class="text-end" style="width: 14%;">MONTO TOTAL</th>
-                            <th class="text-center" style="width: 15%;">FECHA PROG. / FIN</th>
-                            <th style="width: 18%;">OBSERVACIONES</th>
-                            <th class="text-center" style="width: 10%;">ESTADO</th>
-                            <th class="pe-3 text-center" style="width: 6%;">PDF</th>
+                            <th class="ps-3 col-mob-cod" style="width: 12%;">CÓDIGO</th>
+                            <th class="col-mob-proyecto" style="width: 25%;">PROYECTO / CLIENTE</th>
+                            <th class="text-end col-mob-monto" style="width: 14%;">MONTO TOTAL</th>
+                            <th class="text-center col-mob-fechas" style="width: 15%;">FECHA PROG. / FIN</th>
+                            <th class="col-mob-obs" style="width: 20%;">OBSERVACIONES</th>
+                            <th class="text-center col-mob-estado" style="width: 10%;">ESTADO</th>
+                            <th class="pe-3 text-center col-mob-pdf" style="width: 4%;">PDF</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($cotizaciones ?? [] as $cotizacion)
+                            @php
+                                // LIMPIEZA AUTOMÁTICA DEL PREFIJO [Fase #X ⇄ Inspección #X - Ing. ...]
+                                $obsLimpia = trim(preg_replace('/^\[.*?\]\s*/u', '', $cotizacion->observaciones ?? ''));
+                            @endphp
                             <tr>
-                                <td class="ps-3 font-monospace fw-bold text-nowrap" style="color: var(--dtl-navy); font-size: 0.78rem;">
+                                <!-- CÓDIGO -->
+                                <td class="ps-3 font-monospace fw-bold text-nowrap col-mob-cod" style="color: var(--dtl-navy); font-size: 0.76rem;">
                                     {{ $cotizacion->codigo_cotizacion }}
                                 </td>
-                                <td>
-                                    <span class="fw-bold text-dark d-block" style="font-size: 0.78rem;">
+
+                                <!-- PROYECTO Y CLIENTE -->
+                                <td class="col-mob-proyecto">
+                                    <span class="fw-bold text-dark d-block" style="font-size: 0.76rem; line-height: 1.25;">
                                         {{ $cotizacion->obra->titulo ?? 'Sin Obra' }}
                                     </span>
-                                    <small class="text-muted d-block" style="font-size: 0.70rem;">
-                                        <i class="fas fa-building me-1"></i>{{ $cotizacion->obra->cliente->razon_social ?? 'Cliente General' }}
+                                    <small class="text-muted d-block font-monospace" style="font-size: 0.68rem; line-height: 1.2;">
+                                        <i class="fas fa-building me-1 opacity-75"></i>{{ $cotizacion->obra->cliente->razon_social ?? 'Cliente General' }}
                                     </small>
                                 </td>
-                                <td class="text-end font-monospace text-nowrap">
-                                    <span class="fw-bold text-dark" style="font-size: 0.82rem;">
+
+                                <!-- MONTO -->
+                                <td class="text-end font-monospace text-nowrap col-mob-monto">
+                                    <span class="fw-bold text-dark" style="font-size: 0.78rem;">
                                         @if($cotizacion->monto_total > 0)
                                             S/ {{ number_format($cotizacion->monto_total, 2) }}
                                         @else
@@ -281,11 +330,13 @@
                                         @endif
                                     </span>
                                 </td>
-                                <td class="text-center text-nowrap" style="font-size: 0.72rem;">
-                                    <div class="fw-medium text-dark">
-                                        <i class="far fa-calendar-check text-muted me-1"></i>{{ $cotizacion->fecha_emision ? \Carbon\Carbon::parse($cotizacion->fecha_emision)->format('d/m/Y') : '-' }}
+
+                                <!-- FECHAS -->
+                                <td class="text-center text-nowrap col-mob-fechas" style="font-size: 0.72rem;">
+                                    <div class="fw-medium text-dark font-monospace">
+                                        <i class="far fa-calendar-check text-success me-1"></i>{{ $cotizacion->fecha_emision ? \Carbon\Carbon::parse($cotizacion->fecha_emision)->format('d/m/Y') : '-' }}
                                     </div>
-                                    <div class="text-secondary" style="font-size: 0.68rem;">
+                                    <div class="text-secondary font-monospace" style="font-size: 0.68rem;">
                                         @if($cotizacion->fecha_vencimiento)
                                             <i class="far fa-calendar-times text-danger me-1"></i>{{ \Carbon\Carbon::parse($cotizacion->fecha_vencimiento)->format('d/m/Y H:i') }}
                                         @else
@@ -293,42 +344,44 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td>
-                                    <span class="text-secondary d-block" style="font-size: 0.74rem; line-height: 1.45;" title="{{ $cotizacion->observaciones }}">
-                                        {{ $cotizacion->observaciones ?: 'Sin observaciones' }}
+
+                              <!-- OBSERVACIONES (SOLO MENSAJE LIMPIO DEL USUARIO) -->
+                                <td class="col-mob-obs">
+                                    <span class="text-secondary d-block" style="font-size: 0.72rem; line-height: 1.35;" title="{{ $cotizacion->observacion_limpia }}">
+                                        {{ $cotizacion->observacion_limpia ?: 'Sin observaciones' }}
                                     </span>
                                 </td>
-                                <td class="text-center text-nowrap">
+
+                                <!-- ESTADO -->
+                                <td class="text-center text-nowrap col-mob-estado">
                                     @php $est = strtoupper($cotizacion->estado_cotizacion ?? ''); @endphp
                                     @if($est === 'PROGRAMADA')
-                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; font-size: 0.65rem;">Programada</span>
+                                        <span class="badge rounded-pill px-2 py-0.5 fw-semibold" style="background-color: #fffbeb; color: #b45309; border: 1px solid #fde68a; font-size: 0.62rem;">Programada</span>
                                     @elseif($est === 'ENVIADA')
-                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 0.65rem;">Enviada</span>
+                                        <span class="badge rounded-pill px-2 py-0.5 fw-semibold" style="background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 0.62rem;">Enviada</span>
                                     @elseif($est === 'ACEPTADA')
-                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.65rem;">Aceptada</span>
+                                        <span class="badge rounded-pill px-2 py-0.5 fw-semibold" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.62rem;">Aceptada</span>
                                     @elseif($est === 'RECHAZADA')
-                                        <span class="badge rounded-pill px-2.5 py-1 fw-semibold" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-size: 0.65rem;">Rechazada</span>
+                                        <span class="badge rounded-pill px-2 py-0.5 fw-semibold" style="background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-size: 0.62rem;">Rechazada</span>
                                     @else
-                                        <span class="badge rounded-pill px-2.5 py-1 bg-light text-dark border" style="font-size: 0.65rem;">{{ $est }}</span>
+                                        <span class="badge rounded-pill px-2 py-0.5 bg-light text-dark border" style="font-size: 0.62rem;">{{ $est }}</span>
                                     @endif
                                 </td>
-                                <td class="pe-3 text-center text-nowrap">
-                                    @if(empty($ultimasCotizacionesPorObra) || isset($ultimasCotizacionesPorObra[$cotizacion->id]))
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger p-0 d-inline-flex align-items-center justify-content-center" 
-                                                style="width: 30px; height: 30px; border-radius: 8px;" 
-                                                onclick="abrirVisorPdf('{{ route('comercial.cotizador.pdf', $cotizacion->id) }}', '{{ $cotizacion->codigo_cotizacion }}')"
-                                                title="Ver PDF">
-                                            <i class="fas fa-file-pdf"></i>
-                                        </button>
-                                    @else
-                                        <span class="text-muted" style="font-size: 0.75rem;">&mdash;</span>
-                                    @endif
+                                
+                                <!-- BOTÓN PDF -->
+                                <td class="pe-3 text-center text-nowrap col-mob-pdf">
+                                    <button type="button" 
+                                            class="btn btn-sm btn-outline-danger p-0 d-inline-flex align-items-center justify-content-center btn-pdf-mob" 
+                                            style="width: 26px; height: 26px; border-radius: 6px;" 
+                                            onclick="abrirVisorPdf('{{ route('comercial.cotizador.pdf', $cotizacion->id) }}', '{{ $cotizacion->codigo_cotizacion }}')"
+                                            title="Ver PDF Oficial">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-muted small">No se encontraron cotizaciones registradas.</td>
+                                <td colspan="7" class="text-center py-3 text-muted small">No se encontraron cotizaciones registradas.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -337,18 +390,16 @@
         </div>
     </div>
 
-    <!-- 4. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    <!-- 4. PAGINACIÓN CIRCULAR -->
     @if(isset($cotizaciones) && $cotizaciones->hasPages())
         <div class="dtl-pagination-wrapper">
             <ul class="pagination">
-                {{-- Botón Anterior (<) --}}
                 @if ($cotizaciones->onFirstPage())
                     <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
                 @else
                     <li class="page-item"><a class="page-link" href="{{ $cotizaciones->previousPageUrl() }}">&lsaquo;</a></li>
                 @endif
 
-                {{-- Números de Página (1, 2, 3...) --}}
                 @foreach ($cotizaciones->getUrlRange(1, $cotizaciones->lastPage()) as $page => $url)
                     @if ($page == $cotizaciones->currentPage())
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -357,7 +408,6 @@
                     @endif
                 @endforeach
 
-                {{-- Botón Siguiente (>) --}}
                 @if ($cotizaciones->hasMorePages())
                     <li class="page-item"><a class="page-link" href="{{ $cotizaciones->nextPageUrl() }}">&rsaquo;</a></li>
                 @else

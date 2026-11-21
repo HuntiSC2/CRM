@@ -63,7 +63,7 @@
         font-size: 0.82rem;
     }
 
-    /* SCROLL HORIZONTAL TÁCTIL (PERMITE MOVERSE A LA DERECHA E IZQUIERDA EN MÓVIL) */
+    /* SCROLL HORIZONTAL TÁCTIL */
     .dtl-table-scroll-container {
         width: 100% !important;
         max-width: 100% !important;
@@ -72,9 +72,9 @@
         display: block !important;
     }
 
-    /* TABLA FIJA QUE NO SE DESARMA NI SE TRANSFORMA EN LISTA */
+    /* TABLA FIJA EN ESCRITORIO */
     .dtl-pure-table {
-        min-width: 900px !important; /* Fuerza desplazamiento lateral suave */
+        min-width: 950px !important;
         width: 100% !important;
         border-collapse: collapse !important;
         margin-bottom: 0 !important;
@@ -114,9 +114,7 @@
         display: inline-block;
     }
 
-    /* ==========================================================
-       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
-    ========================================================== */
+    /* PAGINACIÓN CIRCULAR */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -142,7 +140,6 @@
         margin: 0 !important;
     }
 
-    /* Botón Circular Blanco (Inactivo y Flechas) */
     .dtl-pagination-wrapper .page-link {
         width: 36px !important;
         height: 36px !important;
@@ -168,7 +165,6 @@
         color: var(--dtl-navy) !important;
     }
 
-    /* Botón Circular VERDE (Página Activa como el '2' de la foto) */
     .dtl-pagination-wrapper .page-item.active .page-link {
         background-color: var(--dtl-green) !important;
         border-color: var(--dtl-green) !important;
@@ -176,13 +172,46 @@
         box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
     }
 
-    /* Flechas deshabilitadas */
     .dtl-pagination-wrapper .page-item.disabled .page-link {
         background-color: #ffffff !important;
         border-color: #e2e8f0 !important;
         color: #cbd5e1 !important;
         box-shadow: none !important;
         cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       OPTIMIZACIÓN EXCLUSIVA PARA RESOLUCIÓN DE CELULAR
+    ========================================================== */
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
+        /* 1. Ancho total ampliado para no comprimir los comentarios */
+        .dtl-pure-table {
+            min-width: 1350px !important;
+        }
+
+        /* 2. Reducción vertical drástica de altura de celdas */
+        .dtl-pure-table thead th {
+            padding: 0.38rem 0.65rem !important;
+            font-size: 0.62rem !important;
+        }
+
+        .dtl-pure-table td {
+            padding: 0.32rem 0.65rem !important;
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+        }
+
+        /* 3. Anchos generosos por columna para que no se oculte nada */
+        .col-mob-fecha      { min-width: 160px !important; width: 160px !important; }
+        .col-mob-obra       { min-width: 360px !important; width: 360px !important; }
+        .col-mob-tipo       { min-width: 145px !important; width: 145px !important; }
+        .col-mob-comentario { min-width: 480px !important; width: 480px !important; }
+        .col-mob-user       { min-width: 165px !important; width: 165px !important; }
     }
 </style>
 
@@ -299,64 +328,73 @@
         </div>
     </div>
 
-    <!-- 4. TABLA CON SCROLL LATERAL PURO (DERECHA / IZQUIERDA EN MÓVIL) -->
+    <!-- 4. TABLA CON SCROLL LATERAL Y ALTO MÍNIMO -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="dtl-table-scroll-container">
                 <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3" style="width: 16%;">FECHA / HORA</th>
-                            <th style="width: 26%;">OBRA / PROYECTO</th>
-                            <th class="text-center" style="width: 14%;">TIPO CONTACTO</th>
-                            <th style="width: 28%;">COMENTARIO / ACUERDO</th>
-                            <th class="pe-3 text-center" style="width: 16%;">REGISTRADO POR</th>
+                            <th class="ps-3 col-mob-fecha" style="width: 14%;">FECHA / HORA</th>
+                            <th class="col-mob-obra" style="width: 26%;">OBRA / PROYECTO</th>
+                            <th class="text-center col-mob-tipo" style="width: 14%;">TIPO CONTACTO</th>
+                            <th class="col-mob-comentario" style="width: 32%;">COMENTARIO / ACUERDO</th>
+                            <th class="pe-3 text-center col-mob-user" style="width: 14%;">REGISTRADO POR</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bitacoras ?? [] as $bitacora)
                             <tr>
-                                <td class="ps-3 text-nowrap">
-                                    <span class="fw-bold text-dark d-inline-flex align-items-center" style="font-size: 0.75rem;">
+                                <!-- FECHA / HORA -->
+                                <td class="ps-3 text-nowrap col-mob-fecha">
+                                    <span class="fw-bold text-dark d-inline-flex align-items-center font-monospace" style="font-size: 0.74rem;">
                                         <i class="far fa-clock me-1 text-success"></i>
                                         {{ \Carbon\Carbon::parse($bitacora->created_at ?? now())->format('d/m/Y h:i A') }}
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="fw-bold text-dark text-uppercase d-block" style="font-size: 0.78rem;">
+
+                                <!-- PROYECTO (COMPLETO) -->
+                                <td class="col-mob-obra">
+                                    <span class="fw-bold text-dark text-uppercase d-block" style="font-size: 0.76rem; line-height: 1.25;">
                                         {{ $bitacora->obra->titulo ?? 'Seguimiento General' }}
                                     </span>
                                 </td>
-                                <td class="text-center text-nowrap">
+
+                                <!-- TIPO DE CONTACTO (BADGE) -->
+                                <td class="text-center text-nowrap col-mob-tipo">
                                     @php $tipo = $bitacora->tipo_contacto ?? 'Llamada Telefónica'; @endphp
                                     @if(str_contains(strtolower($tipo), 'reunión') || str_contains(strtolower($tipo), 'presencial'))
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.62rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
                                             <i class="fas fa-users me-1"></i> Reunión
                                         </span>
                                     @elseif(str_contains(strtolower($tipo), 'llamada'))
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.62rem; background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">
                                             <i class="fas fa-phone me-1"></i> Llamada
                                         </span>
                                     @else
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="font-size: 0.65rem; background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="font-size: 0.62rem; background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">
                                             <i class="fas fa-envelope me-1"></i> Correo
                                         </span>
                                     @endif
                                 </td>
-                                <td>
-                                    <span class="text-dark d-block" style="font-size: 0.78rem; line-height: 1.45;">
+
+                                <!-- COMENTARIO / ACUERDO (EXTENDIDO HORIZONTALMENTE) -->
+                                <td class="col-mob-comentario">
+                                    <span class="text-dark d-block" style="font-size: 0.74rem; line-height: 1.35;">
                                         {{ $bitacora->comentario ?: 'Sin detalles anotados' }}
                                     </span>
                                 </td>
-                                <td class="pe-3 text-center text-nowrap">
-                                    <span class="text-muted fw-semibold" style="font-size: 0.78rem;">
+
+                                <!-- REGISTRADO POR -->
+                                <td class="pe-3 text-center text-nowrap col-mob-user">
+                                    <span class="text-muted fw-semibold" style="font-size: 0.74rem;">
                                         {{ $bitacora->user->name ?? 'Asesor Comercial' }}
                                     </span>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-4 text-muted small">No se encontraron anotaciones en la bitácora.</td>
+                                <td colspan="5" class="text-center py-3 text-muted small">No se encontraron anotaciones en la bitácora.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -365,18 +403,16 @@
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    <!-- 5. PAGINACIÓN CIRCULAR -->
     @if(isset($bitacoras) && $bitacoras->hasPages())
         <div class="dtl-pagination-wrapper">
             <ul class="pagination">
-                {{-- Botón Anterior (<) --}}
                 @if ($bitacoras->onFirstPage())
                     <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
                 @else
                     <li class="page-item"><a class="page-link" href="{{ $bitacoras->previousPageUrl() }}">&lsaquo;</a></li>
                 @endif
 
-                {{-- Números de Página (1, 2, 3...) --}}
                 @foreach ($bitacoras->getUrlRange(1, $bitacoras->lastPage()) as $page => $url)
                     @if ($page == $bitacoras->currentPage())
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -385,7 +421,6 @@
                     @endif
                 @endforeach
 
-                {{-- Botón Siguiente (>) --}}
                 @if ($bitacoras->hasMorePages())
                     <li class="page-item"><a class="page-link" href="{{ $bitacoras->nextPageUrl() }}">&rsaquo;</a></li>
                 @else

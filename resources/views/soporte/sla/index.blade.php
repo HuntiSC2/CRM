@@ -52,7 +52,7 @@
         padding: 0;
     }
 
-    /* SCROLL HORIZONTAL TÁCTIL GARANTIZADO */
+    /* SCROLL HORIZONTAL TÁCTIL */
     .dtl-table-scroll-container {
         width: 100% !important;
         max-width: 100% !important;
@@ -61,9 +61,9 @@
         display: block !important;
     }
 
-    /* TABLA FIJA QUE NO SE DESARMA NI SE TRANSFORMA EN LISTA */
+    /* TABLA FIJA EN ESCRITORIO */
     .dtl-pure-table {
-        min-width: 860px !important;
+        min-width: 950px !important;
         width: 100% !important;
         border-collapse: collapse !important;
         margin-bottom: 0 !important;
@@ -106,7 +106,7 @@
     .status-pulse-yellow { background-color: #f59e0b; }
     .status-pulse-red { background-color: #ef4444; }
 
-    /* CHIPS KPI CON ESPACIADO PROPORCIONAL Y NUNCA VERTICAL */
+    /* CHIPS KPI CON ESPACIADO PROPORCIONAL */
     .sla-kpi-chip {
         background-color: #ffffff;
         border: 1px solid #cbd5e1 !important;
@@ -119,30 +119,7 @@
         white-space: nowrap !important;
     }
 
-    @media (max-width: 767.98px) {
-        .sla-kpi-container {
-            display: grid !important;
-            grid-template-columns: 1fr !important;
-            gap: 0.5rem !important;
-            width: 100% !important;
-        }
-        .sla-kpi-chip {
-            justify-content: space-between !important;
-            width: 100% !important;
-            padding: 0.5rem 0.75rem !important;
-        }
-        .sla-toolbar-actions {
-            width: 100% !important;
-            margin-top: 0.5rem !important;
-        }
-        .sla-toolbar-actions .btn {
-            width: 100% !important;
-        }
-    }
-
-    /* ==========================================================
-       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
-    ========================================================== */
+    /* PAGINACIÓN CIRCULAR */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -168,7 +145,6 @@
         margin: 0 !important;
     }
 
-    /* Botón Circular Blanco (Inactivo y Flechas) */
     .dtl-pagination-wrapper .page-link {
         width: 36px !important;
         height: 36px !important;
@@ -194,7 +170,6 @@
         color: var(--dtl-navy) !important;
     }
 
-    /* Botón Circular VERDE (Página Activa) */
     .dtl-pagination-wrapper .page-item.active .page-link {
         background-color: var(--dtl-green) !important;
         border-color: var(--dtl-green) !important;
@@ -202,13 +177,65 @@
         box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
     }
 
-    /* Flechas deshabilitadas */
     .dtl-pagination-wrapper .page-item.disabled .page-link {
         background-color: #ffffff !important;
         border-color: #e2e8f0 !important;
         color: #cbd5e1 !important;
         box-shadow: none !important;
         cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       OPTIMIZACIÓN EXCLUSIVA PARA RESOLUCIÓN DE CELULAR
+    ========================================================== */
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
+        .sla-kpi-container {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 0.4rem !important;
+            width: 100% !important;
+        }
+        .sla-kpi-chip {
+            justify-content: space-between !important;
+            width: 100% !important;
+            padding: 0.4rem 0.65rem !important;
+        }
+        .sla-toolbar-actions {
+            width: 100% !important;
+            margin-top: 0.4rem !important;
+        }
+        .sla-toolbar-actions .btn {
+            width: 100% !important;
+        }
+
+        /* 1. Ancho total de 1350px para dar espacio completo al diagnóstico */
+        .dtl-pure-table {
+            min-width: 1350px !important;
+        }
+
+        /* 2. Reducción vertical drástica de altura de celdas */
+        .dtl-pure-table thead th {
+            padding: 0.38rem 0.65rem !important;
+            font-size: 0.62rem !important;
+        }
+
+        .dtl-pure-table td {
+            padding: 0.32rem 0.65rem !important;
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+        }
+
+        /* 3. Anchos generosos por columna */
+        .col-mob-semaforo { min-width: 135px !important; width: 135px !important; }
+        .col-mob-obra     { min-width: 380px !important; width: 380px !important; }
+        .col-mob-cliente  { min-width: 280px !important; width: 280px !important; }
+        .col-mob-asesor   { min-width: 180px !important; width: 180px !important; }
+        .col-mob-diag     { min-width: 380px !important; width: 380px !important; }
     }
 </style>
 
@@ -300,7 +327,7 @@
         </div>
     </div>
 
-    <!-- 3. CONFIGURADOR DE POLÍTICAS (INICIA CERRADO) -->
+    <!-- 3. CONFIGURADOR DE POLÍTICAS -->
     <div class="collapse mb-3" id="panelPoliticasSLA">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="border: 1px solid #cbd5e1 !important;">
             <div class="card-header px-3 py-2 d-flex align-items-center justify-content-between" style="background-color: var(--dtl-navy); border-bottom: 3px solid #059669;">
@@ -353,7 +380,7 @@
         </div>
     </div>
 
-    <!-- 4. TABLA CON SCROLL LATERAL (DERECHA / IZQUIERDA EN MÓVIL) -->
+    <!-- 4. TABLA CON SCROLL LATERAL Y ALTO MÍNIMO -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-header px-3 py-2.5 d-flex align-items-center justify-content-between" style="background-color: var(--dtl-navy); border-bottom: 3px solid #059669;">
             <div class="d-flex align-items-center gap-2">
@@ -369,11 +396,11 @@
                 <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3 text-center" style="width: 12%;">SEMÁFORO</th>
-                            <th style="width: 26%;">OBRA / EXPEDIENTE</th>
-                            <th style="width: 24%;">CLIENTE CORPORATIVO</th>
-                            <th style="width: 16%;">ASESOR ASIGNADO</th>
-                            <th class="pe-3" style="width: 22%;">DIAGNÓSTICO OBJETIVO SLA</th>
+                            <th class="ps-3 text-center col-mob-semaforo" style="width: 12%;">SEMÁFORO</th>
+                            <th class="col-mob-obra" style="width: 28%;">OBRA / EXPEDIENTE</th>
+                            <th class="col-mob-cliente" style="width: 24%;">CLIENTE CORPORATIVO</th>
+                            <th class="col-mob-asesor" style="width: 16%;">ASESOR ASIGNADO</th>
+                            <th class="pe-3 col-mob-diag" style="width: 20%;">DIAGNÓSTICO OBJETIVO SLA</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -382,70 +409,75 @@
                                 $color = strtoupper($obra->sla['color'] ?? 'VERDE');
                             @endphp
                             <tr>
-                                <td class="ps-3 text-center text-nowrap">
+                                <!-- SEMÁFORO -->
+                                <td class="ps-3 text-center text-nowrap col-mob-semaforo">
                                     @if($color === 'ROJO')
-                                        <span class="badge rounded-pill fw-bold px-2 py-1 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 0.68rem; background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">
+                                        <span class="badge rounded-pill fw-bold px-2 py-0.5 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 0.62rem; background-color: #fef2f2; color: #b91c1c; border: 1px solid #fecaca;">
                                             <span class="status-pulse-red"></span> CRÍTICO
                                         </span>
                                     @elseif($color === 'AMARILLO')
-                                        <span class="badge rounded-pill fw-bold px-2 py-1 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 0.68rem; background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">
+                                        <span class="badge rounded-pill fw-bold px-2 py-0.5 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 0.62rem; background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a;">
                                             <span class="status-pulse-yellow"></span> DEMORADO
                                         </span>
                                     @else
-                                        <span class="badge rounded-pill fw-bold px-2 py-1 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 0.68rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
+                                        <span class="badge rounded-pill fw-bold px-2 py-0.5 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 0.62rem; background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;">
                                             <span class="status-pulse-green"></span> CONTROL
                                         </span>
                                     @endif
                                 </td>
 
-                                <td>
-                                    <div class="fw-bold text-dark text-break" style="font-size: 0.79rem;">
+                                <!-- OBRA / EXPEDIENTE (COMPLETO) -->
+                                <td class="col-mob-obra">
+                                    <div class="fw-bold text-dark" style="font-size: 0.76rem; line-height: 1.25;">
                                         {{ $obra->titulo }}
                                     </div>
-                                    <div class="d-flex align-items-center gap-1 mt-0.5">
-                                        <span class="badge px-1.5 py-0.5 rounded-1 font-monospace" style="background-color: var(--dtl-navy); color: #34d399; font-size: 0.62rem;">
+                                    <div class="d-flex align-items-center gap-1 mt-0.5 font-monospace">
+                                        <span class="badge px-1.5 py-0.2 rounded-1" style="background-color: var(--dtl-navy); color: #34d399; font-size: 0.60rem;">
                                             {{ $obra->codigo }}
                                         </span>
-                                        <span class="text-secondary extra-small fw-semibold">&bull; {{ $obra->estado_real }}</span>
+                                        <span class="text-secondary extra-small fw-semibold" style="font-size: 0.65rem;">&bull; {{ $obra->estado_real }}</span>
                                     </div>
                                 </td>
 
-                                <td>
-                                    <div class="fw-bold text-dark text-uppercase text-break" style="font-size: 0.77rem;">
+                                <!-- CLIENTE -->
+                                <td class="col-mob-cliente">
+                                    <div class="fw-bold text-dark text-uppercase" style="font-size: 0.76rem; line-height: 1.25;">
                                         {{ $obra->cliente->razon_social ?? 'S/C - CLIENTE PARTICULAR' }}
                                     </div>
                                     @if(isset($obra->cliente->ruc))
-                                        <div class="text-muted font-monospace" style="font-size: 0.68rem;">RUC: {{ $obra->cliente->ruc }}</div>
+                                        <div class="text-muted font-monospace" style="font-size: 0.66rem; line-height: 1.2;">RUC: {{ $obra->cliente->ruc }}</div>
                                     @endif
                                 </td>
 
-                                <td class="text-nowrap">
-                                    <div class="d-flex align-items-center gap-1.5 text-dark fw-semibold" style="font-size: 0.77rem;">
-                                        <div class="rounded-circle d-flex align-items-center justify-content-center bg-light border text-secondary" style="width: 22px; height: 22px; font-size: 0.65rem;">
+                                <!-- ASESOR -->
+                                <td class="text-nowrap col-mob-asesor">
+                                    <div class="d-flex align-items-center gap-1 text-dark fw-semibold" style="font-size: 0.74rem;">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center bg-light border text-secondary" style="width: 20px; height: 20px; font-size: 0.60rem;">
                                             <i class="fas fa-user"></i>
                                         </div>
                                         <span>{{ $obra->user->name ?? 'Sin Asignar' }}</span>
                                     </div>
                                 </td>
 
-                                <td class="pe-3">
+                                <!-- DIAGNÓSTICO OBJETIVO SLA (COMPLETO A LO ANCHO) -->
+                                <td class="pe-3 col-mob-diag">
                                     @if($color === 'ROJO')
-                                        <div class="p-1 px-2 rounded-2" style="background-color: #fef2f2; border: 1px solid #fecaca;">
-                                            <span class="fw-bold text-danger d-flex align-items-center gap-1 text-break" style="font-size: 0.74rem;">
+                                        <div class="py-0.5 px-2 rounded-2" style="background-color: #fef2f2; border: 1px solid #fecaca;">
+                                            <span class="fw-bold text-danger d-flex align-items-center gap-1" style="font-size: 0.70rem; line-height: 1.3;">
                                                 <i class="fas fa-triangle-exclamation flex-shrink-0"></i>
                                                 <span>{{ $obra->sla['mensaje'] }}</span>
                                             </span>
                                         </div>
                                     @elseif($color === 'AMARILLO')
-                                        <div class="p-1 px-2 rounded-2" style="background-color: #fffbeb; border: 1px solid #fde68a;">
-                                            <span class="fw-bold d-flex align-items-center gap-1 text-break" style="color: #b45309; font-size: 0.74rem;">
+                                        <div class="py-0.5 px-2 rounded-2" style="background-color: #fffbeb; border: 1px solid #fde68a;">
+                                            <span class="fw-bold d-flex align-items-center gap-1" style="color: #b45309; font-size: 0.70rem; line-height: 1.3;">
                                                 <i class="fas fa-clock flex-shrink-0"></i>
                                                 <span>{{ $obra->sla['mensaje'] }}</span>
                                             </span>
                                         </div>
                                     @else
-                                        <div class="p-1 px-2 rounded-2" style="background-color: #ecfdf5; border: 1px solid #a7f3d0;">
-                                            <span class="fw-semibold d-flex align-items-center gap-1 text-break" style="color: #047857; font-size: 0.74rem;">
+                                        <div class="py-0.5 px-2 rounded-2" style="background-color: #ecfdf5; border: 1px solid #a7f3d0;">
+                                            <span class="fw-semibold d-flex align-items-center gap-1" style="color: #047857; font-size: 0.70rem; line-height: 1.3;">
                                                 <i class="fas fa-circle-check flex-shrink-0 text-success"></i>
                                                 <span>{{ $obra->sla['mensaje'] }}</span>
                                             </span>
@@ -455,7 +487,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-5 text-muted small">
+                                <td colspan="5" class="text-center py-4 text-muted small">
                                     No existen solicitudes u obras activas en el pipeline comercial.
                                 </td>
                             </tr>
@@ -466,18 +498,16 @@
         </div>
     </div>
 
-    <!-- 5. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    <!-- 5. PAGINACIÓN CIRCULAR -->
     @if(isset($obras) && method_exists($obras, 'links') && $obras->hasPages())
         <div class="dtl-pagination-wrapper">
             <ul class="pagination">
-                {{-- Botón Anterior (<) --}}
                 @if ($obras->onFirstPage())
                     <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
                 @else
                     <li class="page-item"><a class="page-link" href="{{ $obras->previousPageUrl() }}">&lsaquo;</a></li>
                 @endif
 
-                {{-- Números de Página (1, 2, 3...) --}}
                 @foreach ($obras->getUrlRange(1, $obras->lastPage()) as $page => $url)
                     @if ($page == $obras->currentPage())
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -486,7 +516,6 @@
                     @endif
                 @endforeach
 
-                {{-- Botón Siguiente (>) --}}
                 @if ($obras->hasMorePages())
                     <li class="page-item"><a class="page-link" href="{{ $obras->nextPageUrl() }}">&rsaquo;</a></li>
                 @else

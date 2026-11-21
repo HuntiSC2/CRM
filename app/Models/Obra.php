@@ -14,7 +14,6 @@ class Obra extends Model
 
     protected $table = 'obras';
 
-    // Asignación masiva alineada a tu base de datos unificada
     protected $fillable = [
         'codigo',
         'titulo',
@@ -30,205 +29,171 @@ class Obra extends Model
         'monto' => 'decimal:2',
     ];
 
-    /**
-     * Sumatoria de cotizaciones cuando se carga con withSum.
-     */
-    protected $appends = ['monto_total_cotizado'];
-
     // =========================================================================
-    // RELACIONES ELOQUENT (MODELO ESTRELLA 100% CONECTADO)
+    // EVENTOS ELOQUENT (SINCRONIZACIÓN DE ESTADOS CON EL CLIENTE)
     // =========================================================================
 
-    /**
-     * Cliente empresarial al que pertenece la obra (COSAPI, AESA, etc.)
-     */
+    protected static function booted(): void
+    {
+        static::saved(function (Obra $obra) {
+            if ($obra->cliente_id) {
+                \App\Http\Controllers\Comercial\PipelineController::actualizarEstadoCliente($obra->cliente_id);
+            }
+        });
+
+        static::deleted(function (Obra $obra) {
+            if ($obra->cliente_id) {
+                \App\Http\Controllers\Comercial\PipelineController::actualizarEstadoCliente($obra->cliente_id);
+            }
+        });
+    }
+
+    // =========================================================================
+    // RELACIONES ELOQUENT
+    // =========================================================================
+
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    /**
-     * Asesor comercial responsable de la obra
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Inspecciones técnicas y visitas de campo realizadas para esta obra (1 a N)
-     */
     public function inspecciones(): HasMany
     {
-        return $this->hasMany(Inspeccion::class, 'obra_id')->latest();
+        return $this->hasMany(Inspeccion::class, 'obra_id')->latest('id');
     }
 
-    /**
-     * Presupuestos y propuestas económicas emitidas para esta obra (1 a N)
-     */
     public function cotizaciones(): HasMany
     {
-        return $this->hasMany(Cotizacion::class, 'obra_id')->latest();
+        return $this->hasMany(Cotizacion::class, 'obra_id')->latest('id');
     }
 
-    /**
-     * Última cotización registrada (mayor id) para la obra.
-     */
     public function ultimaCotizacion(): HasOne
     {
         return $this->hasOne(Cotizacion::class, 'obra_id')->latestOfMany('id');
     }
 
-    // =========================================================================
-    // ACCESSORS DE MONTOS
-    // =========================================================================
-
-    /**
-     * Monto total acumulado: sumatoria de todas las cotizaciones asociadas
-     * (la obra puede dividirse por áreas y cotizarse por separado).
-     * Se apoya en withSum('cotizaciones', 'monto_total') cuando está disponible.
-     */
-    public function getMontoTotalCotizadoAttribute(): float
+    public function ultimaInspeccion(): HasOne
     {
-        if (array_key_exists('cotizaciones_sum_monto_total', $this->attributes)) {
-            return (float) ($this->attributes['cotizaciones_sum_monto_total'] ?? 0);
-        }
-
-        return (float) $this->cotizaciones()->sum('monto_total');
+        return $this->hasOne(Inspeccion::class, 'obra_id')->latestOfMany('id');
     }
 
-    /**
-     * Alias de presentación formateada en soles.
-     */
-    public function getMontoTotalCotizadoFormateadoAttribute(): string
-    {
-        return 'S/ ' . number_format($this->monto_total_cotizado, 2);
-    }
-
-    /**
-     * Bitácora de incidencias, reuniones y contactos
-     */
     public function bitacoras(): HasMany
     {
-        return $this->hasMany(Bitacora::class, 'obra_id')->latest();
+        return $this->hasMany(Bitacora::class, 'obra_id')->latest('id');
     }
 
-    /**
-     * Registro auditable de alertas semafóricas disparadas (HU-08)
-     */
     public function alertasSla(): HasMany
     {
-        return $this->hasMany(SlaAlertaLog::class, 'obra_id')->latest();
+        return $this->hasMany(SlaAlertaLog::class, 'obra_id')->latest('id');
     }
 
     // =========================================================================
-    // ESTADO REAL DERIVADO DE LOS REGISTROS EN BASE DE DATOS
+    // ESTADO REAL DERIVADO
+    // =========================================================================
+
+public function getEstadoRealAttribute(): string
+{
+    // Se añade 'Ganada' para que no recalcule a Prospecto o Cotización una obra cerrada
+    if (in_array($this->estado, ['Aceptada', 'Ganada', 'Cancelada', 'Perdida', 'Cierre Comercial'])) {
+        return $this->estado;
+    }
+
+    $ultimaCotizacion = $this->cotizaciones->first();
+    $ultimaInspeccion = $this->inspecciones->first();
+
+    if (
+        ($ultimaCotizacion && in_array($ultimaCotizacion->estado_cotizacion, ['Programada', 'Enviada', 'Aceptada', 'Rechazada'])) ||
+        ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Completada')
+    ) {
+        return 'Cotización';
+    }
+
+    if ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Pendiente') {
+        return 'Inspeccion';
+    }
+
+    return 'Prospecto';
+}
+
+    // =========================================================================
+    // MOTOR DE DIAGNÓSTICO SLA (OPTIMIZADO EN MEMORIA)
     // =========================================================================
 
     /**
-     * Determina la etapa oficial de la obra según sus registros reales
-     * (cotizaciones e inspecciones), sin depender de arrastres manuales.
+     * Evalúa el SLA recibiendo los límites por parámetro (para no consultar la BD 100 veces)
      */
-    public function getEstadoRealAttribute(): string
+    public function calcularDiagnosticoSla(int $limiteVisita = 24, int $limiteCotiz = 48): array
     {
-        // 1. Si ya fue cerrada definitivamente o trasladada explícitamente a Cierre Comercial, se respeta
+        // 1. REGLA: Obra concluida o perdida -> Semáforo apagado
         if (in_array($this->estado, ['Aceptada', 'Cancelada', 'Perdida', 'Cierre Comercial'])) {
-            return $this->estado;
-        }
-
-        $ultimaCotizacion = $this->cotizaciones->sortByDesc('id')->first();
-        $ultimaInspeccion = $this->inspecciones->sortByDesc('id')->first();
-
-        // 2. Si tiene cotizaciones y/o inspección completada -> Cotización
-        if (
-            ($ultimaCotizacion && in_array($ultimaCotizacion->estado_cotizacion, ['Programada', 'Enviada', 'Aceptada', 'Rechazada'])) ||
-            ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Completada')
-        ) {
-            return 'Cotización';
-        }
-
-        // 3. Si tiene inspección pendiente -> Inspeccion
-        if ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Pendiente') {
-            return 'Inspeccion';
-        }
-
-        // 4. Si solo tiene el registro inicial -> Prospecto
-        return 'Prospecto';
-    }
-
-    // =========================================================================
-    // MOTOR DE DIAGNÓSTICO SEMAFÓRICO INTELIGENTE (HU-08)
-    // =========================================================================
-
-    /**
-     * Evalúa el estado real del expediente sin depender de la ubicación visual
-     * de la tarjeta en el Kanban (inmune a arrastres por descuido).
-     */
-    public function getDiagnosticoSlaAttribute(): array
-    {
-        // 1. REGLA CERO: Obra terminada, cancelada o perdida -> Semáforo apagado
-        if (in_array($this->estado, ['Aceptada', 'Cancelada', 'Perdida'])) {
             return [
                 'color'   => 'GRIS',
                 'badge'   => 'secondary',
-                'mensaje' => 'Expediente Terminado/Inactivo',
+                'mensaje' => 'Expediente Terminado / Sin acciones pendientes',
                 'horas'   => 0
             ];
         }
 
-        // Obtener parámetros de la tabla institucional de SLA (o valores por defecto)
-        $politicaVisita = SlaPolitica::where('etapa_evaluada', 'VISITA_INSPECCION')->first();
-        $politicaCotiz  = SlaPolitica::where('etapa_evaluada', 'COTIZACION_PROPUESTA')->first();
+        // Trabajamos con las relaciones YA CARGADAS en memoria (sin ejecutar SQL)
+        $ultimaInspeccion = $this->inspecciones->first();
+        $ultimaCotizacion = $this->cotizaciones->first();
 
-        $limiteVisita = $politicaVisita ? $politicaVisita->tiempo_limite_horas : 24;
-        $limiteCotiz  = $politicaCotiz ? $politicaCotiz->tiempo_limite_horas : 48;
-
-        // Consultamos los hechos reales registrados en la base de datos
-        $ultimaInspeccion = $this->inspecciones()->latest('created_at')->first();
-        $ultimaCotizacion = $this->cotizaciones()->latest('created_at')->first();
-
-        // 2. CRITERIO ROJO: Hay inspección técnica completada, pero no hay cotización vigente en > 48h
+        // 2. ESCENARIO COTIZACIÓN (ROJO):
+        // La inspección se completó O la cotización ya está "Programada", pero no se ha enviado
         if ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Completada') {
-            $tieneCotizVigente = $this->cotizaciones()
+            
+            // Revisamos si ya existe cotización enviada o aceptada posterior a la inspección
+            $cotizacionVigente = $this->cotizaciones
                 ->where('created_at', '>=', $ultimaInspeccion->updated_at)
-                ->where('estado_cotizacion', '!=', 'Rechazada')
-                ->exists();
+                ->whereNotIn('estado_cotizacion', ['Rechazada'])
+                ->first();
 
-            if (!$tieneCotizVigente) {
-                // Si la última cotización fue rechazada por precio, contamos desde la fecha de rechazo
+            // Si aún no se envía cotización válida:
+            if (!$cotizacionVigente || $cotizacionVigente->estado_cotizacion === 'Programada') {
                 $referencia = ($ultimaCotizacion && $ultimaCotizacion->estado_cotizacion === 'Rechazada')
                     ? $ultimaCotizacion->updated_at
                     : $ultimaInspeccion->updated_at;
 
-                $horas = round($referencia->diffInHours(now()));
+                $horas = (int) round($referencia->diffInHours(now()));
 
                 if ($horas > $limiteCotiz) {
                     return [
                         'color'   => 'ROJO',
                         'badge'   => 'danger',
-                        'mensaje' => "Cotización retrasada ({$horas}h transcurridas / Límite {$limiteCotiz}h)",
+                        'mensaje' => "Cotización demorada ({$horas}h transcurridas / SLA: {$limiteCotiz}h)",
                         'horas'   => $horas
                     ];
                 }
             }
         }
 
-        // 3. CRITERIO AMARILLO: Obra activa sin visita o con inspección pendiente en > 24h
-        if (!$ultimaInspeccion || $ultimaInspeccion->estado_inspeccion === 'Pendiente') {
-            $referencia = $ultimaInspeccion ? $ultimaInspeccion->created_at : $this->created_at;
-            $horas = round($referencia->diffInHours(now()));
-
-            if ($horas > $limiteVisita) {
-                return [
-                    'color'   => 'AMARILLO',
-                    'badge'   => 'warning text-dark',
-                    'mensaje' => "Inspección demorada ({$horas}h transcurridas / Límite {$limiteVisita}h)",
-                    'horas'   => $horas
-                ];
+        // 3. ESCENARIO INSPECCIÓN (AMARILLO):
+        // Solo cuenta si YA SE AGENDÓ una inspección y sigue "Pendiente"
+        if ($ultimaInspeccion && $ultimaInspeccion->estado_inspeccion === 'Pendiente') {
+            
+            // Si tiene fecha_inspeccion pactada, contamos desde esa fecha programada hacia adelante si ya pasó
+            $fechaCompromiso = $ultimaInspeccion->fecha_inspeccion ?? $ultimaInspeccion->created_at;
+            
+            if (now()->greaterThan($fechaCompromiso)) {
+                $horas = (int) round($fechaCompromiso->diffInHours(now()));
+                if ($horas > $limiteVisita) {
+                    return [
+                        'color'   => 'AMARILLO',
+                        'badge'   => 'warning text-dark',
+                        'mensaje' => "Visita técnica demorada ({$horas}h de retraso / SLA: {$limiteVisita}h)",
+                        'horas'   => $horas
+                    ];
+                }
             }
         }
 
-        // 4. CRITERIO VERDE: Expediente dentro de los plazos SLA
+        // 4. ESCENARIO CONTROL (VERDE):
+        // Está en prospecto aún sin agendar, o las fechas están dentro del margen
         return [
             'color'   => 'VERDE',
             'badge'   => 'success',
@@ -237,23 +202,38 @@ class Obra extends Model
         ];
     }
 
-    /**
-     * Alias para compatibilidad con vistas y componentes
-     */
-    public function getSlaInfoAttribute(): array
+    public function getDiagnosticoSlaAttribute(): array
     {
-        return $this->diagnostico_sla;
+        return $this->calcularDiagnosticoSla();
     }
 
     // =========================================================================
-    // QUERY SCOPES (Filtros de Alto Rendimiento)
+    // SCOPES
     // =========================================================================
 
-    /**
-     * Scope: Obras vivas en el pipeline comercial (excluye cerradas y perdidas)
-     */
     public function scopeActivas($query)
     {
-        return $query->whereNotIn('estado', ['Aceptada', 'Cancelada', 'Perdida']);
+        return $query->whereNotIn('estado', ['Aceptada', 'Cancelada', 'Perdida', 'Cierre Comercial']);
+    }
+
+    /**
+     * Filtra solo las obras que están en fases operativas de SLA (Inspección o Cotización)
+     */
+    public function scopeEnRiesgoSla($query)
+    {
+        return $query->activas()->where(function ($q) {
+            // Tiene inspección pendiente
+            $q->whereHas('inspecciones', function ($ins) {
+                $ins->where('estado_inspeccion', 'Pendiente');
+            })
+            // O tiene inspección completada esperando cotización
+            ->orWhereHas('inspecciones', function ($ins) {
+                $ins->where('estado_inspeccion', 'Completada');
+            })
+            // O tiene cotización programada
+            ->orWhereHas('cotizaciones', function ($cot) {
+                $cot->where('estado_cotizacion', 'Programada');
+            });
+        });
     }
 }

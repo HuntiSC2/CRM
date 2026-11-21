@@ -63,7 +63,7 @@
         font-size: 0.82rem;
     }
 
-    /* SCROLL HORIZONTAL TÁCTIL (DERECHA E IZQUIERDA EN MÓVIL) */
+    /* SCROLL HORIZONTAL TÁCTIL */
     .dtl-table-scroll-container {
         width: 100% !important;
         max-width: 100% !important;
@@ -72,9 +72,9 @@
         display: block !important;
     }
 
-    /* TABLA FIJA QUE NO SE DESARMA NI SE VUELVE LISTA */
+    /* TABLA FIJA EN ESCRITORIO */
     .dtl-pure-table {
-        min-width: 900px !important;
+        min-width: 950px !important;
         width: 100% !important;
         border-collapse: collapse !important;
         margin-bottom: 0 !important;
@@ -110,9 +110,7 @@
         display: inline-block;
     }
 
-    /* ==========================================================
-       PAGINACIÓN: CÍRCULOS PERFECTOS EXACTOS A LA IMAGEN 1
-    ========================================================== */
+    /* PAGINACIÓN CIRCULAR */
     .dtl-pagination-wrapper {
         display: flex !important;
         justify-content: flex-end !important;
@@ -138,7 +136,6 @@
         margin: 0 !important;
     }
 
-    /* Botón Circular Blanco (Inactivo y Flechas) */
     .dtl-pagination-wrapper .page-link {
         width: 36px !important;
         height: 36px !important;
@@ -164,7 +161,6 @@
         color: var(--dtl-navy) !important;
     }
 
-    /* Botón Circular VERDE (Página Activa) */
     .dtl-pagination-wrapper .page-item.active .page-link {
         background-color: var(--dtl-green) !important;
         border-color: var(--dtl-green) !important;
@@ -172,13 +168,47 @@
         box-shadow: 0 3px 8px rgba(5, 150, 105, 0.35) !important;
     }
 
-    /* Flechas deshabilitadas */
     .dtl-pagination-wrapper .page-item.disabled .page-link {
         background-color: #ffffff !important;
         border-color: #e2e8f0 !important;
         color: #cbd5e1 !important;
         box-shadow: none !important;
         cursor: not-allowed;
+    }
+
+    /* ==========================================================
+       OPTIMIZACIÓN EXCLUSIVA PARA RESOLUCIÓN DE CELULAR
+    ========================================================== */
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 6px !important;
+            padding-right: 6px !important;
+        }
+
+        /* 1. Ancho total ampliado para dar espacio al dictamen y obra */
+        .dtl-pure-table {
+            min-width: 1450px !important;
+        }
+
+        /* 2. Reducción vertical de altura de celdas */
+        .dtl-pure-table thead th {
+            padding: 0.38rem 0.65rem !important;
+            font-size: 0.62rem !important;
+        }
+
+        .dtl-pure-table td {
+            padding: 0.32rem 0.65rem !important;
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+        }
+
+        /* 3. Anchos generosos por columna para mostrar toda la información técnica */
+        .col-mob-id        { min-width: 120px !important; width: 120px !important; }
+        .col-mob-obra      { min-width: 380px !important; width: 380px !important; }
+        .col-mob-ing       { min-width: 240px !important; width: 240px !important; }
+        .col-mob-fecha     { min-width: 160px !important; width: 160px !important; }
+        .col-mob-resultado { min-width: 420px !important; width: 420px !important; }
+        .col-mob-estado    { min-width: 130px !important; width: 130px !important; }
     }
 </style>
 
@@ -245,69 +275,80 @@
         </div>
     </div>
 
-    <!-- 3. TABLA CON SCROLL LATERAL (DERECHA / IZQUIERDA EN MÓVIL) -->
+    <!-- 3. TABLA CON SCROLL LATERAL Y ALTO MÍNIMO -->
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-2" style="border: 1px solid #cbd5e1 !important;">
         <div class="card-body p-0">
             <div class="dtl-table-scroll-container">
                 <table class="table table-bordered table-hover align-middle dtl-pure-table">
                     <thead>
                         <tr>
-                            <th class="ps-3" style="width: 12%;">ID</th>
-                            <th style="width: 26%;">OBRA / PROYECTO</th>
-                            <th style="width: 20%;">INGENIERO ASIGNADO</th>
-                            <th class="text-center" style="width: 14%;">FECHA VISITA</th>
-                            <th style="width: 18%;">RESULTADO / DICTAMEN</th>
-                            <th class="pe-3 text-center" style="width: 10%;">ESTADO</th>
+                            <th class="ps-3 col-mob-id" style="width: 10%;">ID</th>
+                            <th class="col-mob-obra" style="width: 26%;">OBRA / PROYECTO</th>
+                            <th class="col-mob-ing" style="width: 20%;">INGENIERO ASIGNADO</th>
+                            <th class="text-center col-mob-fecha" style="width: 14%;">FECHA VISITA</th>
+                            <th class="col-mob-resultado" style="width: 20%;">RESULTADO / DICTAMEN</th>
+                            <th class="pe-3 text-center col-mob-estado" style="width: 10%;">ESTADO</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($inspecciones ?? [] as $inspeccion)
                             <tr>
-                                <td class="ps-3 font-monospace fw-bold text-nowrap" style="color: var(--dtl-navy); font-size: 0.78rem;">
+                                <!-- ID -->
+                                <td class="ps-3 font-monospace fw-bold text-nowrap col-mob-id" style="color: var(--dtl-navy); font-size: 0.76rem;">
                                     #INS-{{ str_pad($inspeccion->id, 4, '0', STR_PAD_LEFT) }}
                                 </td>
-                                <td>
-                                    <span class="fw-bold text-dark d-block" style="font-size: 0.78rem;">
+
+                                <!-- OBRA Y CLIENTE -->
+                                <td class="col-mob-obra">
+                                    <span class="fw-bold text-dark d-block" style="font-size: 0.76rem; line-height: 1.25;">
                                         {{ $inspeccion->obra->titulo ?? 'Sin Obra' }}
                                     </span>
-                                    <small class="text-muted d-block" style="font-size: 0.70rem;">
-                                        <i class="fas fa-building me-1"></i>{{ $inspeccion->obra->cliente->razon_social ?? 'Cliente General' }}
+                                    <small class="text-muted d-block font-monospace" style="font-size: 0.68rem; line-height: 1.2;">
+                                        <i class="fas fa-building me-1 opacity-75"></i>{{ $inspeccion->obra->cliente->razon_social ?? 'Cliente General' }}
                                     </small>
                                 </td>
-                                <td>
-                                    <span class="fw-semibold text-secondary d-block" style="font-size: 0.75rem;">
-                                        <i class="fas fa-user-tie me-1 opacity-50"></i>{{ $inspeccion->ingeniero_asignado ?? 'No asignado' }}
+
+                                <!-- INGENIERO -->
+                                <td class="col-mob-ing">
+                                    <span class="fw-semibold text-secondary d-block" style="font-size: 0.74rem;">
+                                        <i class="fas fa-user-tie me-1 text-muted opacity-75"></i>{{ $inspeccion->ingeniero_asignado ?? 'No asignado' }}
                                     </span>
                                 </td>
-                                <td class="text-center font-monospace text-nowrap" style="font-size: 0.74rem;">
+
+                                <!-- FECHA VISITA -->
+                                <td class="text-center font-monospace text-nowrap col-mob-fecha" style="font-size: 0.72rem;">
                                     <span class="text-dark d-inline-flex align-items-center">
                                         <i class="far fa-calendar-alt me-1 text-success"></i>
                                         {{ $inspeccion->fecha_inspeccion ? \Carbon\Carbon::parse($inspeccion->fecha_inspeccion)->format('d/m/Y H:i') : '-' }}
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="text-secondary d-block" style="font-size: 0.74rem; line-height: 1.45;" title="{{ $inspeccion->resultado }}">
+
+                                <!-- RESULTADO / DICTAMEN (COMPLETO) -->
+                                <td class="col-mob-resultado">
+                                    <span class="text-secondary d-block" style="font-size: 0.72rem; line-height: 1.35;" title="{{ $inspeccion->resultado }}">
                                         {{ $inspeccion->resultado ?: 'Visita pendiente de informe' }}
                                     </span>
                                 </td>
-                                <td class="pe-3 text-center text-nowrap">
+
+                                <!-- ESTADO -->
+                                <td class="pe-3 text-center text-nowrap col-mob-estado">
                                     @php $est = ucfirst(strtolower($inspeccion->estado_inspeccion ?? '')); @endphp
                                     @if($est === 'Completada')
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.65rem;">
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-size: 0.62rem;">
                                             <i class="fas fa-check-circle me-1"></i>Completada
                                         </span>
                                     @elseif($est === 'Pendiente')
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.65rem;">
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5" style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.62rem;">
                                             <i class="fas fa-clock me-1"></i>Pendiente
                                         </span>
                                     @else
-                                        <span class="badge rounded-pill fw-semibold px-2.5 py-1 bg-light text-dark border" style="font-size: 0.65rem;">{{ $est }}</span>
+                                        <span class="badge rounded-pill fw-semibold px-2 py-0.5 bg-light text-dark border" style="font-size: 0.62rem;">{{ $est }}</span>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted small">No se encontraron inspecciones técnicas registradas.</td>
+                                <td colspan="6" class="text-center py-3 text-muted small">No se encontraron inspecciones técnicas registradas.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -316,18 +357,16 @@
         </div>
     </div>
 
-    <!-- 4. PAGINACIÓN IDÉNTICA A LA IMAGEN 1 (< 1 2 >) -->
+    <!-- 4. PAGINACIÓN CIRCULAR -->
     @if(isset($inspecciones) && $inspecciones->hasPages())
         <div class="dtl-pagination-wrapper">
             <ul class="pagination">
-                {{-- Botón Anterior (<) --}}
                 @if ($inspecciones->onFirstPage())
                     <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
                 @else
                     <li class="page-item"><a class="page-link" href="{{ $inspecciones->previousPageUrl() }}">&lsaquo;</a></li>
                 @endif
 
-                {{-- Números de Página (1, 2, 3...) --}}
                 @foreach ($inspecciones->getUrlRange(1, $inspecciones->lastPage()) as $page => $url)
                     @if ($page == $inspecciones->currentPage())
                         <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
@@ -336,7 +375,6 @@
                     @endif
                 @endforeach
 
-                {{-- Botón Siguiente (>) --}}
                 @if ($inspecciones->hasMorePages())
                     <li class="page-item"><a class="page-link" href="{{ $inspecciones->nextPageUrl() }}">&rsaquo;</a></li>
                 @else

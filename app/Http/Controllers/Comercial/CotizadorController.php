@@ -6,68 +6,79 @@ use App\Http\Controllers\Controller;
 use App\Models\Cotizacion;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 
 class CotizadorController extends Controller
 {
+    /**
+     * Genera y visualiza el PDF oficial de la cotización de forma individual.
+     */
     public function generarPdf($id)
     {
-        // 1. Cargamos relaciones seguras (incluyendo comercial si existe)
-        $cotizacion = Cotizacion::with(['obra.cliente', 'user'])->findOrFail($id);
+        try {
+            // Cargamos la cotización con sus relaciones clave
+            $cotizacion = Cotizacion::with(['obra.cliente', 'user', 'detalles.partida'])->findOrFail($id);
 
-        // Monto acumulado de la obra: sumatoria de TODAS sus cotizaciones
-        // (una obra puede dividirse por áreas y cotizarse por separado).
-        $montoTotalObra = (float) Cotizacion::where('obra_id', $cotizacion->obra_id)->sum('monto_total');
+            $pdf = Pdf::loadView('comercial.cotizador.pdf', compact('cotizacion'))
+                ->setPaper('a4', 'portrait')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled'      => true,
+                    'chroot'               => public_path(),
+                    'defaultFont'          => 'sans-serif'
+                ]);
 
-        // 2. Cargamos la vista y activamos los permisos para imágenes locales
-        $pdf = Pdf::loadView('comercial.cotizador.pdf', compact('cotizacion', 'montoTotalObra'))
-            ->setPaper('a4', 'portrait')
-            ->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled'      => true, // Permite cargar imágenes locales/remotas
-                'chroot'               => public_path(), // Permite leer la carpeta public/images/
-                'defaultFont'          => 'sans-serif'
+            return response($pdf->output(), 200, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="Cotizacion_' . $cotizacion->codigo_cotizacion . '.pdf"',
+                'X-Frame-Options'     => 'SAMEORIGIN'
             ]);
-
-        // 3. Devolvemos el PDF con cabeceras que permiten la vista previa en el modal
-        return response($pdf->output(), 200, [
-            'Content-Type'        => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="Cotizacion_' . $cotizacion->codigo_cotizacion . '.pdf"',
-            'X-Frame-Options'     => 'SAMEORIGIN' // Permite mostrarse dentro del iframe de tu modal
-        ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'error'   => 'No se pudo generar el expediente PDF.',
+                'detalle' => $e->getMessage()
+            ], 500);
+        }
     }
 
+    /**
+     * Listado y auditoría de cotizaciones con búsqueda y paginación optimizada.
+     */
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search = trim((string) $request->input('search', ''));
 
-        // Consulta de auditoría y trazabilidad histórica
-        $cotizaciones = Cotizacion::with(['obra.cliente', 'user'])
-            ->when($search, function ($query, $search) {
-                return $query->where(function ($q) use ($search) {
-                    $q->where('codigo_cotizacion', 'like', '%' . $search . '%')
-                      ->orWhere('estado_cotizacion', 'like', '%' . $search . '%')
+        $cotizaciones = Cotizacion::with(['obra.cliente', 'user', 'detalles.partida'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('codigo_cotizacion', 'like', "%{$search}%")
+                      ->orWhere('estado_cotizacion', 'like', "%{$search}%")
+                      ->orWhere('observaciones', 'like', "%{$search}%")
                       ->orWhereHas('obra', function ($sub) use ($search) {
-                          $sub->where('titulo', 'like', '%' . $search . '%')
-                              ->orWhere('codigo', 'like', '%' . $search . '%')
+                          $sub->where('titulo', 'like', "%{$search}%")
+                              ->orWhere('codigo', 'like', "%{$search}%")
                               ->orWhereHas('cliente', function ($c) use ($search) {
-                                  $c->where('razon_social', 'like', '%' . $search . '%');
+                                  $c->where('razon_social', 'like', "%{$search}%");
                               });
                       });
                 });
             })
-            ->latest()
-            ->paginate(10);
+            ->latest('id')
+            ->paginate(10)
+            ->withQueryString(); // Mantiene los filtros de búsqueda al pasar de página en celular
 
-        // Identifica la última cotización (mayor id) de cada obra para
-        // mostrar únicamente su PDF, usando una única consulta agregada.
-        $ultimasCotizacionesPorObra = Cotizacion::selectRaw('MAX(id) as id')
-            ->whereIn('obra_id', $cotizaciones->pluck('obra_id')->filter()->unique()->all())
-            ->groupBy('obra_id')
-            ->pluck('id')
-            ->all();
+        // Sanitización segura: limpia el prefijo de corchetes [Fase #X ⇄ Inspección #X - Ing. ...]
+        // Protegido contra valores NULL para evitar cualquier error en PHP
+        $cotizaciones->getCollection()->transform(function ($cotizacion) {
+            $raw = (string) ($cotizacion->observaciones ?? '');
+            
+            // Remueve el prefijo del sistema y deja solo el texto del usuario
+            $limpio = preg_replace('/^\[.*?\]\s*/u', '', $raw);
+            $cotizacion->observacion_limpia = trim((string) $limpio);
 
-        $ultimasCotizacionesPorObra = array_flip($ultimasCotizacionesPorObra);
+            return $cotizacion;
+        });
 
-        return view('comercial.cotizador.index', compact('cotizaciones', 'ultimasCotizacionesPorObra'));
+        return view('comercial.cotizador.index', compact('cotizaciones', 'search'));
     }
 }
